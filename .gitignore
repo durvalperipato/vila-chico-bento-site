@@ -12,6 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 _bmad/
+.firebase/
 
 # IntelliJ related
 *.iml
