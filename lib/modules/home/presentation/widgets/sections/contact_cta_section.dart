@@ -137,8 +137,7 @@ class ContactCtaSection extends StatelessWidget {
                             shadowColor:
                                 AppColors.whatsapp.withValues(alpha: 0.4),
                           ),
-                          icon: BrandIcons.whatsapp(
-                              color: Colors.white),
+                          icon: BrandIcons.whatsapp(color: Colors.white),
                           label: Text(
                             l10n.btnWhatsapp,
                             style: const TextStyle(

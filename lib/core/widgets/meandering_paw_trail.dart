@@ -7,7 +7,11 @@ import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 /// para que as seções fiquem literalmente "coladas" e unidas de ponta a ponta.
 class MeanderingPawTrail extends StatelessWidget {
   const MeanderingPawTrail({
-    required this.start, required this.control1, required this.control2, required this.end, super.key,
+    required this.start,
+    required this.control1,
+    required this.control2,
+    required this.end,
+    super.key,
     this.pawCount = 12,
     this.color = AppColors.primary,
     this.baseSize = 32.0,

@@ -14,6 +14,7 @@ class AppColors {
   static const Color primaryHover = Color(0xFFC8661B);
   static const Color primaryLight = Color(0xFFFFF3E8);
   static const Color primaryGlow = Color(0xFFF59E0B);
+  static const Color primaryDark = Color(0xFFC8661B);
 
   static const Color secondary = Color(0xFF0EA5E9); // Azul Céu Ensolarado
   static const Color secondaryHover = Color(0xFF0284C7);

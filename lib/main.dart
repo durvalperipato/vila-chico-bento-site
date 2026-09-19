@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nano_core/nano_core.dart';
 import 'package:vila_chico_bento_site/firebase_options.dart';
+import 'core/injections/app_injections.dart';
+import 'core/routes/app_router.dart';
 import 'core/settings/app_settings.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
-import 'modules/home/presentation/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await const AppInjections()();
   runApp(const VilaChicoBentoApp());
 }
 
@@ -31,6 +33,7 @@ class VilaChicoBentoApp extends StatelessWidget {
       ]),
       builder: (context, _) {
         return NanoApp(
+          router: appRouter,
           title: 'Vila Chico Bento | Creche e Hospedagem para Cães em Pinhais',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme(),
@@ -44,7 +47,6 @@ class VilaChicoBentoApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: const HomePage(),
         );
       },
     );
