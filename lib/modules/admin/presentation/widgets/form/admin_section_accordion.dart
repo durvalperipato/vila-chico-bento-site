@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../domain/admin_section_group.dart';
 import '../../../domain/admin_section_icon.dart';
 
@@ -105,8 +106,11 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${widget.section.fields.length} '
-                          'campos configuráveis',
+                          AppLocalizations.of(context)?.adminConfigurableFields(
+                                widget.section.fields.length,
+                              ) ??
+                              '${widget.section.fields.length} '
+                                  'campos configuráveis',
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             color: AppColors.textMuted(isDark),

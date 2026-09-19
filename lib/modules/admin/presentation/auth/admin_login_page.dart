@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import 'admin_login_controller.dart';
 import 'admin_login_injections.dart';
 import 'admin_login_state.dart';
@@ -117,7 +118,8 @@ class _AdminLoginPageState
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Painel Administrativo',
+                    AppLocalizations.of(context)?.adminLoginSubtitle ??
+                        'Painel Administrativo',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14,
@@ -129,7 +131,7 @@ class _AdminLoginPageState
 
                   // Email Field
                   Text(
-                    'E-mail',
+                    AppLocalizations.of(context)?.adminEmailLabel ?? 'E-mail',
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -146,7 +148,8 @@ class _AdminLoginPageState
                       color: AppColors.textPrimary(isDark),
                     ),
                     decoration: InputDecoration(
-                      hintText: 'admin@vilachicobento.com.br',
+                      hintText: AppLocalizations.of(context)?.adminEmailHint ??
+                          'admin@vilachicobento.com.br',
                       hintStyle: GoogleFonts.inter(
                         fontSize: 14,
                         color: AppColors.textMuted(isDark),
@@ -182,7 +185,8 @@ class _AdminLoginPageState
 
                   // Password Field
                   Text(
-                    'Senha de Acesso',
+                    AppLocalizations.of(context)?.adminPasswordLabel ??
+                        'Senha de Acesso',
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -256,7 +260,11 @@ class _AdminLoginPageState
                       elevation: 0,
                     ),
                     child: Text(
-                      'Entrar no Painel',
+                      isLoading
+                          ? (AppLocalizations.of(context)?.adminBtnSigningIn ??
+                              'Autenticando...')
+                          : (AppLocalizations.of(context)?.adminBtnSignIn ??
+                              'Entrar no Painel'),
                       style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,

@@ -403,6 +403,132 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!'**
   String get whatsappMessage;
+
+  /// No description provided for @adminWorkspaceDraftSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rascunho salvo com sucesso!'**
+  String get adminWorkspaceDraftSaved;
+
+  /// No description provided for @adminWorkspacePublished.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conteúdo publicado no site oficial com sucesso!'**
+  String get adminWorkspacePublished;
+
+  /// No description provided for @adminWorkspaceError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falha ao processar alterações.'**
+  String get adminWorkspaceError;
+
+  /// No description provided for @adminAuthEmptyFields.
+  ///
+  /// In pt, this message translates to:
+  /// **'Por favor, preencha e-mail e senha.'**
+  String get adminAuthEmptyFields;
+
+  /// No description provided for @adminAuthInvalidCredentials.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail ou senha incorretos.'**
+  String get adminAuthInvalidCredentials;
+
+  /// No description provided for @adminAuthUnknownError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falha na autenticação. Tente novamente.'**
+  String get adminAuthUnknownError;
+
+  /// No description provided for @adminEditorTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vila Chico Bento | Editor de Conteúdo'**
+  String get adminEditorTitle;
+
+  /// No description provided for @adminSaveDraft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar Rascunho'**
+  String get adminSaveDraft;
+
+  /// No description provided for @adminPublishLive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicar no Site'**
+  String get adminPublishLive;
+
+  /// No description provided for @adminSignOut.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sair da sessão'**
+  String get adminSignOut;
+
+  /// No description provided for @adminStatusDraft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rascunho não publicado'**
+  String get adminStatusDraft;
+
+  /// No description provided for @adminStatusPublished.
+  ///
+  /// In pt, this message translates to:
+  /// **'Publicado'**
+  String get adminStatusPublished;
+
+  /// No description provided for @adminBannerDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Formulário gerado automaticamente a partir do VilaChicoBentoSchema. Qualquer caractere alterado atualiza o rascunho instantaneamente.'**
+  String get adminBannerDescription;
+
+  /// Quantidade de campos na seção
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} campos configuráveis'**
+  String adminConfigurableFields(int count);
+
+  /// No description provided for @adminLoginTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acesso Administrativo'**
+  String get adminLoginTitle;
+
+  /// No description provided for @adminLoginSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerencie o conteúdo do site oficial Vila Chico Bento'**
+  String get adminLoginSubtitle;
+
+  /// No description provided for @adminEmailLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'E-mail'**
+  String get adminEmailLabel;
+
+  /// No description provided for @adminEmailHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'operador@vilachicobento.com.br'**
+  String get adminEmailHint;
+
+  /// No description provided for @adminPasswordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha de Acesso'**
+  String get adminPasswordLabel;
+
+  /// No description provided for @adminBtnSignIn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Acessar Painel'**
+  String get adminBtnSignIn;
+
+  /// No description provided for @adminBtnSigningIn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Autenticando...'**
+  String get adminBtnSigningIn;
 }
 
 class _AppLocalizationsDelegate

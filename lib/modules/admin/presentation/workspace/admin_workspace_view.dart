@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/vila_chico_bento_schema.dart';
 import '../widgets/form/dynamic_form_generator.dart';
 import 'admin_workspace_controller.dart';
@@ -43,7 +44,8 @@ class _AdminWorkspaceViewState
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
-                  'Vila Chico Bento | Editor de Conteúdo',
+                  AppLocalizations.of(context)?.adminEditorTitle ??
+                      'Vila Chico Bento | Editor de Conteúdo',
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
                     fontSize: 18,
@@ -59,7 +61,10 @@ class _AdminWorkspaceViewState
             OutlinedButton.icon(
               onPressed: controller.saveDraft,
               icon: const Icon(Icons.save_outlined, size: 16),
-              label: const Text('Salvar Rascunho'),
+              label: Text(
+                AppLocalizations.of(context)?.adminSaveDraft ??
+                    'Salvar Rascunho',
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.textPrimary(isDark),
                 side: BorderSide(color: AppColors.borderSubtle(isDark)),
@@ -75,7 +80,10 @@ class _AdminWorkspaceViewState
             ElevatedButton.icon(
               onPressed: controller.publish,
               icon: const Icon(Icons.cloud_upload_rounded, size: 16),
-              label: const Text('Publicar no Site'),
+              label: Text(
+                AppLocalizations.of(context)?.adminPublishLive ??
+                    'Publicar no Site',
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
@@ -89,7 +97,8 @@ class _AdminWorkspaceViewState
 
             // Operator Sign Out
             IconButton(
-              tooltip: 'Sair da sessão',
+              tooltip: AppLocalizations.of(context)?.adminSignOut ??
+                  'Sair da sessão',
               icon: const Icon(Icons.logout_rounded, size: 20),
               onPressed: controller.signOut,
             ),
@@ -129,10 +138,12 @@ class _AdminWorkspaceViewState
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Formulário gerado automaticamente a partir '
-                            'do VilaChicoBentoSchema. '
-                            'Qualquer caractere alterado atualiza o '
-                            'rascunho instantaneamente.',
+                            AppLocalizations.of(context)
+                                    ?.adminBannerDescription ??
+                                'Formulário gerado automaticamente a partir '
+                                    'do VilaChicoBentoSchema. '
+                                    'Qualquer caractere alterado atualiza o '
+                                    'rascunho instantaneamente.',
                             style: GoogleFonts.inter(
                               fontSize: 13,
                               color: AppColors.textPrimary(isDark),
@@ -171,8 +182,12 @@ class _AdminWorkspaceViewState
                               const SizedBox(width: 6),
                               Text(
                                 state.hasUnsavedChanges
-                                    ? 'Rascunho não publicado'
-                                    : 'Publicado',
+                                    ? (AppLocalizations.of(context)
+                                            ?.adminStatusDraft ??
+                                        'Rascunho não publicado')
+                                    : (AppLocalizations.of(context)
+                                            ?.adminStatusPublished ??
+                                        'Publicado'),
                                 style: GoogleFonts.inter(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,

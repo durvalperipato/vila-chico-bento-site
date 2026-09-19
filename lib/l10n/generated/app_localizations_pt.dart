@@ -179,4 +179,72 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get whatsappMessage =>
       'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!';
+
+  @override
+  String get adminWorkspaceDraftSaved => 'Rascunho salvo com sucesso!';
+
+  @override
+  String get adminWorkspacePublished =>
+      'Conteúdo publicado no site oficial com sucesso!';
+
+  @override
+  String get adminWorkspaceError => 'Falha ao processar alterações.';
+
+  @override
+  String get adminAuthEmptyFields => 'Por favor, preencha e-mail e senha.';
+
+  @override
+  String get adminAuthInvalidCredentials => 'E-mail ou senha incorretos.';
+
+  @override
+  String get adminAuthUnknownError => 'Falha na autenticação. Tente novamente.';
+
+  @override
+  String get adminEditorTitle => 'Vila Chico Bento | Editor de Conteúdo';
+
+  @override
+  String get adminSaveDraft => 'Salvar Rascunho';
+
+  @override
+  String get adminPublishLive => 'Publicar no Site';
+
+  @override
+  String get adminSignOut => 'Sair da sessão';
+
+  @override
+  String get adminStatusDraft => 'Rascunho não publicado';
+
+  @override
+  String get adminStatusPublished => 'Publicado';
+
+  @override
+  String get adminBannerDescription =>
+      'Formulário gerado automaticamente a partir do VilaChicoBentoSchema. Qualquer caractere alterado atualiza o rascunho instantaneamente.';
+
+  @override
+  String adminConfigurableFields(int count) {
+    return '$count campos configuráveis';
+  }
+
+  @override
+  String get adminLoginTitle => 'Acesso Administrativo';
+
+  @override
+  String get adminLoginSubtitle =>
+      'Gerencie o conteúdo do site oficial Vila Chico Bento';
+
+  @override
+  String get adminEmailLabel => 'E-mail';
+
+  @override
+  String get adminEmailHint => 'operador@vilachicobento.com.br';
+
+  @override
+  String get adminPasswordLabel => 'Senha de Acesso';
+
+  @override
+  String get adminBtnSignIn => 'Acessar Painel';
+
+  @override
+  String get adminBtnSigningIn => 'Autenticando...';
 }

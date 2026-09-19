@@ -178,4 +178,73 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get whatsappMessage =>
       'Hello! I saw the Vila Chico Bento website and would like to schedule a visit and an adaptation period for my dog!';
+
+  @override
+  String get adminWorkspaceDraftSaved => 'Draft saved successfully!';
+
+  @override
+  String get adminWorkspacePublished =>
+      'Content published to live website successfully!';
+
+  @override
+  String get adminWorkspaceError => 'Failed to process changes.';
+
+  @override
+  String get adminAuthEmptyFields => 'Please fill in both email and password.';
+
+  @override
+  String get adminAuthInvalidCredentials => 'Incorrect email or password.';
+
+  @override
+  String get adminAuthUnknownError =>
+      'Authentication failed. Please try again.';
+
+  @override
+  String get adminEditorTitle => 'Vila Chico Bento | Content Editor';
+
+  @override
+  String get adminSaveDraft => 'Save Draft';
+
+  @override
+  String get adminPublishLive => 'Publish Live';
+
+  @override
+  String get adminSignOut => 'Sign out';
+
+  @override
+  String get adminStatusDraft => 'Unpublished draft';
+
+  @override
+  String get adminStatusPublished => 'Published';
+
+  @override
+  String get adminBannerDescription =>
+      'Form dynamically generated from VilaChicoBentoSchema. Any character changed updates draft instantly.';
+
+  @override
+  String adminConfigurableFields(int count) {
+    return '$count configurable fields';
+  }
+
+  @override
+  String get adminLoginTitle => 'Admin Access';
+
+  @override
+  String get adminLoginSubtitle =>
+      'Manage the official Vila Chico Bento website content';
+
+  @override
+  String get adminEmailLabel => 'Email';
+
+  @override
+  String get adminEmailHint => 'operator@vilachicobento.com.br';
+
+  @override
+  String get adminPasswordLabel => 'Password';
+
+  @override
+  String get adminBtnSignIn => 'Sign In to Dashboard';
+
+  @override
+  String get adminBtnSigningIn => 'Signing in...';
 }

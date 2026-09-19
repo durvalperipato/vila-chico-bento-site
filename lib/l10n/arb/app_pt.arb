@@ -50,5 +50,35 @@
   "mascotBattery": "Bateria: 0% | Felicidade: 100%",
   "mascotStatus": "Modo Soneca Pós-Creche Ativado 😴",
   "footerRights": "© Vila Chico Bento. Todos os direitos reservados. Pinhais - PR.",
-  "whatsappMessage": "Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!"
+  "whatsappMessage": "Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!",
+  "adminWorkspaceDraftSaved": "Rascunho salvo com sucesso!",
+  "adminWorkspacePublished": "Conteúdo publicado no site oficial com sucesso!",
+  "adminWorkspaceError": "Falha ao processar alterações.",
+  "adminAuthEmptyFields": "Por favor, preencha e-mail e senha.",
+  "adminAuthInvalidCredentials": "E-mail ou senha incorretos.",
+  "adminAuthUnknownError": "Falha na autenticação. Tente novamente.",
+  "adminEditorTitle": "Vila Chico Bento | Editor de Conteúdo",
+  "adminSaveDraft": "Salvar Rascunho",
+  "adminPublishLive": "Publicar no Site",
+  "adminSignOut": "Sair da sessão",
+  "adminStatusDraft": "Rascunho não publicado",
+  "adminStatusPublished": "Publicado",
+  "adminBannerDescription": "Formulário gerado automaticamente a partir do VilaChicoBentoSchema. Qualquer caractere alterado atualiza o rascunho instantaneamente.",
+  "adminConfigurableFields": "{count} campos configuráveis",
+  "@adminConfigurableFields": {
+    "description": "Quantidade de campos na seção",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "adminLoginTitle": "Acesso Administrativo",
+  "adminLoginSubtitle": "Gerencie o conteúdo do site oficial Vila Chico Bento",
+  "adminEmailLabel": "E-mail",
+  "adminEmailHint": "operador@vilachicobento.com.br",
+  "adminPasswordLabel": "Senha de Acesso",
+  "adminBtnSignIn": "Acessar Painel",
+  "adminBtnSigningIn": "Autenticando..."
 }
