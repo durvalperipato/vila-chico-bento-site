@@ -255,7 +255,7 @@ class FooterSection extends StatelessWidget {
                           HomeNavSection.hero,
                           controller.heroKey,
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -266,8 +266,8 @@ class FooterSection extends StatelessWidget {
                                 color: AppColors.primary,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            const Icon(
+                            SizedBox(width: 4),
+                            Icon(
                               Icons.arrow_upward_rounded,
                               size: 15,
                               color: AppColors.primary,
@@ -297,7 +297,7 @@ class FooterSection extends StatelessWidget {
                       HomeNavSection.hero,
                       controller.heroKey,
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
@@ -308,8 +308,8 @@ class FooterSection extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        const Icon(
+                        SizedBox(width: 4),
+                        Icon(
                           Icons.arrow_upward_rounded,
                           size: 15,
                           color: AppColors.primary,
@@ -366,7 +366,6 @@ class _DeveloperSignatureState extends State<_DeveloperSignature> {
               color: _isHovered
                   ? (isDark ? const Color(0x6638BDF8) : const Color(0x440284C7))
                   : Colors.transparent,
-              width: 1,
             ),
           ),
           child: Row(
@@ -396,9 +395,9 @@ class _DeveloperSignatureState extends State<_DeveloperSignature> {
                       : TextDecoration.none,
                   decorationColor: const Color(0xFF38BDF8),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text('NanoDevs'),
                     SizedBox(width: 4),
                     Text('⚡', style: TextStyle(fontSize: 11)),

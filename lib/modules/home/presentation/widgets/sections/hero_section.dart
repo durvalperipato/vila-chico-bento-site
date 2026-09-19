@@ -47,7 +47,6 @@ class HeroSection extends StatelessWidget {
             child: Image.network(
               AppAssets.heroMainImage,
               fit: BoxFit.cover,
-              alignment: Alignment.center,
               loadingBuilder: (context, child, progress) {
                 if (progress == null) return child;
                 return NanoSkeleton.box(
@@ -74,7 +73,6 @@ class HeroSection extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment.center,
                   radius: 1.15,
                   colors: [
                     Colors.transparent,
@@ -114,7 +112,6 @@ class HeroSection extends StatelessWidget {
             child: ResponsiveContainer(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Selo Acolhedor Artesanal (Identidade Exclusiva Vila Chico Bento)
                   ClipRRect(

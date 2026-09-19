@@ -217,7 +217,7 @@ class Navbar extends StatelessWidget {
                       ),
                       elevation: 4,
                     ),
-                    icon: BrandIcons.whatsapp(size: 20, color: Colors.white),
+                    icon: BrandIcons.whatsapp(color: Colors.white),
                     label: Text(
                       l10n.heroCtaWhatsapp,
                       style: const TextStyle(
@@ -299,7 +299,7 @@ class Navbar extends StatelessWidget {
                             height: 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [
                                   AppColors.primary,
                                   AppColors.primaryGlow,
@@ -347,7 +347,7 @@ class Navbar extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  Text(
+                                  const Text(
                                     'Creche & Resort Canino',
                                     style: TextStyle(
                                       fontSize: 11,
@@ -570,7 +570,6 @@ class _PillNavLinkState extends State<_PillNavLink> {
               color: isSelected
                   ? AppColors.primary.withValues(alpha: 0.35)
                   : Colors.transparent,
-              width: 1,
             ),
           ),
           child: Text(

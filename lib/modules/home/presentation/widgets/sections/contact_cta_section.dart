@@ -41,7 +41,6 @@ class ContactCtaSection extends StatelessWidget {
               control2: const Offset(0.50, 0.40),
               end: const Offset(0.50, 0.52),
               pawCount: 7,
-              baseSize: 32.0,
               opacity: isDark ? 0.38 : 0.50,
               color: AppColors.pawTrail,
               startWithRightFoot: true,
@@ -139,7 +138,7 @@ class ContactCtaSection extends StatelessWidget {
                                 AppColors.whatsapp.withValues(alpha: 0.4),
                           ),
                           icon: BrandIcons.whatsapp(
-                              size: 20, color: Colors.white),
+                              color: Colors.white),
                           label: Text(
                             l10n.btnWhatsapp,
                             style: const TextStyle(
@@ -164,7 +163,7 @@ class ContactCtaSection extends StatelessWidget {
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
-                          icon: BrandIcons.instagram(size: 20),
+                          icon: BrandIcons.instagram(),
                           label: Text(
                             l10n.btnInstagram,
                             style: const TextStyle(
@@ -258,7 +257,6 @@ class _Free3DMascotDogState extends State<_Free3DMascotDog>
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // 1. Balão de Fala estilo História em Quadrinhos / Cartoon Moderno
         ConstrainedBox(
@@ -307,7 +305,6 @@ class _Free3DMascotDogState extends State<_Free3DMascotDog>
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(
                               color: AppColors.primary.withValues(alpha: 0.4),
-                              width: 1,
                             ),
                           ),
                           child: Text(
@@ -331,7 +328,6 @@ class _Free3DMascotDogState extends State<_Free3DMascotDog>
                             border: Border.all(
                               color:
                                   AppColors.accentGreen.withValues(alpha: 0.4),
-                              width: 1,
                             ),
                           ),
                           child: Text(
@@ -400,7 +396,6 @@ class _Free3DMascotDogState extends State<_Free3DMascotDog>
                   return Transform.scale(
                     scaleX: scale,
                     scaleY: scale,
-                    alignment: Alignment.center,
                     child: Container(
                       width: dogWidth * 0.78,
                       height: isMobile ? 16 : 22,
@@ -410,7 +405,6 @@ class _Free3DMascotDogState extends State<_Free3DMascotDog>
                               dogWidth * 0.78, isMobile ? 16 : 22),
                         ),
                         gradient: RadialGradient(
-                          center: Alignment.center,
                           radius: 0.85,
                           colors: [
                             Colors.black

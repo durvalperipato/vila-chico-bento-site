@@ -135,8 +135,6 @@ class VilaChicoBentoSchema {
           AdminField.gallery(
             key: 'gallery.images',
             label: 'Fotos do Espaço e Cães',
-            maxItems: 10,
-            maxSizeMB: 2.0,
           ),
         ],
       ),

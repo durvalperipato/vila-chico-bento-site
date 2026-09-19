@@ -23,7 +23,8 @@ void main() {
       expect(field.validate('   '), isNotNull);
       expect(field.validate('Valid Title'), isNull);
       expect(
-        field.validate('A very long title that definitely exceeds twenty characters'),
+        field.validate(
+            'A very long title that definitely exceeds twenty characters'),
         isNotNull,
       );
     });
@@ -70,9 +71,17 @@ void main() {
 
       expect(listField.type, AdminFieldType.list);
       expect(listField.itemFields.length, 2);
-      expect(listField.validate([{'title': 'S1'}]), isNull);
       expect(
-        listField.validate([{'title': 'S1'}, {'title': 'S2'}, {'title': 'S3'}]),
+          listField.validate([
+            {'title': 'S1'}
+          ]),
+          isNull);
+      expect(
+        listField.validate([
+          {'title': 'S1'},
+          {'title': 'S2'},
+          {'title': 'S3'}
+        ]),
         isNotNull,
       );
     });

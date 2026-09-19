@@ -1,18 +1,8 @@
 import 'admin_field_type.dart';
 
-/// Immutable domain model representing a single configurable field in the schema.
+/// Immutable domain model representing a single configurable field in the
+/// schema.
 class AdminField {
-  final String key;
-  final String label;
-  final AdminFieldType type;
-  final bool required;
-  final int? maxLength;
-  final int maxLines;
-  final double? maxSizeMB;
-  final List<String> allowedExtensions;
-  final int? maxItems;
-  final List<AdminField> itemFields;
-
   const AdminField({
     required this.key,
     required this.label,
@@ -26,7 +16,8 @@ class AdminField {
     this.itemFields = const [],
   });
 
-  /// Factory constructor for text inputs (headlines, descriptions, phone numbers).
+  /// Factory constructor for text inputs (headlines, descriptions, phone
+  /// numbers).
   factory AdminField.text({
     required String key,
     required String label,
@@ -77,7 +68,6 @@ class AdminField {
       maxItems: maxItems,
       maxSizeMB: maxSizeMB,
       allowedExtensions: allowedExtensions,
-      required: false,
     );
   }
 
@@ -96,20 +86,38 @@ class AdminField {
       maxItems: maxItems,
     );
   }
+  final String key;
+  final String label;
+  final AdminFieldType type;
+  final bool required;
+  final int? maxLength;
+  final int maxLines;
+  final double? maxSizeMB;
+  final List<String> allowedExtensions;
+  final int? maxItems;
+  final List<AdminField> itemFields;
 
   /// Validates a candidate value against this field's business rules.
   String? validate(dynamic value) {
     if (required) {
-      if (value == null) return '$label is required.';
-      if (value is String && value.trim().isEmpty) return '$label cannot be empty.';
-      if (value is List && value.isEmpty) return '$label requires at least one item.';
+      if (value == null) {
+        return '$label is required.';
+      }
+      if (value is String && value.trim().isEmpty) {
+        return '$label cannot be empty.';
+      }
+      if (value is List && value.isEmpty) {
+        return '$label requires at least one item.';
+      }
     }
 
-    if (value == null) return null;
+    if (value == null) {
+      return null;
+    }
 
     if (type == AdminFieldType.text && value is String) {
       if (maxLength != null && value.length > maxLength!) {
-        return '$label cannot exceed $maxLength characters (currently ${value.length}).';
+        return '$label cannot exceed $maxLength characters.';
       }
     }
 

@@ -3,13 +3,12 @@ import 'admin_section_group.dart';
 
 /// Represents the complete schema contract for a website.
 class SiteSchema {
-  final String siteId;
-  final List<AdminSectionGroup> sections;
-
   const SiteSchema({
     required this.siteId,
     required this.sections,
   });
+  final String siteId;
+  final List<AdminSectionGroup> sections;
 
   /// Retrieves a section group by its unique ID.
   AdminSectionGroup? getSection(String id) {

@@ -1,18 +1,18 @@
 import 'admin_field.dart';
 
-/// Represents a logical grouping of editable fields corresponding to a site section.
+/// Represents a logical grouping of editable fields corresponding to a site
+/// section.
 class AdminSectionGroup {
-  final String id;
-  final String title;
-  final String icon;
-  final List<AdminField> fields;
-
   const AdminSectionGroup({
     required this.id,
     required this.title,
     required this.icon,
     required this.fields,
   });
+  final String id;
+  final String title;
+  final String icon;
+  final List<AdminField> fields;
 
   /// Finds a field by its content key within this section group.
   AdminField? findField(String key) {

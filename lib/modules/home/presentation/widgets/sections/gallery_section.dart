@@ -43,10 +43,8 @@ class GallerySection extends StatelessWidget {
               control2: const Offset(0.10, 0.75),
               end: const Offset(0.10, 1.0),
               pawCount: isMobile ? 8 : 14,
-              baseSize: 32.0,
               opacity: isDark ? 0.38 : 0.50,
               color: AppColors.pawTrail,
-              startWithRightFoot: false,
             ),
           ),
           Padding(

@@ -11,7 +11,6 @@ class HomeController extends NanoController<HomeState> {
   HomeController()
       : super(
           initialState: HomeState(
-            isDarkMode: true,
             currentLanguage: AppSettings.initialLanguage,
           ),
         );

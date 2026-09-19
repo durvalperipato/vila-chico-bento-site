@@ -128,7 +128,7 @@ class _RealMapEmbedState extends State<RealMapEmbed> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.touch_app_rounded,
                             size: 15,
                             color: AppColors.primary,
