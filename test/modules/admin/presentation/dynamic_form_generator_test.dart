@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nano_core/nano_core.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/admin_field.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_group.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_icon.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bundle.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
@@ -24,7 +25,7 @@ void main() {
         AdminSectionGroup(
           id: 'hero',
           title: 'Hero Section',
-          icon: 'stars',
+          icon: AdminSectionIcon.stars,
           fields: [
             AdminField.text(
               key: 'hero.title',
@@ -96,7 +97,7 @@ void main() {
               section: AdminSectionGroup(
                 id: 'test',
                 title: 'Test Section',
-                icon: 'pets',
+                icon: AdminSectionIcon.pets,
                 fields: [],
               ),
               children: [Text('Child Content')],

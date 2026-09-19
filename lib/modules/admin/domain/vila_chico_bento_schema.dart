@@ -1,5 +1,6 @@
 import 'admin_field.dart';
 import 'admin_section_group.dart';
+import 'admin_section_icon.dart';
 import 'site_schema.dart';
 
 /// Concrete schema configuration for the Vila Chico Bento website.
@@ -14,7 +15,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'hero',
         title: 'Seção Inicial (Hero)',
-        icon: 'stars',
+        icon: AdminSectionIcon.stars,
         fields: [
           AdminField.text(
             key: 'hero.badge',
@@ -49,7 +50,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'about',
         title: 'Sobre Nós & Cuidados',
-        icon: 'pets',
+        icon: AdminSectionIcon.pets,
         fields: [
           AdminField.text(
             key: 'about.badge',
@@ -78,7 +79,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'services',
         title: 'Serviços Oferecidos',
-        icon: 'category',
+        icon: AdminSectionIcon.category,
         fields: [
           AdminField.text(
             key: 'services.badge',
@@ -120,7 +121,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'gallery',
         title: 'Galeria de Fotos',
-        icon: 'photo_library',
+        icon: AdminSectionIcon.photoLibrary,
         fields: [
           AdminField.text(
             key: 'gallery.badge',
@@ -141,7 +142,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'location',
         title: 'Localização & Horários',
-        icon: 'location_on',
+        icon: AdminSectionIcon.location,
         fields: [
           AdminField.text(
             key: 'location.badge',
@@ -169,7 +170,7 @@ class VilaChicoBentoSchema {
       AdminSectionGroup(
         id: 'contact',
         title: 'Contato & Redes',
-        icon: 'contact_phone',
+        icon: AdminSectionIcon.contactPhone,
         fields: [
           AdminField.text(
             key: 'contact.whatsapp_number',

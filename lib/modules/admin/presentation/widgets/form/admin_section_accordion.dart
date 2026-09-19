@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/admin_section_group.dart';
+import '../../../domain/admin_section_icon.dart';
 
 /// Expandable accordion card wrapping fields of an [AdminSectionGroup].
 class AdminSectionAccordion extends StatefulWidget {
@@ -29,22 +30,15 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
     _isExpanded = widget.initiallyExpanded;
   }
 
-  IconData _resolveIcon(String iconName) {
-    switch (iconName) {
-      case 'stars':
-        return Icons.star_rounded;
-      case 'pets':
-        return Icons.pets_rounded;
-      case 'category':
-        return Icons.grid_view_rounded;
-      case 'photo_library':
-        return Icons.photo_library_rounded;
-      case 'location_on':
-        return Icons.location_on_rounded;
-      default:
-        return Icons.edit_note_rounded;
-    }
-  }
+  IconData _resolveIcon(AdminSectionIcon icon) => switch (icon) {
+        AdminSectionIcon.stars => Icons.star_rounded,
+        AdminSectionIcon.pets => Icons.pets_rounded,
+        AdminSectionIcon.category => Icons.grid_view_rounded,
+        AdminSectionIcon.photoLibrary => Icons.photo_library_rounded,
+        AdminSectionIcon.location => Icons.location_on_rounded,
+        AdminSectionIcon.contactPhone => Icons.contact_phone_rounded,
+        AdminSectionIcon.general => Icons.edit_note_rounded,
+      };
 
   @override
   Widget build(BuildContext context) {

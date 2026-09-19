@@ -87,12 +87,34 @@ void main() {
     });
   });
 
+  group('AdminSectionIcon Tests', () {
+    test('fromName resolves known icons and falls back to general', () {
+      expect(AdminSectionIcon.fromName('stars'), AdminSectionIcon.stars);
+      expect(AdminSectionIcon.fromName('pets'), AdminSectionIcon.pets);
+      expect(AdminSectionIcon.fromName('category'), AdminSectionIcon.category);
+      expect(
+        AdminSectionIcon.fromName('photo_library'),
+        AdminSectionIcon.photoLibrary,
+      );
+      expect(
+        AdminSectionIcon.fromName('location_on'),
+        AdminSectionIcon.location,
+      );
+      expect(
+        AdminSectionIcon.fromName('contact_phone'),
+        AdminSectionIcon.contactPhone,
+      );
+      expect(AdminSectionIcon.fromName('unknown'), AdminSectionIcon.general);
+      expect(AdminSectionIcon.fromName(null), AdminSectionIcon.general);
+    });
+  });
+
   group('AdminSectionGroup Tests', () {
     test('findField locates direct and nested item fields', () {
       final section = AdminSectionGroup(
         id: 'services',
         title: 'Services',
-        icon: 'build',
+        icon: AdminSectionIcon.category,
         fields: [
           AdminField.text(key: 'services.title', label: 'Title'),
           AdminField.list(
@@ -119,7 +141,7 @@ void main() {
           AdminSectionGroup(
             id: 'sec1',
             title: 'Sec 1',
-            icon: 'icon1',
+            icon: AdminSectionIcon.stars,
             fields: [
               AdminField.text(key: 'sec1.f1', label: 'F1'),
               AdminField.text(key: 'sec1.f2', label: 'F2'),
@@ -128,7 +150,7 @@ void main() {
           AdminSectionGroup(
             id: 'sec2',
             title: 'Sec 2',
-            icon: 'icon2',
+            icon: AdminSectionIcon.pets,
             fields: [
               AdminField.image(key: 'sec2.img', label: 'Img'),
             ],

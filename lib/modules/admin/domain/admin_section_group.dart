@@ -1,4 +1,5 @@
 import 'admin_field.dart';
+import 'admin_section_icon.dart';
 
 /// Represents a logical grouping of editable fields corresponding to a site
 /// section.
@@ -11,7 +12,7 @@ class AdminSectionGroup {
   });
   final String id;
   final String title;
-  final String icon;
+  final AdminSectionIcon icon;
   final List<AdminField> fields;
 
   /// Finds a field by its content key within this section group.
