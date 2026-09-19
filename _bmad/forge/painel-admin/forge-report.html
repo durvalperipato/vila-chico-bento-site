@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMad Forge Report — Painel Admin Schema-Driven</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --border-focus: #374151;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --accent: #3b82f6;
+      --gold: #f59e0b;
+      --green: #10b981;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2.5rem 1rem;
+    }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      position: relative;
+    }
+    .header {
+      padding: 3rem 2.5rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 70%),
+                  radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 70%);
+    }
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .tag-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      max-width: 650px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 650px;
+    }
+    .seal-wrap {
+      position: absolute;
+      top: 2.25rem;
+      right: 2.5rem;
+      text-align: center;
+    }
+    .seal-svg {
+      width: 125px;
+      height: 125px;
+      filter: drop-shadow(0 6px 16px rgba(245, 158, 11, 0.3));
+    }
+    .content {
+      padding: 2.5rem;
+      display: grid;
+      gap: 2rem;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+    .lock-list, .killed-list {
+      list-style: none;
+      display: grid;
+      gap: 1rem;
+    }
+    .lock-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .lock-icon {
+      color: var(--green);
+      font-size: 1.1rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .killed-icon {
+      color: var(--red);
+      font-size: 1.1rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .persona-card {
+      background: #162032;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .persona-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .persona-quote {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .footer {
+      padding: 1.5rem 2.5rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    @media (max-width: 768px) {
+      .seal-wrap { position: static; margin-top: 1.5rem; }
+      .header { padding: 2rem 1.5rem; }
+      .content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="badge-bar">
+      <span class="tag">⚡ BMad Forge Idea</span>
+      <span class="tag-blue">Nano Core Engine</span>
+    </div>
+    <h1>Painel Admin Schema-Driven & Live Preview</h1>
+    <p class="subtitle">Evolução do site Vila Chico Bento para um motor reutilizável de sites institucionais com admin desacoplado.</p>
+
+    <div class="seal-wrap">
+      <svg class="seal-svg" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="4,2"/>
+        <circle cx="60" cy="60" r="46" fill="#1e180a" stroke="#d97706" stroke-width="2"/>
+        <path id="curve-top" d="M 22 60 A 38 38 0 0 1 98 60" fill="none"/>
+        <text font-size="8.5" font-weight="900" fill="#fbbf24" letter-spacing="2">
+          <textPath href="#curve-top" startOffset="50%" text-anchor="middle">BMAD FORGE IDEA</textPath>
+        </text>
+        <path id="curve-bot" d="M 24 62 A 38 38 0 0 0 96 62" fill="none"/>
+        <text font-size="7.5" font-weight="800" fill="#f59e0b" letter-spacing="1.5">
+          <textPath href="#curve-bot" startOffset="50%" text-anchor="middle">VERIFIED &amp; LOCKED</textPath>
+        </text>
+        <rect x="22" y="49" width="76" height="22" rx="4" fill="#f59e0b"/>
+        <text x="60" y="65" font-size="13" font-weight="950" fill="#0f172a" text-anchor="middle" letter-spacing="1">HARDENED</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="content">
+    <div>
+      <div class="section-title">🛡️ Decisões Travadas (Locks)</div>
+      <div class="card">
+        <ul class="lock-list">
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>Módulo Local no Piloto:</strong> Implementar a pasta <code>lib/modules/admin</code> direto dentro do <code>vila-chico-bento-site</code>, mantendo o <code>nano_core</code> intacto e agnóstico.</div>
+          </li>
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>Arquitetura Schema-Driven:</strong> O Admin é agnóstico ao layout visual. Ele lê um catálogo de campos declarativos (<code>AdminField.text</code>, <code>AdminField.image</code>, <code>AdminField.gallery</code>) e gera o formulário automaticamente. O layout consome dados por chave e tem fallback para valores locais caso o banco falhe.</div>
+          </li>
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>UX de Live Preview:</strong> Split-screen (Desktop) com formulário à esquerda e preview em tempo real à direita, além de controle de rascunho com botão de publicar.</div>
+          </li>
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>Multi-tenant Seguro no Firebase:</strong> Gerenciado na conta da agência via Firestore (<code>sites/{siteId}</code>) com Security Rules estritas para que nenhum cliente veja dados alheios. Cliente final nunca toca no Google Cloud Console.</div>
+          </li>
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>Exportação para Skill:</strong> Após validação com a Vila Chico Bento, o padrão será exportado como Skill no repositório <code>nano-agents</code> para automação de novos sites.</div>
+          </li>
+          <li class="lock-item">
+            <span class="lock-icon">✔</span>
+            <div><strong>Governança por Epics &amp; Stories:</strong> Fluxo completo de documentação formal para garantir rastreabilidade de entrega.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">🛑 Opções Rejeitadas (Killed)</div>
+      <div class="card">
+        <ul class="killed-list">
+          <li class="lock-item">
+            <span class="killed-icon">✖</span>
+            <div><strong>Package Dart Separado Imediato:</strong> Rejeitado para evitar sobrecarga de múltiplos repositórios, versionamento precoce e burocracia de pubspec antes de testar em produção.</div>
+          </li>
+          <li class="lock-item">
+            <span class="killed-icon">✖</span>
+            <div><strong>Editor de Layout Livre (Estilo Wix):</strong> Rejeitado. O cliente só edita textos e fotos; o design e responsividade permanecem 100% sob controle do desenvolvedor.</div>
+          </li>
+          <li class="lock-item">
+            <span class="killed-icon">✖</span>
+            <div><strong>Console Firebase nas Mãos do Cliente:</strong> Rejeitado devido ao risco de perda de senhas, custos acidentais e exclusão indevida de dados.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">👥 Personas que Desafiaram a Ideia</div>
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-header"><span>🚢</span> Dana (A Pragmática)</div>
+          <div class="persona-quote">"Zero pacotes novos para manter agora. O Admin é simplesmente um módulo dentro do site. Menos burocracia, mais código rodando."</div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-header"><span>🎯</span> Yui (A Arquiteta)</div>
+          <div class="persona-quote">"O Admin não deve saber como é o layout do Figma. Ele só precisa de um catálogo declarativo de campos. Isso torna o módulo imutável e reutilizável."</div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-header"><span>🔒</span> Vex (Segurança)</div>
+          <div class="persona-quote">"Cliente nunca vê a cor do GCP. Isolamos cada site via Security Rules no Firestore por siteId. Sem chance de vazamento entre clientes."</div>
+        </div>
+        <div class="persona-card">
+          <div class="persona-header"><span>🛑</span> Killjoy (Anti-Overengineering)</div>
+          <div class="persona-quote">"Barramos o impulso de criar um construtor de páginas genérico de 6 meses. Focamos no que entrega valor para o cliente e dinheiro pro bolso."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>BMad Method — Session: <code>painel-admin</code></span>
+    <span>Status: <strong>COMPLETE (HARDENED)</strong></span>
+  </div>
+</div>
+
+</body>
+</html>

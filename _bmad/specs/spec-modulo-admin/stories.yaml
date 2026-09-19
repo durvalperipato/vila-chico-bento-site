@@ -1,0 +1,62 @@
+- id: "1"
+  title: Domain Models and Field Schema Catalog
+  description: >-
+    Define immutable domain entities AdminField (text, image, gallery), AdminSectionGroup,
+    and the concrete Vila Chico Bento schema definition under lib/modules/admin/domain.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Follow the Nano Core layered architecture strictly. Keep domain models pure and free from Flutter UI bindings.
+
+- id: "2"
+  title: Firestore Content Repository with Resilient Fallback
+  description: >-
+    Implement SiteContentRepository to read and write content under sites/{siteId} in Cloud Firestore,
+    providing automated fallback to local AppConstants when offline or encountering null entries.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Ensure network drops never trigger red screens or unhandled exceptions for public visitors.
+
+- id: "3"
+  title: Operator Authentication and Protected /admin Route
+  description: >-
+    Implement the Login view and authentication flow with Firebase Auth, redirecting unauthenticated
+    visitors and guarding administrative route transitions.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Use NanoStatePage, NanoController, and NanoInjections for the authentication module.
+
+- id: "4"
+  title: Dynamic Schema-Driven Form Generator
+  description: >-
+    Build the administrative form renderer widget that converts declarative AdminField definitions
+    into reactive inputs equipped with length limits and character counters.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Field inputs must dispatch changes directly to the reactive AdminController state on keystroke.
+
+- id: "5"
+  title: Gallery Image Upload and Management via Firebase Storage
+  description: >-
+    Implement image selection, client-side compression, upload to sites/{siteId}/gallery/ in Storage,
+    and gallery management for up to 10 photos with delete/reorder capability.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Validate maximum 2MB file size and supported extensions (jpg, png, webp) before upload initiation.
+
+- id: "6"
+  title: Split-Screen Live Preview and Publishing Workflow
+  description: >-
+    Implement desktop split-screen layout with form inputs on the left and live real-time site preview
+    on the right, maintaining a working draft until the user commits with 'Publish'.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Ensure smaller viewports gracefully switch to tabbed or modal preview modes.
+
+- id: "7"
+  title: Landing Page Integration with Content Service
+  description: >-
+    Refactor existing HomePage widgets (Hero, Services, Gallery) to observe the reactive
+    SiteContentRepository state, maintaining default AppConstants fallback.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Perform comprehensive visual verification and automated regression tests across mobile and desktop viewports.
