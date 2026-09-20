@@ -44,6 +44,10 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
+    final fieldCount = widget.section.fields.length;
+    final fieldsCountText = l10n?.adminConfigurableFields(fieldCount) ??
+        '$fieldCount campos configuráveis';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -106,11 +110,7 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          AppLocalizations.of(context)?.adminConfigurableFields(
-                                widget.section.fields.length,
-                              ) ??
-                              '${widget.section.fields.length} '
-                                  'campos configuráveis',
+                          fieldsCountText,
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             color: AppColors.textMuted(isDark),

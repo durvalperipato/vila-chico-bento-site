@@ -20,16 +20,19 @@ Widget buildMapEmbedView({
       _viewTypeId,
       (int viewId) {
         final iframe =
-            web.document.createElement('iframe') as web.HTMLIFrameElement;
-        iframe.src = mapUrl;
-        iframe.style.border = '0';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.borderRadius = '24px';
-        iframe.style.pointerEvents = 'none';
-        iframe.setAttribute('loading', 'lazy');
-        iframe.setAttribute('allowfullscreen', 'true');
-        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+            (web.document.createElement('iframe') as web.HTMLIFrameElement)
+              ..src = mapUrl
+              ..style.border = '0'
+              ..style.width = '100%'
+              ..style.height = '100%'
+              ..style.borderRadius = '24px'
+              ..style.pointerEvents = 'none'
+              ..setAttribute('loading', 'lazy')
+              ..setAttribute('allowfullscreen', 'true')
+              ..setAttribute(
+                'referrerpolicy',
+                'no-referrer-when-downgrade',
+              );
         _currentIFrame = iframe;
         return iframe;
       },
