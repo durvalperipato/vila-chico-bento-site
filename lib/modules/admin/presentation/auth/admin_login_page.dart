@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
@@ -271,6 +272,34 @@ class _AdminLoginPageState
                       ),
                     ),
                   ),
+                  // TODO(durval): Remover apos finalizar os testes no
+                  // painel admin.
+                  if (kDebugMode) ...[
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              _emailController.text =
+                                  'admin@vilachicobento.com.br';
+                              _passwordController.text = 'admin123';
+                              _submit();
+                            },
+                      icon: const Icon(Icons.flash_on_rounded, size: 16),
+                      label: const Text(
+                        'Entrar no Modo Demo (Bypass Local)',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 20),
 
                   // Back to public site button

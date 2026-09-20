@@ -41,6 +41,10 @@ Clients of institutional websites frequently request autonomy to update copy, co
   - **intent:** Public Landing Page renders default static fallback values whenever network connectivity is lost or remote fields are empty.
   - **success:** In offline mode or when Firestore documents are absent, the Landing Page renders 100% intact using local defaults from `AppConstants` without rendering errors or broken layouts.
 
+- **CAP-7**
+  - **intent:** The admin panel workspace initializes form inputs pre-populated with the official current site copy and assets if no Firestore data or draft has been saved yet.
+  - **success:** Opening `/admin` displays all section fields pre-filled with the actual production copy, allowing the operator to review and make minor edits without starting from blank inputs.
+
 ## Constraints
 
 - Module code must reside strictly under `lib/modules/admin/` and conform to canonical `nano_core` conventions (`NanoStatePage`, `NanoController`, `NanoInjections`).

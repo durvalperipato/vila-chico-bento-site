@@ -46,3 +46,7 @@ context: []
   - 100% test pass rate across the full project test suite.
   - 0 linter issues in `lib/modules/admin/` and `test/modules/admin/`.
 
+- **Course Correction (2026-09-20 / CAP-7):**
+  - Integrated `VilaChicoBentoDefaultContent.bundle` as seed fallback in `SiteContentService` and `AdminWorkspaceController`.
+  - When opening `/admin` without existing Firestore document or draft, form fields load pre-filled with the official live site copy and assets instead of empty blanks.
+

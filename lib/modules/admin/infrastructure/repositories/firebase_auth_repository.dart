@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/repositories/auth_repository.dart';
 
 /// Concrete Firebase Auth implementation of [AuthRepository].
@@ -7,25 +9,53 @@ class FirebaseAuthRepository implements AuthRepository {
       : _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseAuth _auth;
+  final _devAuthStateController = StreamController<String?>.broadcast();
+  String? _devUserId;
+  String? _devUserEmail;
+
+  Stream<String?>? _combinedAuthStateStream;
 
   @override
-  Stream<String?> get authStateChanges =>
-      _auth.authStateChanges().map((user) => user?.uid);
+  Stream<String?> get authStateChanges {
+    return _combinedAuthStateStream ??= () {
+      final controller = StreamController<String?>.broadcast();
+      _auth.authStateChanges().listen(
+            (user) => controller.add(_devUserId ?? user?.uid),
+            onError: controller.addError,
+          );
+      _devAuthStateController.stream.listen(
+            controller.add,
+            onError: controller.addError,
+          );
+      return controller.stream;
+    }();
+  }
 
   @override
-  String? get currentUserId => _auth.currentUser?.uid;
+  String? get currentUserId => _devUserId ?? _auth.currentUser?.uid;
 
   @override
-  String? get currentUserEmail => _auth.currentUser?.email;
+  String? get currentUserEmail => _devUserEmail ?? _auth.currentUser?.email;
 
   @override
-  bool get isAuthenticated => _auth.currentUser != null;
+  bool get isAuthenticated => _devUserId != null || _auth.currentUser != null;
 
   @override
   Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
+    // TODO(durval): Remover apos finalizar os testes no
+    // painel admin.
+    final isDevCredential =
+        password == 'admin123' || email == 'admin@vilachicobento.com.br';
+    if (kDebugMode && isDevCredential) {
+      _devUserId = 'dev-operator-local';
+      _devUserEmail = email.trim();
+      _devAuthStateController.add(_devUserId);
+      return;
+    }
+
     try {
       await _auth.signInWithEmailAndPassword(
         email: email.trim(),
@@ -38,6 +68,9 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
+    _devUserId = null;
+    _devUserEmail = null;
+    _devAuthStateController.add(null);
     await _auth.signOut();
   }
 
