@@ -6,6 +6,7 @@ import '../../../domain/admin_field_type.dart';
 import '../../../domain/admin_section_group.dart';
 import '../../../domain/entities/content_bundle.dart';
 import '../../../domain/site_schema.dart';
+import 'admin_gallery_field_input.dart';
 import 'admin_section_accordion.dart';
 import 'admin_text_field_input.dart';
 
@@ -16,12 +17,16 @@ class DynamicFormGenerator extends StatelessWidget {
     required this.schema,
     required this.bundle,
     required this.onFieldChanged,
+    this.onUploadImage,
+    this.imagePickerAdapter,
     super.key,
   });
 
   final SiteSchema schema;
   final ContentBundle bundle;
   final void Function(String key, dynamic value) onFieldChanged;
+  final GalleryImageUploader? onUploadImage;
+  final ImagePickerAdapter? imagePickerAdapter;
 
   @override
   Widget build(BuildContext context) {
@@ -67,60 +72,31 @@ class DynamicFormGenerator extends StatelessWidget {
         );
 
       case AdminFieldType.gallery:
-        return _buildGalleryNotice(context, field);
+        final initialUrls = bundle.getStringList(field.key, fallback: const []);
+        return AdminGalleryFieldInput(
+          key: ValueKey(field.key),
+          field: field,
+          initialUrls: initialUrls,
+          onUploadImage: onUploadImage ??
+              ({
+                required bytes,
+                required fileName,
+                required contentType,
+              }) async {
+                throw UnsupportedError(
+                  'onUploadImage was not provided.',
+                );
+              },
+          imagePickerAdapter:
+              imagePickerAdapter ?? const DefaultImagePickerAdapter(),
+          onChanged: (value) => onFieldChanged(field.key, value),
+        );
 
       case AdminFieldType.list:
         return _buildListField(context, field);
     }
   }
 
-  Widget _buildGalleryNotice(BuildContext context, AdminField field) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.bgSurface(isDark),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderSubtle(isDark)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.photo_library_outlined,
-            color: AppColors.primary,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  field.label,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary(isDark),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Gerenciador de upload direto para Firebase Storage '
-                  '(até ${field.maxItems ?? 10} fotos - Story 1.5).',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.textMuted(isDark),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildListField(BuildContext context, AdminField field) {
     final isDark = Theme.of(context).brightness == Theme.of(context).brightness;

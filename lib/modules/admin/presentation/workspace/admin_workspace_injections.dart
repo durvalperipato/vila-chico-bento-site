@@ -1,5 +1,6 @@
 import 'package:nano_core/nano_core.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/storage_repository.dart';
 import '../../infrastructure/services/site_content_service.dart';
 import 'admin_workspace_controller.dart';
 
@@ -14,6 +15,7 @@ class AdminWorkspaceInjections extends NanoInjections {
       () => AdminWorkspaceController(
         siteContentService: i<SiteContentService>(),
         authRepository: i<AuthRepository>(),
+        storageRepository: i<StorageRepository>(),
       ),
     );
   }

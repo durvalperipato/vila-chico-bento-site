@@ -6,6 +6,7 @@ import 'package:vila_chico_bento_site/l10n/generated/app_localizations.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bundle.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_messages.dart';
@@ -115,6 +116,7 @@ void main() {
 
       GetIt.I.registerSingleton<AuthRepository>(mockAuth);
       GetIt.I.registerSingleton<SiteContentRepository>(mockRepo);
+      GetIt.I.registerSingleton<StorageRepository>(MockStorageRepository());
       GetIt.I.registerSingleton<SiteContentService>(
         SiteContentService(
           repository: mockRepo,

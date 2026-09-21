@@ -208,6 +208,7 @@ class _AdminWorkspaceViewState
                     schema: VilaChicoBentoSchema.schema,
                     bundle: state.bundle,
                     onFieldChanged: controller.updateField,
+                    onUploadImage: controller.uploadGalleryImage,
                   ),
                 ],
               ),

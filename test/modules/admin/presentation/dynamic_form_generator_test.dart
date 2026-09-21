@@ -7,6 +7,7 @@ import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_icon.da
 import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bundle.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/site_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
@@ -130,6 +131,7 @@ void main() {
       await GetIt.I.reset();
       mockRepo = MockSiteContentRepository();
       mockAuth = MockAuthRepository();
+      final mockStorage = MockStorageRepository();
       contentService = SiteContentService(
         repository: mockRepo,
         siteId: 'test-site',
@@ -138,6 +140,7 @@ void main() {
       controller = AdminWorkspaceController(
         siteContentService: contentService,
         authRepository: mockAuth,
+        storageRepository: mockStorage,
       );
     });
 
@@ -202,6 +205,7 @@ void main() {
 
       GetIt.I.registerSingleton<AuthRepository>(mockAuth);
       GetIt.I.registerSingleton<SiteContentRepository>(mockRepo);
+      GetIt.I.registerSingleton<StorageRepository>(MockStorageRepository());
       GetIt.I.registerSingleton<SiteContentService>(
         SiteContentService(
           repository: mockRepo,

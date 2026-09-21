@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nano_core/nano_core.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_login_controller.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_login_page.dart';
@@ -88,6 +89,7 @@ void main() {
 
       GetIt.I.registerSingleton<AuthRepository>(mockAuth);
       GetIt.I.registerSingleton<SiteContentRepository>(mockRepo);
+      GetIt.I.registerSingleton<StorageRepository>(MockStorageRepository());
       GetIt.I.registerSingleton<SiteContentService>(
         SiteContentService(
           repository: mockRepo,

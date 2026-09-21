@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
+import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/admin_gallery_field_input.dart';
 
 class MockAuthRepository implements AuthRepository {
   String? userId;
@@ -68,3 +72,36 @@ class MockSiteContentRepository implements SiteContentRepository {
   @override
   Future<Map<String, dynamic>?> getDraft(String siteId) async => storedDraft;
 }
+
+class MockStorageRepository implements StorageRepository {
+  final List<String> uploadedPaths = [];
+  bool shouldThrow = false;
+  String errorMessage = 'Storage Upload Failed';
+  String returnUrl =
+      'https://firebasestorage.googleapis.com/v0/b/mock/o/photo.jpg';
+
+  @override
+  Future<String> uploadImage({
+    required String path,
+    required Uint8List bytes,
+    required String contentType,
+  }) async {
+    if (shouldThrow) throw errorMessage;
+    uploadedPaths.add(path);
+    return returnUrl;
+  }
+
+  @override
+  Future<void> deleteImage(String urlOrPath) async {
+    if (shouldThrow) throw errorMessage;
+    uploadedPaths.remove(urlOrPath);
+  }
+}
+
+class MockImagePickerAdapter implements ImagePickerAdapter {
+  XFile? pickedFile;
+
+  @override
+  Future<XFile?> pickImage() async => pickedFile;
+}
+
