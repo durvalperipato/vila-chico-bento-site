@@ -3,13 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../domain/vila_chico_bento_schema.dart';
-import '../widgets/form/dynamic_form_generator.dart';
 import 'admin_workspace_controller.dart';
 import 'admin_workspace_injections.dart';
 import 'admin_workspace_state.dart';
-import 'widgets/admin_live_preview.dart';
-import 'widgets/admin_preview_toolbar.dart';
+import 'widgets/admin_desktop_split_screen.dart';
+import 'widgets/admin_mobile_adaptive_layout.dart';
 
 /// Full administrative workspace rendering the schema-driven form generator
 /// and real-time live site preview.
@@ -24,8 +22,6 @@ class _AdminWorkspaceViewState
     extends NanoStatePage<AdminWorkspaceView, AdminWorkspaceController> {
   @override
   NanoInjections get injections => const AdminWorkspaceInjections();
-
-  static const double _desktopBreakpoint = 1024.0;
 
   @override
   Widget build(BuildContext context) {
@@ -130,257 +126,24 @@ class _AdminWorkspaceViewState
       builder: (context, nanoState) {
         final state = nanoState.data ?? controller.viewState;
 
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final isDesktop = constraints.maxWidth >= _desktopBreakpoint;
-
-            if (isDesktop) {
-              return _buildDesktopSplitScreen(context, state, isDark);
-            }
-
-            return _buildMobileAdaptiveLayout(context, state, isDark);
-          },
+        return NanoResponsiveLayout(
+          desktop: (context) => AdminDesktopSplitScreen(
+            state: state,
+            controller: controller,
+            isDark: isDark,
+          ),
+          tablet: (context) => AdminMobileAdaptiveLayout(
+            state: state,
+            controller: controller,
+            isDark: isDark,
+          ),
+          mobile: (context) => AdminMobileAdaptiveLayout(
+            state: state,
+            controller: controller,
+            isDark: isDark,
+          ),
         );
       },
-    );
-  }
-
-  /// Desktop split-screen layout: Editor on left, Live Preview on right.
-  Widget _buildDesktopSplitScreen(
-    BuildContext context,
-    AdminWorkspaceState state,
-    bool isDark,
-  ) {
-    return Row(
-      children: [
-        // Left Column: Form Editor
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: AppColors.borderSubtle(isDark),
-                ),
-              ),
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              child: _buildFormContent(context, state, isDark),
-            ),
-          ),
-        ),
-
-        // Right Column: Live Real-Time Preview
-        Expanded(
-          child: Column(
-            children: [
-              AdminPreviewToolbar(
-                selectedDevice: state.previewDevice,
-                onDeviceChanged: controller.setPreviewDevice,
-              ),
-              Expanded(
-                child: AdminLivePreview(
-                  bundle: state.bundle,
-                  previewDevice: state.previewDevice,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Mobile/compact layout: Segmented tab switch between Editor and Preview.
-  Widget _buildMobileAdaptiveLayout(
-    BuildContext context,
-    AdminWorkspaceState state,
-    bool isDark,
-  ) {
-    final l10n = AppLocalizations.of(context);
-
-    return Column(
-      children: [
-        // Mobile Mode Switcher Bar
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.bgCard(isDark),
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.borderSubtle(isDark),
-              ),
-            ),
-          ),
-          child: Center(
-            child: SegmentedButton<AdminViewMode>(
-              style: SegmentedButton.styleFrom(
-                selectedBackgroundColor:
-                    AppColors.primary.withValues(alpha: 0.15),
-                selectedForegroundColor: AppColors.primary,
-              ),
-              segments: [
-                ButtonSegment<AdminViewMode>(
-                  value: AdminViewMode.editor,
-                  icon: const Icon(Icons.edit_note_rounded, size: 18),
-                  label: Text(
-                    l10n?.adminTabEditor ?? 'Editor',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                ButtonSegment<AdminViewMode>(
-                  value: AdminViewMode.preview,
-                  icon: const Icon(Icons.visibility_rounded, size: 18),
-                  label: Text(
-                    l10n?.adminTabPreview ?? 'Pré-visualizar',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-              selected: {state.viewMode},
-              onSelectionChanged: (selected) {
-                if (selected.isNotEmpty) {
-                  controller.setViewMode(selected.first);
-                }
-              },
-            ),
-          ),
-        ),
-
-        // Body Content based on active mode
-        Expanded(
-          child: state.viewMode == AdminViewMode.editor
-              ? SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                  child: Center(
-                    child: Container(
-                      constraints: const BoxConstraints(maxWidth: 820),
-                      child: _buildFormContent(context, state, isDark),
-                    ),
-                  ),
-                )
-              : Column(
-                  children: [
-                    AdminPreviewToolbar(
-                      selectedDevice: state.previewDevice,
-                      onDeviceChanged: controller.setPreviewDevice,
-                    ),
-                    Expanded(
-                      child: AdminLivePreview(
-                        bundle: state.bundle,
-                        previewDevice: state.previewDevice,
-                      ),
-                    ),
-                  ],
-                ),
-        ),
-      ],
-    );
-  }
-
-  /// Reusable form content containing the status banner and dynamic form
-  /// generator.
-  Widget _buildFormContent(
-    BuildContext context,
-    AdminWorkspaceState state,
-    bool isDark,
-  ) {
-    final l10n = AppLocalizations.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Information banner
-        Container(
-          margin: const EdgeInsets.only(bottom: 24),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.2),
-            ),
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.auto_awesome_rounded,
-                color: AppColors.primary,
-                size: 22,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  l10n?.adminBannerDescription ??
-                      'Formulário gerado automaticamente a partir '
-                          'do VilaChicoBentoSchema. '
-                          'Qualquer caractere alterado atualiza o '
-                          'rascunho instantaneamente.',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: AppColors.textPrimary(isDark),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: state.hasUnsavedChanges
-                      ? Colors.orange.withValues(alpha: 0.15)
-                      : Colors.green.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: state.hasUnsavedChanges
-                        ? Colors.orange.withValues(alpha: 0.4)
-                        : Colors.green.withValues(alpha: 0.4),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      state.hasUnsavedChanges
-                          ? Icons.circle_rounded
-                          : Icons.check_circle_rounded,
-                      size: 10,
-                      color: state.hasUnsavedChanges
-                          ? Colors.orange
-                          : Colors.green,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      state.hasUnsavedChanges
-                          ? (l10n?.adminStatusDraft ?? 'Rascunho não publicado')
-                          : (l10n?.adminStatusPublished ?? 'Publicado'),
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: state.hasUnsavedChanges
-                            ? (Colors.orange[300] ?? Colors.orange)
-                            : (Colors.green[300] ?? Colors.green),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Dynamic Schema-Driven Form Generator
-        DynamicFormGenerator(
-          schema: VilaChicoBentoSchema.schema,
-          bundle: state.bundle,
-          onFieldChanged: controller.updateField,
-          onUploadImage: controller.uploadGalleryImage,
-        ),
-      ],
     );
   }
 }

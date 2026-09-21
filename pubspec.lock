@@ -496,11 +496,10 @@ packages:
   nano_core:
     dependency: "direct main"
     description:
-      name: nano_core
-      sha256: "75e02cdc50c7a2e088fd414961a3c3c55b2ca52b9d2f2beb0e0448d30aabfb60"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.7"
+      path: "/Users/durvalperipatoneto/Projects/nano-core"
+      relative: false
+    source: path
+    version: "1.0.8-dev"
   objective_c:
     dependency: transitive
     description:

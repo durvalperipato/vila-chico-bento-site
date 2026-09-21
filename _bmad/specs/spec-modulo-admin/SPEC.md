@@ -45,10 +45,16 @@ Clients of institutional websites frequently request autonomy to update copy, co
   - **intent:** The admin panel workspace initializes form inputs pre-populated with the official current site copy and assets if no Firestore data or draft has been saved yet.
   - **success:** Opening `/admin` displays all section fields pre-filled with the actual production copy, allowing the operator to review and make minor edits without starting from blank inputs.
 
+- **CAP-8**
+  - **intent:** Viewport layout adaptation across the admin workspace and landing page utilizes canonical `NanoResponsiveLayout` and `NanoResponsiveLayout.flex` from `nano_core`.
+  - **success:** Screen switching (desktop split-screen vs mobile adaptive) and responsive multiplatform columns/rows are achieved without manual `LayoutBuilder` / `MediaQuery.sizeOf(context)` boilerplate in widget `build()` methods.
+
 ## Constraints
 
 - Module code must reside strictly under `lib/modules/admin/` and conform to canonical `nano_core` conventions (`NanoStatePage`, `NanoController`, `NanoInjections`).
 - The `nano_core` foundation package must remain agnostic, lean, and free of Firebase or Admin UI dependencies.
+- Responsive layout adaptation must utilize `NanoResponsiveLayout` and `NanoResponsiveLayout.flex` from `nano_core` adhering to canonical breakpoints (mobile < 600dp, tablet 600..1023dp, desktop >= 1024dp).
+- **Widget Component Architecture (No Widget-returning helper methods):** Avoid creating helper functions or methods that return `Widget` (e.g. `Widget _build...()`) inside view classes unless strictly trivial and simple. Always extract modular, dedicated `StatelessWidget` / `StatefulWidget` classes placed under `{feature}/widgets/`, keeping the main `{feature}_view.dart` clean, declarative, and focused solely on layout composition.
 - Firestore and Storage access must be enforced by Security Rules scoped strictly to the authenticated operator's `siteId`.
 - Visual layout structure remains governed by Landing Page widgets; operators edit content data only.
 

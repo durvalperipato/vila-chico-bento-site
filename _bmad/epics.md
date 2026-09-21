@@ -22,5 +22,6 @@ Implement image selection, client-side size validation, upload to `sites/{siteId
 ### Story 1.6: Split-Screen Live Preview and Publishing Workflow
 Implement desktop split-screen layout with form inputs on the left and live real-time site preview on the right, maintaining a working draft until the operator explicitly clicks 'Publish'. Gracefully adapt to tabbed/modal preview on mobile.
 
-### Story 1.7: Landing Page Integration with Content Service
-Refactor existing HomePage widgets (Hero, Services, Gallery) to observe the reactive `SiteContentRepository` state while preserving default `AppConstants` fallback, followed by comprehensive visual and functional verification.
+### Story 1.7: Landing Page Integration with Content Service and Canonical Responsiveness
+Refactor existing HomePage sections (Hero, About, Services, Gallery, Location, Contact CTA, Footer) to observe the reactive `SiteContentRepository` state, eliminating build boilerplate by adopting `NanoResponsiveLayout` and `NanoResponsiveLayout.flex` with extracted modular widgets, while preserving default `AppConstants` fallback.
+

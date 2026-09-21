@@ -84,9 +84,10 @@ context: []
 - Implemented `setPreviewDevice` and `setViewMode` on `AdminWorkspaceController`.
 - Built `AdminPreviewToolbar` featuring a live preview indicator and responsive device frame toggles.
 - Built `AdminLivePreview` which renders site sections (Hero, About, Services, Gallery, Location, Footer) reactively using the draft `ContentBundle` with automatic fallback to `VilaChicoBentoDefaultContent.bundle`. Supports simulated Desktop (full-bleed), Tablet (768px with frame), and Mobile (375px with smartphone bezel).
-- Refactored `AdminWorkspaceView` using `LayoutBuilder`:
-  - Desktop viewports (>= 1024px) render split-screen with the form editor on the left and the live preview on the right.
-  - Mobile viewports (< 1024px) provide a segmented button to toggle smoothly between the form editor and live preview, with compact AppBar actions to avoid overflow.
+- Refactored `AdminWorkspaceView` using canonical `NanoResponsiveLayout` (from `nano_core` v1.0.8):
+  - Eliminates `LayoutBuilder` wrapper boilerplate.
+  - `desktop` builder renders split-screen with the form editor on the left and live preview on the right (viewport >= 1024px).
+  - `mobile` builder renders the adaptive segmented toggle between form editor and live preview (viewport < 1024px).
 - Authored 9 unit and widget tests in `test/modules/admin/presentation/admin_workspace_preview_test.dart` verifying all 6 matrix scenarios.
 - 100% test pass rate across 47 admin tests, 0 analyzer issues in admin module.
 
