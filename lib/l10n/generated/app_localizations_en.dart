@@ -247,4 +247,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminBtnSigningIn => 'Signing in...';
+
+  @override
+  String get adminLivePreview => 'Live Preview';
+
+  @override
+  String get adminPreviewDesktop => 'Desktop';
+
+  @override
+  String get adminPreviewTablet => 'Tablet';
+
+  @override
+  String get adminPreviewMobile => 'Mobile';
+
+  @override
+  String get adminTabEditor => 'Editor';
+
+  @override
+  String get adminTabPreview => 'Preview';
+
+  @override
+  String get adminPreviewEmpty => 'No content to display';
 }

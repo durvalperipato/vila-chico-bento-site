@@ -247,4 +247,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get adminBtnSigningIn => 'Autenticando...';
+
+  @override
+  String get adminLivePreview => 'Pré-visualização ao vivo';
+
+  @override
+  String get adminPreviewDesktop => 'Desktop';
+
+  @override
+  String get adminPreviewTablet => 'Tablet';
+
+  @override
+  String get adminPreviewMobile => 'Celular';
+
+  @override
+  String get adminTabEditor => 'Editor';
+
+  @override
+  String get adminTabPreview => 'Pré-visualizar';
+
+  @override
+  String get adminPreviewEmpty => 'Nenhum conteúdo para exibir';
 }

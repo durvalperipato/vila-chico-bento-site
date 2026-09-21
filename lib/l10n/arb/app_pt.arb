@@ -80,5 +80,12 @@
   "adminEmailHint": "operador@vilachicobento.com.br",
   "adminPasswordLabel": "Senha de Acesso",
   "adminBtnSignIn": "Acessar Painel",
-  "adminBtnSigningIn": "Autenticando..."
+  "adminBtnSigningIn": "Autenticando...",
+  "adminLivePreview": "Pré-visualização ao vivo",
+  "adminPreviewDesktop": "Desktop",
+  "adminPreviewTablet": "Tablet",
+  "adminPreviewMobile": "Celular",
+  "adminTabEditor": "Editor",
+  "adminTabPreview": "Pré-visualizar",
+  "adminPreviewEmpty": "Nenhum conteúdo para exibir"
 }

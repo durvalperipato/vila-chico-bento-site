@@ -116,6 +116,16 @@ class AdminWorkspaceController extends NanoController<AdminWorkspaceState> {
     );
   }
 
+  /// Changes the simulated preview device type (desktop, tablet, mobile).
+  void setPreviewDevice(PreviewDeviceType device) {
+    emitLoaded(viewState.copyWith(previewDevice: device));
+  }
+
+  /// Changes the active mobile view mode (editor or preview).
+  void setViewMode(AdminViewMode mode) {
+    emitLoaded(viewState.copyWith(viewMode: mode));
+  }
+
   /// Ends operator session.
   Future<void> signOut() => _authRepository.signOut();
 }

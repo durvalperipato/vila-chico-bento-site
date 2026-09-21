@@ -71,5 +71,12 @@
   "adminEmailHint": "operator@vilachicobento.com.br",
   "adminPasswordLabel": "Password",
   "adminBtnSignIn": "Sign In to Dashboard",
-  "adminBtnSigningIn": "Signing in..."
+  "adminBtnSigningIn": "Signing in...",
+  "adminLivePreview": "Live Preview",
+  "adminPreviewDesktop": "Desktop",
+  "adminPreviewTablet": "Tablet",
+  "adminPreviewMobile": "Mobile",
+  "adminTabEditor": "Editor",
+  "adminTabPreview": "Preview",
+  "adminPreviewEmpty": "No content to display"
 }

@@ -529,6 +529,48 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Autenticando...'**
   String get adminBtnSigningIn;
+
+  /// No description provided for @adminLivePreview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pré-visualização ao vivo'**
+  String get adminLivePreview;
+
+  /// No description provided for @adminPreviewDesktop.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desktop'**
+  String get adminPreviewDesktop;
+
+  /// No description provided for @adminPreviewTablet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tablet'**
+  String get adminPreviewTablet;
+
+  /// No description provided for @adminPreviewMobile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Celular'**
+  String get adminPreviewMobile;
+
+  /// No description provided for @adminTabEditor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editor'**
+  String get adminTabEditor;
+
+  /// No description provided for @adminTabPreview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pré-visualizar'**
+  String get adminTabPreview;
+
+  /// No description provided for @adminPreviewEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum conteúdo para exibir'**
+  String get adminPreviewEmpty;
 }
 
 class _AppLocalizationsDelegate
