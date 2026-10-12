@@ -3,7 +3,6 @@ import 'package:nano_core/nano_core.dart';
 import 'package:vila_chico_bento_site/core/extensions/image_provider_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/theme/app_typography.dart';
-import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
 import 'package:vila_chico_bento_site/core/widgets/meandering_paw_trail.dart';
 import 'package:vila_chico_bento_site/core/widgets/responsive_container.dart';
 import 'package:vila_chico_bento_site/core/widgets/section_tag.dart';
@@ -14,7 +13,8 @@ import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart'
 /// Seção Serviços no formato Opção 2 (Triptych com Mini-Fotos Reais):
 /// 3 colunas bem distribuídas no Desktop (Esquerda, Meio, Direita),
 /// com fotografias reais dos cães em cada serviço, contraste sutil de fundo
-/// em relação à seção anterior e botões de ação personalizados para cada serviço.
+/// em relação à seção anterior e botões de ação personalizados para cada
+/// serviço.
 class ServicesSection extends StatelessWidget {
   const ServicesSection({
     required this.state,
@@ -174,7 +174,8 @@ class ServicesSection extends StatelessWidget {
                   ],
                   const SizedBox(height: 32),
 
-                  // 3 Cards em Colunas no Desktop (Esquerda, Meio, Direita) ou Coluna no Mobile
+                  // 3 Cards em Colunas no Desktop (Esquerda, Meio, Direita) ou
+                  // Coluna no Mobile
                   if (isDesktop)
                     _buildDesktopColumns(context, services.items)
                   else
@@ -246,7 +247,8 @@ class ServicesSection extends StatelessWidget {
   }
 }
 
-/// Card de Serviço com Mini-Foto Real no topo, tipografia aconchegante e CTA exclusivo
+/// Card de Serviço com Mini-Foto Real no topo, tipografia aconchegante e CTA
+/// exclusivo
 class _ServicePhotoCard extends StatefulWidget {
   const _ServicePhotoCard({
     required this.service,

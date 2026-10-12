@@ -55,7 +55,7 @@ class DynamicFormGenerator extends StatelessWidget {
   Widget _buildField(BuildContext context, AdminField field) {
     switch (field.type) {
       case AdminFieldType.text:
-        final initialValue = bundle.getString(field.key, fallback: '');
+        final initialValue = bundle.getString(field.key);
         return AdminTextFieldInput(
           key: ValueKey(field.key),
           field: field,
@@ -64,10 +64,10 @@ class DynamicFormGenerator extends StatelessWidget {
         );
 
       case AdminFieldType.image:
-        final initialValue = bundle.getString(field.key, fallback: '');
+        final initialValue = bundle.getString(field.key);
         final initialAlignmentY = bundle.getDouble(
           '${field.key}_alignment_y',
-          fallback: bundle.getDouble('hero.banner_alignment_y', fallback: 0.0),
+          fallback: bundle.getDouble('hero.banner_alignment_y'),
         );
         if (onUploadImage != null) {
           return AdminImageFieldInput(
@@ -91,7 +91,7 @@ class DynamicFormGenerator extends StatelessWidget {
         );
 
       case AdminFieldType.gallery:
-        final initialUrls = bundle.getStringList(field.key, fallback: const []);
+        final initialUrls = bundle.getStringList(field.key);
         return AdminGalleryFieldInput(
           key: ValueKey(field.key),
           field: field,
@@ -117,7 +117,7 @@ class DynamicFormGenerator extends StatelessWidget {
   }
 
   Widget _buildListField(BuildContext context, AdminField field) {
-    final items = bundle.getListMap(field.key, fallback: const []);
+    final items = bundle.getListMap(field.key);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),

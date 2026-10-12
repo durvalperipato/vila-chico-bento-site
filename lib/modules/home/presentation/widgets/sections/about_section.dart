@@ -10,7 +10,8 @@ import 'package:vila_chico_bento_site/core/widgets/section_tag.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
 
-/// Seção Sobre Nós em layout Split Editorial com tipografia rica e foto de destaque
+/// Seção Sobre Nós em layout Split Editorial com tipografia rica e foto de
+/// destaque
 class AboutSection extends StatelessWidget {
   const AboutSection({
     required this.state,
@@ -134,7 +135,8 @@ class AboutSection extends StatelessWidget {
     );
   }
 
-  /// Layout Desktop: Tipografia ampla, confortável e legível, com foto proporcional
+  /// Layout Desktop: Tipografia ampla, confortável e legível, com foto
+  /// proporcional
   Widget _buildDesktopLayout(
     BuildContext context,
     dynamic l10n,
@@ -142,7 +144,6 @@ class AboutSection extends StatelessWidget {
     String photoUrl,
   ) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Coluna Esquerda: Texto editorial + Pilares com excelente legibilidade
         Expanded(
@@ -282,7 +283,8 @@ class AboutSection extends StatelessWidget {
     );
   }
 
-  /// Indicador de confiança com tipografia legível, padding confortável e sombra sutil
+  /// Indicador de confiança com tipografia legível, padding confortável e
+  /// sombra sutil
   Widget _buildTrustPill({
     required BuildContext context,
     required IconData icon,

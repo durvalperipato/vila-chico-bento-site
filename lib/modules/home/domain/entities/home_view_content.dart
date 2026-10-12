@@ -148,8 +148,8 @@ class ServicesViewContent {
         badge: badge,
         icon: icon,
         accentColor: color,
-        whatsappMessage:
-            'Olá! Gostaria de saber mais sobre o serviço de "$title" na Vila Chico Bento!',
+        whatsappMessage: 'Olá! Gostaria de saber mais sobre o serviço de '
+            '"$title" na Vila Chico Bento!',
       );
     }).toList();
 

@@ -94,8 +94,7 @@ class _AdminImageFieldInputState extends State<AdminImageFieldInput> {
       if (sizeInMB > _maxSizeMB) {
         if (mounted) {
           setState(() {
-            _errorMessage =
-                'Arquivo excede ${_maxSizeMB.toStringAsFixed(1)}MB '
+            _errorMessage = 'Arquivo excede ${_maxSizeMB.toStringAsFixed(1)}MB '
                 '(${sizeInMB.toStringAsFixed(2)}MB).';
             _isUploading = false;
           });

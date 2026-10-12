@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'gallery_photo_card.dart';
 
 /// Grid adaptativo e inteligente de fotos da galeria:
-/// Suporta de 1 a N fotos sem nunca quebrar o layout nem deixar vazios estranhos.
+/// Suporta de 1 a N fotos sem nunca quebrar o layout nem deixar vazios
+/// estranhos.
 class GalleryDesktopGrid extends StatelessWidget {
   const GalleryDesktopGrid({
     required this.images,
@@ -37,7 +38,7 @@ class GalleryDesktopGrid extends StatelessWidget {
           Expanded(
             child: AspectRatio(
               aspectRatio: 1.35,
-              child: GalleryPhotoCard(imageUrl: images[0], index: 0),
+              child: GalleryPhotoCard(imageUrl: images[0]),
             ),
           ),
           const SizedBox(width: 20),

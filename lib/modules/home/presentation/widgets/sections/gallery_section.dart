@@ -11,8 +11,9 @@ import 'widgets/gallery_desktop_grid.dart';
 import 'widgets/gallery_horizontal_carousel.dart';
 
 /// Seção Galeria (Momentos Felizes):
-/// Fundo alternado em bgPrimary (creme suave), molduras orgânicas no formato da almofadinha da pata (paw pad)
-/// e grade flexível inteligente de 1 a N fotos sem buracos vazios.
+/// Fundo alternado em bgPrimary (creme suave), molduras orgânicas no formato
+/// da almofadinha da pata (paw pad) e grade flexível inteligente de 1 a N fotos
+/// sem buracos vazios.
 class GallerySection extends StatelessWidget {
   const GallerySection({
     required this.state,
@@ -37,7 +38,8 @@ class GallerySection extends StatelessWidget {
       constraints:
           isDesktop ? BoxConstraints(minHeight: minViewportHeight) : null,
       alignment: Alignment.center,
-      // Fundo alternado em relação aos Serviços (volta para o tom iluminado suave)
+      // Fundo alternado em relação aos Serviços (volta para tom iluminado
+      // suave)
       color: AppColors.bgPrimary(context),
       child: Stack(
         clipBehavior: Clip.none,

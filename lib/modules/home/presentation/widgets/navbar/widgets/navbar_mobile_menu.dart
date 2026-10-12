@@ -191,7 +191,8 @@ class NavbarMobileMenuSheet extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // TODO(durval): Para o MVP sera usado por enquanto apenas portugues - BR.
+            // TODO(durval): Para o MVP sera usado por enquanto apenas
+            // portugues - BR.
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
             //   children: [

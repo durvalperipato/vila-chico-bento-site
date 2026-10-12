@@ -30,7 +30,8 @@ class ServicesDesktopGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     if (services.isEmpty) return const SizedBox.shrink();
 
-    // 3 Cards: Exibe em 3 colunas perfeitamente alinhadas (igual a seção Sobre Nós)
+    // 3 Cards: Exibe em 3 colunas perfeitamente alinhadas (igual a seção
+    // Sobre Nós)
     if (services.length == 3) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -86,7 +86,8 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a `List<String>` or the provided [fallback]. Defaults to `const []`.
+  /// Returns a `List<String>` or the provided [fallback].
+  /// Defaults to `const []`.
   List<String> getStringList(String key, {List<String> fallback = const []}) {
     final val = getRaw(key);
     if (val is List) {
@@ -100,7 +101,8 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a `List<Map<String, dynamic>>` or the provided [fallback]. Defaults to `const []`.
+  /// Returns a `List<Map<String, dynamic>>` or the provided [fallback].
+  /// Defaults to `const []`.
   List<Map<String, dynamic>> getListMap(
     String key, {
     List<Map<String, dynamic>> fallback = const [],

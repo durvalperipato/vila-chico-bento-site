@@ -75,11 +75,11 @@ class HomeController extends NanoController<HomeState> {
   }
 
   List<String> getGalleryImages() {
-    return contentBundle.getStringList('gallery.images', fallback: const []);
+    return contentBundle.getStringList('gallery.images');
   }
 
   List<Map<String, dynamic>> getServices() {
-    return contentBundle.getListMap('services.items', fallback: const []);
+    return contentBundle.getListMap('services.items');
   }
 
   bool get isDarkMode => AppSettings.themeModeNotifier.value == ThemeMode.dark;

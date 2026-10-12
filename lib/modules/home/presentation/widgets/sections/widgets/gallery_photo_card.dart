@@ -3,7 +3,8 @@ import 'package:nano_core/nano_core.dart';
 import 'package:vila_chico_bento_site/core/extensions/image_provider_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 
-/// Card de foto interativo da galeria com curvatura orgânica inspirada na almofadinha da pata (paw pad).
+/// Card de foto interativo da galeria com curvatura orgânica inspirada
+/// na almofadinha da pata (paw pad).
 class GalleryPhotoCard extends StatefulWidget {
   const GalleryPhotoCard({
     required this.imageUrl,
@@ -27,7 +28,8 @@ class _GalleryPhotoCardState extends State<GalleryPhotoCard> {
   BorderRadius _getOrganicRadius() {
     if (widget.borderRadius != null) return widget.borderRadius!;
 
-    // Alterna a geometria sutil entre as fotos para criar um ritmo visual orgânico
+    // Alterna a geometria sutil entre as fotos para criar um ritmo
+    // visual orgânico
     switch (widget.index % 3) {
       case 0:
         // Coxim lateral esquerdo (curvatura mais acentuada no topo esquerdo)
@@ -38,7 +40,8 @@ class _GalleryPhotoCardState extends State<GalleryPhotoCard> {
           bottomRight: Radius.circular(52),
         );
       case 1:
-        // Coxim central (almofada principal da pata: topo mais suave e base acolhedora)
+        // Coxim central (almofada principal da pata: topo mais suave e
+        // base acolhedora)
         return const BorderRadius.only(
           topLeft: Radius.circular(52),
           topRight: Radius.circular(52),

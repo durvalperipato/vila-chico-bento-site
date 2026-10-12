@@ -79,7 +79,7 @@ class _AdminLivePreviewState extends State<AdminLivePreview> {
   ContentBundle get bundle => widget.bundle;
 
   String _get(String key) {
-    return bundle.getOptionalString(key, fallback: '');
+    return bundle.getOptionalString(key);
   }
 
   Widget _buildTextOrPlaceholder({
@@ -105,14 +105,12 @@ class _AdminLivePreviewState extends State<AdminLivePreview> {
   List<String> _getGalleryImages() {
     return widget.bundle.getStringList(
       'gallery.images',
-      fallback: const [],
     );
   }
 
   List<Map<String, dynamic>> _getServices() {
     return widget.bundle.getListMap(
       'services.items',
-      fallback: const [],
     );
   }
 
@@ -244,7 +242,7 @@ class _AdminLivePreviewState extends State<AdminLivePreview> {
     final bannerImage = _get('hero.banner_image');
     final alignmentY = bundle.getDouble(
       'hero.banner_image_alignment_y',
-      fallback: bundle.getDouble('hero.banner_alignment_y', fallback: 0.0),
+      fallback: bundle.getDouble('hero.banner_alignment_y'),
     );
 
     return Container(

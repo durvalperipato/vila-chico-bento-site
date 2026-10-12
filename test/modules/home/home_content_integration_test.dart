@@ -88,7 +88,8 @@ void main() {
       expect(hero.ctaServicesText, equals('Servicos Teste'));
     });
 
-    test('HeroViewContent provides empty safe strings when bundle keys are absent',
+    test(
+        'HeroViewContent provides empty safe strings when bundle keys are absent',
         () {
       const emptyBundle = ContentBundle.empty();
       final hero = HeroViewContent.fromBundle(emptyBundle);

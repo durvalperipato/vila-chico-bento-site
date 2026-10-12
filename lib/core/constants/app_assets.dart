@@ -1,4 +1,5 @@
-/// Referências aos assets estáticos locais do projeto que não são editáveis pelo Admin.
+/// Referências aos assets estáticos locais do projeto que não são editáveis
+/// pelo Admin.
 class AppAssets {
   AppAssets._();
 

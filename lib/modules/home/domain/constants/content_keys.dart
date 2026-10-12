@@ -1,5 +1,7 @@
 /// Strongly-typed canonical key definitions for site content sections.
-/// Avoids magic strings and ensures compiler safety across CMS and landing page.
+/// Avoids magic strings and ensures compiler safety across CMS and landing
+/// page.
+library;
 
 abstract final class HeroKeys {
   static const badge = 'hero.badge';
