@@ -35,7 +35,7 @@ class LocationSection extends StatelessWidget {
       key: controller.locationKey,
       constraints: BoxConstraints(minHeight: minHeight),
       alignment: Alignment.center,
-      color: AppColors.bgPrimary(context),
+      color: AppColors.bgSurface(context),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
