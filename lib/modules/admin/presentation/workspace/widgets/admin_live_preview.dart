@@ -1,49 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../../core/extensions/image_provider_extension.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../home/presentation/widgets/sections/widgets/gallery_desktop_grid.dart';
+import '../../../../home/presentation/widgets/sections/widgets/gallery_horizontal_carousel.dart';
 import '../../../domain/entities/content_bundle.dart';
-import '../../../domain/vila_chico_bento_default_content.dart';
 import '../admin_workspace_state.dart';
 
 /// Live preview pane rendering the site sections in real time based on
+/// Live preview pane rendering the site sections in real time based on
 /// the operator's working draft [bundle].
-class AdminLivePreview extends StatelessWidget {
+class AdminLivePreview extends StatefulWidget {
   const AdminLivePreview({
     required this.bundle,
     required this.previewDevice,
+    this.selectedSectionNotifier,
     super.key,
   });
 
   final ContentBundle bundle;
   final PreviewDeviceType previewDevice;
+  final ValueNotifier<String?>? selectedSectionNotifier;
+
+  @override
+  State<AdminLivePreview> createState() => _AdminLivePreviewState();
+}
+
+class _AdminLivePreviewState extends State<AdminLivePreview> {
+  final Map<String, GlobalKey> _sectionKeys = {
+    'hero': GlobalKey(),
+    'about': GlobalKey(),
+    'services': GlobalKey(),
+    'gallery': GlobalKey(),
+    'location': GlobalKey(),
+    'contact': GlobalKey(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    widget.selectedSectionNotifier?.addListener(_handleSectionSelected);
+  }
+
+  @override
+  void didUpdateWidget(covariant AdminLivePreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedSectionNotifier != widget.selectedSectionNotifier) {
+      oldWidget.selectedSectionNotifier?.removeListener(_handleSectionSelected);
+      widget.selectedSectionNotifier?.addListener(_handleSectionSelected);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.selectedSectionNotifier?.removeListener(_handleSectionSelected);
+    super.dispose();
+  }
+
+  void _handleSectionSelected() {
+    final sectionId = widget.selectedSectionNotifier?.value;
+    if (sectionId == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final targetKey = _sectionKeys[sectionId];
+      final targetContext = targetKey?.currentContext;
+      if (targetContext != null) {
+        Scrollable.ensureVisible(
+          targetContext,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOutCubic,
+          alignment: 0.05,
+        );
+      }
+    });
+  }
+
+  PreviewDeviceType get previewDevice => widget.previewDevice;
+  ContentBundle get bundle => widget.bundle;
 
   String _get(String key) {
-    return bundle.getString(
-      key,
-      fallback: VilaChicoBentoDefaultContent.bundle.getString(
-        key,
-        fallback: '',
-      ),
+    return bundle.getOptionalString(key, fallback: '');
+  }
+
+  Widget _buildTextOrPlaceholder({
+    required String text,
+    required String placeholder,
+    required TextStyle style,
+    TextAlign textAlign = TextAlign.start,
+  }) {
+    final isBlank = text.trim().isEmpty;
+    final displayText = isBlank ? '[$placeholder]' : text;
+    return Text(
+      displayText,
+      textAlign: textAlign,
+      style: isBlank
+          ? style.copyWith(
+              color: style.color?.withValues(alpha: 0.45) ?? Colors.white54,
+              fontStyle: FontStyle.italic,
+            )
+          : style,
     );
   }
 
   List<String> _getGalleryImages() {
-    return bundle.getStringList(
+    return widget.bundle.getStringList(
       'gallery.images',
-      fallback: VilaChicoBentoDefaultContent.bundle.getStringList(
-        'gallery.images',
-        fallback: const [],
-      ),
+      fallback: const [],
     );
   }
 
   List<Map<String, dynamic>> _getServices() {
-    return bundle.getListMap(
+    return widget.bundle.getListMap(
       'services.items',
-      fallback: VilaChicoBentoDefaultContent.bundle.getListMap(
-        'services.items',
-        fallback: const [],
-      ),
+      fallback: const [],
     );
   }
 
@@ -56,7 +125,7 @@ class AdminLivePreview extends StatelessWidget {
     double? deviceBorderRadius;
     EdgeInsets outerPadding = const EdgeInsets.all(16);
 
-    switch (previewDevice) {
+    switch (widget.previewDevice) {
       case PreviewDeviceType.desktop:
         maxWidth = double.infinity;
         deviceBorderRadius = 0;
@@ -72,18 +141,17 @@ class AdminLivePreview extends StatelessWidget {
         break;
     }
 
-    final isConstrained = previewDevice != PreviewDeviceType.desktop;
+    final isConstrained = widget.previewDevice != PreviewDeviceType.desktop;
 
     final Widget previewContent = Container(
       decoration: BoxDecoration(
-        color: AppColors.bgPrimary(isDark),
+        color: AppColors.bgPrimary(context),
         borderRadius: BorderRadius.circular(deviceBorderRadius),
         border: isConstrained
             ? Border.all(
-                color: isDark
-                    ? const Color(0xFF334155)
-                    : const Color(0xFFCBD5E1),
-                width: previewDevice == PreviewDeviceType.mobile ? 8 : 6,
+                color:
+                    isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1),
+                width: widget.previewDevice == PreviewDeviceType.mobile ? 8 : 6,
               )
             : null,
         boxShadow: isConstrained
@@ -104,12 +172,30 @@ class AdminLivePreview extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeroSection(isDark),
-                _buildAboutSection(isDark),
-                _buildServicesSection(isDark),
-                _buildGallerySection(isDark),
-                _buildLocationSection(isDark),
-                _buildFooterSection(isDark),
+                KeyedSubtree(
+                  key: _sectionKeys['hero'],
+                  child: _buildHeroSection(isDark),
+                ),
+                KeyedSubtree(
+                  key: _sectionKeys['about'],
+                  child: _buildAboutSection(context, isDark),
+                ),
+                KeyedSubtree(
+                  key: _sectionKeys['services'],
+                  child: _buildServicesSection(context, isDark),
+                ),
+                KeyedSubtree(
+                  key: _sectionKeys['gallery'],
+                  child: _buildGallerySection(context, isDark),
+                ),
+                KeyedSubtree(
+                  key: _sectionKeys['location'],
+                  child: _buildLocationSection(context, isDark),
+                ),
+                KeyedSubtree(
+                  key: _sectionKeys['contact'],
+                  child: _buildFooterSection(isDark),
+                ),
               ],
             ),
           ),
@@ -156,6 +242,10 @@ class AdminLivePreview extends StatelessWidget {
     final subtitle = _get('hero.subtitle');
     final ctaText = _get('hero.cta_whatsapp_text');
     final bannerImage = _get('hero.banner_image');
+    final alignmentY = bundle.getDouble(
+      'hero.banner_image_alignment_y',
+      fallback: bundle.getDouble('hero.banner_alignment_y', fallback: 0.0),
+    );
 
     return Container(
       key: const ValueKey('preview_hero_section'),
@@ -170,9 +260,11 @@ class AdminLivePreview extends StatelessWidget {
             child: Opacity(
               opacity: 0.35,
               child: bannerImage.isNotEmpty
-                  ? Image.network(
-                      bannerImage,
+                  ? Image(
+                      image: bannerImage.toImageProvider(),
                       fit: BoxFit.cover,
+                      alignment: Alignment(0.0, alignmentY),
+                      gaplessPlayback: true,
                       errorBuilder: (_, __, ___) => Container(
                         color: const Color(0xFF1E293B),
                       ),
@@ -218,26 +310,26 @@ class AdminLivePreview extends StatelessWidget {
                       ),
                     ),
                   ),
-                Text(
-                  title,
+                _buildTextOrPlaceholder(
+                  text: title,
+                  placeholder: 'Título Principal do Hero',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(
-                    fontSize: previewDevice == PreviewDeviceType.mobile
-                        ? 22
-                        : 30,
+                    fontSize:
+                        previewDevice == PreviewDeviceType.mobile ? 22 : 30,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
                     height: 1.2,
                   ),
                 ),
                 const SizedBox(height: 14),
-                Text(
-                  subtitle,
+                _buildTextOrPlaceholder(
+                  text: subtitle,
+                  placeholder: 'Subtítulo descritivo do Hero',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
-                    fontSize: previewDevice == PreviewDeviceType.mobile
-                        ? 13
-                        : 15,
+                    fontSize:
+                        previewDevice == PreviewDeviceType.mobile ? 13 : 15,
                     color: Colors.white70,
                     height: 1.5,
                   ),
@@ -271,11 +363,10 @@ class AdminLivePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutSection(bool isDark) {
+  Widget _buildAboutSection(BuildContext context, bool isDark) {
     final badge = _get('about.badge');
     final title = _get('about.title');
-    final desc1 = _get('about.description_1');
-    final desc2 = _get('about.description_2');
+    final desc = _get('about.description');
 
     return Container(
       key: const ValueKey('preview_about_section'),
@@ -295,41 +386,31 @@ class AdminLivePreview extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 6),
-          Text(
-            title,
+          _buildTextOrPlaceholder(
+            text: title,
+            placeholder: 'Título da Seção Sobre Nós',
             style: GoogleFonts.outfit(
               fontSize: previewDevice == PreviewDeviceType.mobile ? 18 : 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary(isDark),
+              color: AppColors.textPrimary(context),
             ),
           ),
           const SizedBox(height: 14),
-          if (desc1.isNotEmpty)
-            Text(
-              desc1,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: AppColors.textSecondary(isDark),
-                height: 1.6,
-              ),
+          _buildTextOrPlaceholder(
+            text: desc,
+            placeholder: 'Conteúdo descritivo sobre a Vila Chico Bento...',
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: AppColors.textSecondary(context),
+              height: 1.6,
             ),
-          if (desc2.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Text(
-              desc2,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: AppColors.textSecondary(isDark),
-                height: 1.6,
-              ),
-            ),
-          ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildServicesSection(bool isDark) {
+  Widget _buildServicesSection(BuildContext context, bool isDark) {
     final badge = _get('services.badge');
     final title = _get('services.title');
     final subtitle = _get('services.subtitle');
@@ -353,12 +434,13 @@ class AdminLivePreview extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 6),
-          Text(
-            title,
+          _buildTextOrPlaceholder(
+            text: title,
+            placeholder: 'Título da Seção de Serviços',
             style: GoogleFonts.outfit(
               fontSize: previewDevice == PreviewDeviceType.mobile ? 18 : 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary(isDark),
+              color: AppColors.textPrimary(context),
             ),
           ),
           if (subtitle.isNotEmpty) ...[
@@ -367,7 +449,7 @@ class AdminLivePreview extends StatelessWidget {
               subtitle,
               style: GoogleFonts.inter(
                 fontSize: 13,
-                color: AppColors.textSecondary(isDark),
+                color: AppColors.textSecondary(context),
               ),
             ),
           ],
@@ -379,10 +461,10 @@ class AdminLivePreview extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.bgCard(isDark),
+                color: AppColors.bgCard(context),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                 ),
               ),
               child: Row(
@@ -403,7 +485,7 @@ class AdminLivePreview extends StatelessWidget {
                           style: GoogleFonts.outfit(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary(isDark),
+                            color: AppColors.textPrimary(context),
                           ),
                         ),
                         if (cardDesc.isNotEmpty) ...[
@@ -412,7 +494,7 @@ class AdminLivePreview extends StatelessWidget {
                             cardDesc,
                             style: GoogleFonts.inter(
                               fontSize: 12,
-                              color: AppColors.textSecondary(isDark),
+                              color: AppColors.textSecondary(context),
                             ),
                           ),
                         ],
@@ -428,7 +510,7 @@ class AdminLivePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildGallerySection(bool isDark) {
+  Widget _buildGallerySection(BuildContext context, bool isDark) {
     final badge = _get('gallery.badge');
     final title = _get('gallery.title');
     final images = _getGalleryImages();
@@ -451,49 +533,29 @@ class AdminLivePreview extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 6),
-          Text(
-            title,
+          _buildTextOrPlaceholder(
+            text: title,
+            placeholder: 'Momentos de pura diversão',
             style: GoogleFonts.outfit(
               fontSize: previewDevice == PreviewDeviceType.mobile ? 18 : 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary(isDark),
+              color: AppColors.textPrimary(context),
             ),
           ),
           const SizedBox(height: 18),
           if (images.isNotEmpty)
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                    previewDevice == PreviewDeviceType.mobile ? 2 : 3,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                final url = images[index];
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    url,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: AppColors.bgCard(isDark),
-                      child: const Icon(
-                        Icons.image_not_supported_outlined,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )
+            previewDevice == PreviewDeviceType.mobile
+                ? GalleryHorizontalCarousel(images: images)
+                : GalleryDesktopGrid(
+                    images: images,
+                    crossAxisCount:
+                        previewDevice == PreviewDeviceType.tablet ? 2 : 3,
+                  )
           else
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppColors.bgCard(isDark),
+                color: AppColors.bgCard(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
@@ -501,7 +563,7 @@ class AdminLivePreview extends StatelessWidget {
                 'Nenhuma foto na galeria',
                 style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: AppColors.textSecondary(isDark),
+                  color: AppColors.textSecondary(context),
                 ),
               ),
             ),
@@ -510,7 +572,7 @@ class AdminLivePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationSection(bool isDark) {
+  Widget _buildLocationSection(BuildContext context, bool isDark) {
     final badge = _get('location.badge');
     final title = _get('location.title');
     final address = _get('location.address');
@@ -534,12 +596,13 @@ class AdminLivePreview extends StatelessWidget {
               ),
             ),
           const SizedBox(height: 6),
-          Text(
-            title,
+          _buildTextOrPlaceholder(
+            text: title,
+            placeholder: 'Onde estamos e horários',
             style: GoogleFonts.outfit(
               fontSize: previewDevice == PreviewDeviceType.mobile ? 18 : 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary(isDark),
+              color: AppColors.textPrimary(context),
             ),
           ),
           const SizedBox(height: 14),
@@ -557,7 +620,7 @@ class AdminLivePreview extends StatelessWidget {
                   address,
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: AppColors.textSecondary(isDark),
+                    color: AppColors.textSecondary(context),
                   ),
                 ),
               ),
@@ -578,7 +641,7 @@ class AdminLivePreview extends StatelessWidget {
                   hours,
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: AppColors.textSecondary(isDark),
+                    color: AppColors.textSecondary(context),
                   ),
                 ),
               ),

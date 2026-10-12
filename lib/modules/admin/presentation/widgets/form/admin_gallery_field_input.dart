@@ -2,8 +2,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../../core/extensions/image_provider_extension.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/admin_field.dart';
+import '../../../domain/domain.dart';
 
 /// Callback signature for uploading gallery images.
 typedef GalleryImageUploader = Future<String> Function({
@@ -77,10 +78,14 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
   List<String> get _allowedExtensions => widget.field.allowedExtensions;
 
   Future<void> _pickAndUploadImage() async {
-    setState(() => _errorMessage = null);
+    setState(() {
+      _errorMessage = null;
+      _isUploading = true;
+    });
 
     if (_images.length >= _maxItems) {
       setState(() {
+        _isUploading = false;
         _errorMessage = 'Limite máximo de $_maxItems fotos atingido.';
       });
       return;
@@ -88,7 +93,10 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
 
     try {
       final file = await widget.imagePickerAdapter.pickImage();
-      if (file == null) return;
+      if (file == null) {
+        if (mounted) setState(() => _isUploading = false);
+        return;
+      }
 
       // 1. Validate file extension
       final fileName = file.name.isNotEmpty
@@ -97,10 +105,12 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
       final extension =
           fileName.contains('.') ? fileName.split('.').last.toLowerCase() : '';
       if (!_allowedExtensions.contains(extension)) {
-        setState(() {
-          _errorMessage =
-              'Formato não suportado. Use JPG, PNG ou WebP.';
-        });
+        if (mounted) {
+          setState(() {
+            _isUploading = false;
+            _errorMessage = 'Formato não suportado. Use JPG, PNG ou WebP.';
+          });
+        }
         return;
       }
 
@@ -108,15 +118,18 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
       final bytes = await file.readAsBytes();
       final maxSizeBytes = (_maxSizeMB * 1024 * 1024).toInt();
       if (bytes.lengthInBytes > maxSizeBytes) {
-        setState(() {
-          _errorMessage =
-              'Arquivo excede o limite de ${_maxSizeMB.toInt()}MB.';
-        });
+        if (mounted) {
+          setState(() {
+            _isUploading = false;
+            _errorMessage =
+                'Arquivo excede o limite de ${_maxSizeMB.toInt()}MB.';
+          });
+        }
         return;
       }
 
-      // 3. Initiate upload via controller callback
-      setState(() => _isUploading = true);
+      // 3. Yield to paint loading spinner before heavy compression
+      await Future<void>.delayed(const Duration(milliseconds: 30));
 
       final contentType = _resolveContentType(extension);
       final downloadUrl = await widget.onUploadImage(
@@ -126,15 +139,19 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
       );
 
       final updatedList = List<String>.from(_images)..add(downloadUrl);
-      setState(() {
-        _images = updatedList;
-        _errorMessage = null;
-      });
-      widget.onChanged(updatedList);
+      if (mounted) {
+        setState(() {
+          _images = updatedList;
+          _errorMessage = null;
+        });
+        widget.onChanged(updatedList);
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Erro ao enviar foto: $e';
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Erro ao enviar foto: $e';
+        });
+      }
     } finally {
       if (mounted) {
         setState(() => _isUploading = false);
@@ -181,9 +198,9 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.bgSurface(isDark),
+        color: AppColors.bgSurface(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderSubtle(isDark)),
+        border: Border.all(color: AppColors.borderSubtle(context)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +220,7 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary(isDark),
+                    color: AppColors.textPrimary(context),
                   ),
                 ),
               ),
@@ -212,12 +229,12 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                 decoration: BoxDecoration(
                   color: isLimitReached
                       ? AppColors.primary.withValues(alpha: 0.15)
-                      : AppColors.bgCard(isDark),
+                      : AppColors.bgCard(context),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isLimitReached
                         ? AppColors.primary
-                        : AppColors.borderSubtle(isDark),
+                        : AppColors.borderSubtle(context),
                   ),
                 ),
                 child: Text(
@@ -227,7 +244,7 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                     fontWeight: FontWeight.w600,
                     color: isLimitReached
                         ? AppColors.primary
-                        : AppColors.textMuted(isDark),
+                        : AppColors.textMuted(context),
                   ),
                 ),
               ),
@@ -238,7 +255,7 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
             'Máx. ${_maxSizeMB.toInt()}MB por foto • Formatos: JPG, PNG, WebP',
             style: GoogleFonts.inter(
               fontSize: 12,
-              color: AppColors.textMuted(isDark),
+              color: AppColors.textMuted(context),
             ),
           ),
           const SizedBox(height: 16),
@@ -307,9 +324,7 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                 label: Text(
                   _isUploading
                       ? 'Enviando foto...'
-                      : (isLimitReached
-                          ? 'Limite atingido'
-                          : 'Adicionar Foto'),
+                      : (isLimitReached ? 'Limite atingido' : 'Adicionar Foto'),
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -319,8 +334,8 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   disabledBackgroundColor:
-                      AppColors.borderSubtle(isDark).withValues(alpha: 0.3),
-                  disabledForegroundColor: AppColors.textMuted(isDark),
+                      AppColors.borderSubtle(context).withValues(alpha: 0.3),
+                  disabledForegroundColor: AppColors.textMuted(context),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
@@ -340,10 +355,10 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24),
               decoration: BoxDecoration(
-                color: AppColors.bgCard(isDark),
+                color: AppColors.bgCard(context),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                 ),
               ),
               child: Column(
@@ -351,14 +366,14 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
                   Icon(
                     Icons.photo_outlined,
                     size: 36,
-                    color: AppColors.textMuted(isDark).withValues(alpha: 0.5),
+                    color: AppColors.textMuted(context).withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Nenhuma foto adicionada à galeria.',
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: AppColors.textMuted(isDark),
+                      color: AppColors.textMuted(context),
                     ),
                   ),
                 ],
@@ -389,9 +404,9 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: AppColors.bgCard(isDark),
+        color: AppColors.bgCard(context),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.borderSubtle(isDark)),
+        border: Border.all(color: AppColors.borderSubtle(context)),
       ),
       child: Row(
         children: [
@@ -401,9 +416,9 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
             height: 28,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.bgSurface(isDark),
+              color: AppColors.bgSurface(context),
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: AppColors.borderSubtle(isDark)),
+              border: Border.all(color: AppColors.borderSubtle(context)),
             ),
             child: Text(
               '${index + 1}',
@@ -433,23 +448,27 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  url.startsWith('http')
-                      ? url.split('/').last.split('?').first
-                      : url,
+                  url.startsWith('data:image')
+                      ? 'Foto ${index + 1}'
+                      : (url.startsWith('http')
+                          ? url.split('/').last.split('?').first
+                          : 'Foto ${index + 1}'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimary(isDark),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary(context),
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  url.startsWith('http') ? 'URL Remota' : 'Asset Local',
+                  url.startsWith('data:image')
+                      ? 'Imagem Otimizada (Web)'
+                      : (url.startsWith('http') ? 'URL Remota' : 'Asset Local'),
                   style: GoogleFonts.inter(
                     fontSize: 11,
-                    color: AppColors.textMuted(isDark),
+                    color: AppColors.textMuted(context),
                   ),
                 ),
               ],
@@ -462,16 +481,16 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
             icon: const Icon(Icons.arrow_upward, size: 18),
             tooltip: 'Mover para cima',
             color: index > 0
-                ? AppColors.textPrimary(isDark)
-                : AppColors.textMuted(isDark).withValues(alpha: 0.3),
+                ? AppColors.textPrimary(context)
+                : AppColors.textMuted(context).withValues(alpha: 0.3),
             onPressed: index > 0 ? () => _reorderImage(index, index - 1) : null,
           ),
           IconButton(
             icon: const Icon(Icons.arrow_downward, size: 18),
             tooltip: 'Mover para baixo',
             color: index < _images.length - 1
-                ? AppColors.textPrimary(isDark)
-                : AppColors.textMuted(isDark).withValues(alpha: 0.3),
+                ? AppColors.textPrimary(context)
+                : AppColors.textMuted(context).withValues(alpha: 0.3),
             onPressed: index < _images.length - 1
                 ? () => _reorderImage(index, index + 1)
                 : null,
@@ -490,38 +509,12 @@ class _AdminGalleryFieldInputState extends State<AdminGalleryFieldInput> {
   }
 
   Widget _buildThumbnailImage(String url) {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return Image.network(
-        url,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Center(
-          child: Icon(Icons.broken_image, size: 24, color: Colors.grey),
-        ),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(
-            child: SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          );
-        },
-      );
-    }
-
-    if (url.startsWith('assets/')) {
-      return Image.asset(
-        url,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Center(
-          child: Icon(Icons.image_outlined, size: 24, color: Colors.grey),
-        ),
-      );
-    }
-
-    return const Center(
-      child: Icon(Icons.photo_outlined, size: 24, color: Colors.grey),
+    return Image(
+      image: url.toImageProvider(),
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Center(
+        child: Icon(Icons.broken_image, size: 24, color: Colors.grey),
+      ),
     );
   }
 }

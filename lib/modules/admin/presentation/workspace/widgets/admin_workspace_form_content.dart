@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/l10n/generated/app_localizations.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
-import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/dynamic_form_generator.dart';
+import '../../../domain/domain.dart';
+import '../../widgets/form/dynamic_form_generator.dart';
 import '../admin_workspace_controller.dart';
 import '../admin_workspace_state.dart';
 
@@ -14,16 +14,19 @@ class AdminWorkspaceFormContent extends StatelessWidget {
     required this.state,
     required this.controller,
     required this.isDark,
+    this.schema,
     super.key,
   });
 
   final AdminWorkspaceState state;
   final AdminWorkspaceController controller;
   final bool isDark;
+  final SiteSchema? schema;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final activeSchema = schema ?? VilaChicoBentoSchema.schema;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,13 +53,12 @@ class AdminWorkspaceFormContent extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n?.adminBannerDescription ??
-                      'Formulário gerado automaticamente a partir '
-                          'do VilaChicoBentoSchema. '
+                      'Formulário gerado automaticamente a partir do Schema. '
                           'Qualquer caractere alterado atualiza o '
                           'rascunho instantaneamente.',
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: AppColors.textPrimary(isDark),
+                    color: AppColors.textPrimary(context),
                   ),
                 ),
               ),
@@ -111,10 +113,11 @@ class AdminWorkspaceFormContent extends StatelessWidget {
 
         // Dynamic Schema-Driven Form Generator
         DynamicFormGenerator(
-          schema: VilaChicoBentoSchema.schema,
+          schema: activeSchema,
           bundle: state.bundle,
           onFieldChanged: controller.updateField,
           onUploadImage: controller.uploadGalleryImage,
+          onSectionSelected: controller.selectSection,
         ),
       ],
     );

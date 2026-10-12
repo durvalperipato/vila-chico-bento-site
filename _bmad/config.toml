@@ -5,7 +5,7 @@ document_output_language = "English"
 output_folder = "{project-root}/_bmad"
 
 [modules.bmm]
-planning_artifacts = "{project-root}/_bmad"
+planning_artifacts = "{project-root}/_bmad/specs"
 implementation_artifacts = "{project-root}/_bmad"
 project_knowledge = "{project-root}/_bmad"
 

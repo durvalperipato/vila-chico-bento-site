@@ -35,12 +35,12 @@ tracking_system: file-system
 story_location: 
   /Users/durvalperipatoneto/Frella/vila-chico-bento-site/_bmad/stories
 development_status:
-  epic-1: in-progress
+  epic-1: done
   1-1-domain-models-and-field-schema-catalog: done
   1-2-firestore-content-repository-with-resilient-fallback: done
   1-3-operator-authentication-and-protected-admin-route: done
   1-4-dynamic-schema-driven-form-generator: done
   1-5-gallery-image-upload-and-management-via-firebase-storage: done
   1-6-split-screen-live-preview-and-publishing-workflow: done
-  1-7-landing-page-integration-with-content-service: backlog
+  1-7-landing-page-integration-with-content-service: done
   epic-1-retrospective: optional

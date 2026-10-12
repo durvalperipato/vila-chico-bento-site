@@ -1,36 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:nano_core/nano_core.dart';
-import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
+import 'package:vila_chico_bento_site/core/extensions/image_provider_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/theme/app_typography.dart';
+import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
 import 'package:vila_chico_bento_site/core/widgets/meandering_paw_trail.dart';
 import 'package:vila_chico_bento_site/core/widgets/responsive_container.dart';
 import 'package:vila_chico_bento_site/core/widgets/section_tag.dart';
+import 'package:vila_chico_bento_site/modules/home/domain/entities/home_view_content.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.dart';
+import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
 
+/// Seção Serviços no formato Opção 2 (Triptych com Mini-Fotos Reais):
+/// 3 colunas bem distribuídas no Desktop (Esquerda, Meio, Direita),
+/// com fotografias reais dos cães em cada serviço, contraste sutil de fundo
+/// em relação à seção anterior e botões de ação personalizados para cada serviço.
 class ServicesSection extends StatelessWidget {
-  const ServicesSection({required this.controller, super.key});
+  const ServicesSection({
+    required this.state,
+    required this.controller,
+    super.key,
+  });
+
+  final HomeState state;
   final HomeController controller;
+
+  // Fotografias temáticas para cada serviço da creche
+  static const List<String> _servicePhotos = [
+    'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80', // Day Care / Recreação no gramado
+    'https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=800&q=80', // Hotelzinho / Cão relaxando
+    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80', // Adaptação / Acolhimento
+  ];
+
+  static const List<String> _serviceCtaLabels = [
+    'Agendar Day Care',
+    'Consultar Vagas',
+    'Agendar Adaptação',
+  ];
+
+  static const List<String> _serviceChips = [
+    'Mais Procurado',
+    'Sem Gaiolas',
+    '100% Acolhedor',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final isDark = controller.isDarkMode;
-    final isDesktop = NanoDeviceType.isDesktop(context);
-    final isMobile = NanoDeviceType.isMobile(context);
+    final services = state.services;
+    final isDark = context.theme.isDark;
+    final isDesktop = context.screen.isDesktop;
     final screenHeight = MediaQuery.sizeOf(context).height;
-    final minHeight =
-        isDesktop ? (screenHeight - 86).clamp(600.0, 1400.0) : 0.0;
+    final minViewportHeight = (screenHeight - 86).clamp(620.0, 940.0);
 
     return Container(
       key: controller.servicesKey,
-      constraints: isDesktop ? BoxConstraints(minHeight: minHeight) : null,
+      constraints:
+          isDesktop ? BoxConstraints(minHeight: minViewportHeight) : null,
       alignment: Alignment.center,
-      color: isDark ? AppColors.darkBgPrimary : AppColors.lightBgPrimary,
+      // Fundo ligeiramente contrastante com a seção anterior
+      color: AppColors.bgSurface(context),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Aurora Glow Superior Direito (Verde Esmeralda)
+          // Aurora Glow Superior Direito
           Positioned(
             top: -20,
             right: -30,
@@ -51,7 +83,7 @@ class ServicesSection extends StatelessWidget {
             ),
           ),
 
-          // Aurora Glow Inferior Esquerdo (Âmbar Acolhedor)
+          // Aurora Glow Inferior Esquerdo
           Positioned(
             bottom: -20,
             left: -30,
@@ -72,164 +104,81 @@ class ServicesSection extends StatelessWidget {
             ),
           ),
 
-          // Rastro Contínuo de Patinhas: continua de onde About acabou (0.10) e sai na base direita (0.90)
+          // Rastro Contínuo de Patinhas
           Positioned.fill(
-            child: MeanderingPawTrail(
-              start: const Offset(0.10, 0.0),
-              control1: const Offset(0.10, 0.25),
-              control2: const Offset(0.90, 0.75),
-              end: const Offset(0.90, 1.0),
-              pawCount: isMobile ? 8 : 14,
-              opacity: isDark ? 0.38 : 0.50,
-              color: AppColors.pawTrail,
-              startWithRightFoot: true,
+            child: NanoResponsiveLayout(
+              desktop: (context) => MeanderingPawTrail(
+                start: const Offset(0.08, 0.0),
+                control1: const Offset(0.08, 0.45),
+                control2: const Offset(0.92, 0.65),
+                end: const Offset(0.92, 1.0),
+                pawCount: 14,
+                opacity: isDark ? 0.35 : 0.45,
+                color: AppColors.pawTrail,
+              ),
+              mobile: (context) => MeanderingPawTrail(
+                start: const Offset(0.08, 0.0),
+                control1: const Offset(0.08, 0.45),
+                control2: const Offset(0.92, 0.65),
+                end: const Offset(0.92, 1.0),
+                pawCount: 8,
+                opacity: isDark ? 0.35 : 0.45,
+                color: AppColors.pawTrail,
+              ),
             ),
           ),
 
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: isMobile ? 44 : 48,
+              vertical: isDesktop ? 36 : 48,
             ),
             child: ResponsiveContainer(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Cabeçalho da Seção com consistência visual
                   SectionTag(
-                    text: l10n.servicesBadge,
-                    icon: Icons.sports_baseball_rounded,
+                    text: services.badge.isNotEmpty
+                        ? services.badge
+                        : 'O QUE FAZEMOS DE MELHOR',
+                    icon: Icons.pets_rounded,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 14),
                   Text(
-                    l10n.servicesTitle,
+                    services.title,
                     textAlign: TextAlign.center,
-                    style: isDesktop
-                        ? AppTypography.displayMedium(
-                            color: AppColors.textPrimary(isDark),
-                          ).copyWith(fontSize: 32)
-                        : AppTypography.displaySmall(
-                            color: AppColors.textPrimary(isDark),
-                          ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // Grid 2x2 dos Serviços Compacto e Elegante
-                  if (isDesktop)
-                    Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: _ServiceCard(
-                                icon: Icons.wb_sunny_rounded,
-                                title: l10n.serviceDaycareTitle,
-                                description: l10n.serviceDaycareDesc,
-                                badge: 'Diário & Socialização',
-                                accentColor: AppColors.primary,
-                                isDark: isDark,
-                                onCtaTap: () => controller.openWhatsApp(
-                                  customMessage:
-                                      'Olá! Gostaria de saber mais informações sobre o Day Care (Creche Canina) da Vila Chico Bento!',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: _ServiceCard(
-                                icon: Icons.night_shelter_rounded,
-                                title: l10n.serviceHotelTitle,
-                                description: l10n.serviceHotelDesc,
-                                badge: 'Pernoite & Viagens',
-                                accentColor: AppColors.secondary,
-                                isDark: isDark,
-                                onCtaTap: () => controller.openWhatsApp(
-                                  customMessage:
-                                      'Olá! Gostaria de consultar vagas e valores para a Hospedagem / Hotelzinho na Vila Chico Bento!',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: _ServiceCard(
-                                icon: Icons.handshake_rounded,
-                                title: l10n.serviceAdaptationTitle,
-                                description: l10n.serviceAdaptationDesc,
-                                badge: 'Cuidado & Segurança',
-                                accentColor: AppColors.accentGreen,
-                                isDark: isDark,
-                                onCtaTap: () => controller.openWhatsApp(
-                                  customMessage:
-                                      'Olá! Gostaria de agendar o Período de Adaptação para o meu pet na Vila Chico Bento!',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: _ServiceCard(
-                                icon: Icons.schedule_rounded,
-                                title: l10n.serviceRoutineTitle,
-                                description: l10n.serviceRoutineDesc,
-                                badge: 'Saúde & Equilíbrio',
-                                accentColor: const Color(0xFF8B5CF6),
-                                isDark: isDark,
-                                onCtaTap: () => controller.openWhatsApp(
-                                  customMessage:
-                                      'Olá! Gostaria de saber mais detalhes sobre a Rotina Estruturada e horários na Vila Chico Bento!',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  else
-                    _ServicesCarousel(
-                      services: [
-                        _ServiceItem(
-                          icon: Icons.wb_sunny_rounded,
-                          title: l10n.serviceDaycareTitle,
-                          description: l10n.serviceDaycareDesc,
-                          badge: 'Diário & Socialização',
-                          accentColor: AppColors.primary,
-                          whatsappMessage:
-                              'Olá! Gostaria de saber mais informações sobre o Day Care (Creche Canina) da Vila Chico Bento!',
-                        ),
-                        _ServiceItem(
-                          icon: Icons.night_shelter_rounded,
-                          title: l10n.serviceHotelTitle,
-                          description: l10n.serviceHotelDesc,
-                          badge: 'Pernoite & Viagens',
-                          accentColor: AppColors.secondary,
-                          whatsappMessage:
-                              'Olá! Gostaria de consultar vagas e valores para a Hospedagem / Hotelzinho na Vila Chico Bento!',
-                        ),
-                        _ServiceItem(
-                          icon: Icons.handshake_rounded,
-                          title: l10n.serviceAdaptationTitle,
-                          description: l10n.serviceAdaptationDesc,
-                          badge: 'Cuidado & Segurança',
-                          accentColor: AppColors.accentGreen,
-                          whatsappMessage:
-                              'Olá! Gostaria de agendar o Período de Adaptação para o meu pet na Vila Chico Bento!',
-                        ),
-                        _ServiceItem(
-                          icon: Icons.schedule_rounded,
-                          title: l10n.serviceRoutineTitle,
-                          description: l10n.serviceRoutineDesc,
-                          badge: 'Saúde & Equilíbrio',
-                          accentColor: const Color(0xFF8B5CF6),
-                          whatsappMessage:
-                              'Olá! Gostaria de saber mais detalhes sobre a Rotina Estruturada e horários na Vila Chico Bento!',
-                        ),
-                      ],
-                      controller: controller,
-                      isDark: isDark,
+                    style: AppTypography.displayMedium(
+                      color: AppColors.textPrimary(context),
+                    ).copyWith(
+                      fontSize: isDesktop ? 34 : 26,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.4,
+                      height: 1.18,
                     ),
+                  ),
+                  if (services.subtitle.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 680),
+                      child: Text(
+                        services.subtitle,
+                        textAlign: TextAlign.center,
+                        style: AppTypography.bodyMedium(
+                          color: AppColors.textSecondary(context),
+                        ).copyWith(
+                          fontSize: 15.5,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 32),
+
+                  // 3 Cards em Colunas no Desktop (Esquerda, Meio, Direita) ou Coluna no Mobile
+                  if (isDesktop)
+                    _buildDesktopColumns(context, services.items)
+                  else
+                    _buildMobileStack(context, services.items),
                 ],
               ),
             ),
@@ -238,258 +187,306 @@ class ServicesSection extends StatelessWidget {
       ),
     );
   }
+
+  /// 3 Colunas perfeitamente distribuídas (Esquerda, Centro, Direita)
+  Widget _buildDesktopColumns(
+    BuildContext context,
+    List<ServiceItemContent> items,
+  ) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < items.length; i++) ...[
+            if (i > 0) const SizedBox(width: 24),
+            Expanded(
+              child: _ServicePhotoCard(
+                service: items[i],
+                photoUrl: i < _servicePhotos.length
+                    ? _servicePhotos[i]
+                    : _servicePhotos.first,
+                chipLabel: i < _serviceChips.length ? _serviceChips[i] : '',
+                ctaLabel: i < _serviceCtaLabels.length
+                    ? _serviceCtaLabels[i]
+                    : 'Consultar',
+                controller: controller,
+                isFeatured: i == 0,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Mobile: Cards empilhados naturalmente
+  Widget _buildMobileStack(
+    BuildContext context,
+    List<ServiceItemContent> items,
+  ) {
+    return Column(
+      children: [
+        for (int i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(height: 20),
+          _ServicePhotoCard(
+            service: items[i],
+            photoUrl: i < _servicePhotos.length
+                ? _servicePhotos[i]
+                : _servicePhotos.first,
+            chipLabel: i < _serviceChips.length ? _serviceChips[i] : '',
+            ctaLabel: i < _serviceCtaLabels.length
+                ? _serviceCtaLabels[i]
+                : 'Consultar',
+            controller: controller,
+            isFeatured: i == 0,
+          ),
+        ],
+      ],
+    );
+  }
 }
 
-class _ServiceCard extends StatefulWidget {
-  const _ServiceCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.badge,
-    required this.accentColor,
-    required this.isDark,
-    required this.onCtaTap,
+/// Card de Serviço com Mini-Foto Real no topo, tipografia aconchegante e CTA exclusivo
+class _ServicePhotoCard extends StatefulWidget {
+  const _ServicePhotoCard({
+    required this.service,
+    required this.photoUrl,
+    required this.chipLabel,
+    required this.ctaLabel,
+    required this.controller,
+    this.isFeatured = false,
   });
 
-  final IconData icon;
-  final String title;
-  final String description;
-  final String badge;
-  final Color accentColor;
-  final bool isDark;
-  final VoidCallback onCtaTap;
+  final ServiceItemContent service;
+  final String photoUrl;
+  final String chipLabel;
+  final String ctaLabel;
+  final HomeController controller;
+  final bool isFeatured;
 
   @override
-  State<_ServiceCard> createState() => _ServiceCardState();
+  State<_ServicePhotoCard> createState() => _ServicePhotoCardState();
 }
 
-class _ServiceCardState extends State<_ServiceCard> {
+class _ServicePhotoCardState extends State<_ServicePhotoCard> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.theme.isDark;
+    final service = widget.service;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 220),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+        transform: Matrix4.translationValues(0, _isHovered ? -6 : 0, 0),
         decoration: BoxDecoration(
-          color: AppColors.bgCard(widget.isDark),
-          borderRadius: BorderRadius.circular(22),
+          color: AppColors.bgCard(context),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: _isHovered
-                ? widget.accentColor.withValues(alpha: 0.6)
-                : AppColors.borderSubtle(widget.isDark),
-            width: 1.5,
+                ? service.accentColor.withValues(alpha: 0.45)
+                : (isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : const Color(0xFFF1EAE2)),
+            width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
               color: _isHovered
-                  ? widget.accentColor.withValues(alpha: 0.16)
-                  : AppColors.cardShadow(widget.isDark),
-              blurRadius: _isHovered ? 20 : 12,
-              offset: Offset(0, _isHovered ? 8 : 4),
+                  ? service.accentColor.withValues(alpha: 0.14)
+                  : (isDark
+                      ? Colors.black.withValues(alpha: 0.25)
+                      : const Color(0xFF8A532B).withValues(alpha: 0.05)),
+              blurRadius: _isHovered ? 24 : 14,
+              offset: Offset(0, _isHovered ? 10 : 4),
             ),
           ],
         ),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: widget.accentColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    widget.icon,
-                    size: 24,
-                    color: widget.accentColor,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: widget.accentColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Text(
-                    widget.badge,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: widget.accentColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Text(
-              widget.title,
-              style: AppTypography.titleMedium(
-                color: AppColors.textPrimary(widget.isDark),
-              ).copyWith(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.description,
-              style: AppTypography.bodyMedium(
-                color: AppColors.textSecondary(widget.isDark),
-              ).copyWith(fontSize: 13.5, height: 1.45),
-            ),
-            const SizedBox(height: 14),
-            InkWell(
-              onTap: widget.onCtaTap,
-              borderRadius: BorderRadius.circular(6),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Consultar detalhes',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: widget.accentColor,
+            // 1. Fotografia Temática do Serviço com Micro-Chip
+            SizedBox(
+              height: 180,
+              width: double.infinity,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image(
+                    image: widget.photoUrl.toImageProvider(),
+                    fit: BoxFit.cover,
+                    gaplessPlayback: true,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return NanoSkeleton.box(
+                        color: AppColors.bgCard(context),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: service.accentColor.withValues(alpha: 0.1),
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.pets_rounded,
+                        size: 40,
+                        color: service.accentColor,
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 15,
-                      color: widget.accentColor,
+                  ),
+
+                  // Gradiente sutil na base da foto
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: 60,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.40),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  // Micro-Chip de Destaque
+                  if (widget.chipLabel.isNotEmpty)
+                    Positioned(
+                      top: 14,
+                      left: 14,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              AppColors.bgCard(context).withValues(alpha: 0.92),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.12),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          widget.chipLabel,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: service.accentColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            // 2. Conteúdo do Serviço
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: service.accentColor.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.pets_rounded,
+                          size: 16,
+                          color: service.accentColor,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          service.title,
+                          style: AppTypography.titleMedium(
+                            color: AppColors.textPrimary(context),
+                          ).copyWith(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    service.description,
+                    style: AppTypography.bodyMedium(
+                      color: AppColors.textSecondary(context),
+                    ).copyWith(
+                      fontSize: 13,
+                      height: 1.45,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // 3. Link de Ação Editorial Elegante com Seta Animada
+                  InkWell(
+                    onTap: () => widget.controller.openWhatsApp(
+                      customMessage: service.whatsappMessage,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.ctaLabel,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: service.accentColor,
+                              letterSpacing: -0.1,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 180),
+                            transform: Matrix4.translationValues(
+                              _isHovered ? 4 : 0,
+                              0,
+                              0,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 16,
+                              color: service.accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ServiceItem {
-  const _ServiceItem({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.badge,
-    required this.accentColor,
-    required this.whatsappMessage,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-  final String badge;
-  final Color accentColor;
-  final String whatsappMessage;
-}
-
-class _ServicesCarousel extends StatefulWidget {
-  const _ServicesCarousel({
-    required this.services,
-    required this.controller,
-    required this.isDark,
-  });
-
-  final List<_ServiceItem> services;
-  final HomeController controller;
-  final bool isDark;
-
-  @override
-  State<_ServicesCarousel> createState() => _ServicesCarouselState();
-}
-
-class _ServicesCarouselState extends State<_ServicesCarousel> {
-  late final PageController _pageController;
-  int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(viewportFraction: 0.88);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 295,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.services.length,
-            onPageChanged: (index) => setState(() => _currentPage = index),
-            itemBuilder: (context, index) {
-              final service = widget.services[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                child: _ServiceCard(
-                  icon: service.icon,
-                  title: service.title,
-                  description: service.description,
-                  badge: service.badge,
-                  accentColor: service.accentColor,
-                  isDark: widget.isDark,
-                  onCtaTap: () => widget.controller.openWhatsApp(
-                    customMessage: service.whatsappMessage,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        // Dots indicadores interativos
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.services.length,
-            (index) {
-              final isActive = _currentPage == index;
-              return GestureDetector(
-                onTap: () => _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOutCubic,
-                ),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: isActive ? 24 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? AppColors.primary
-                        : (widget.isDark ? Colors.white24 : Colors.black12),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }

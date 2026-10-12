@@ -18,16 +18,15 @@ class AdminPreviewToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.bgCard(isDark),
+        color: AppColors.bgCard(context),
         border: Border(
           bottom: BorderSide(
-            color: AppColors.borderSubtle(isDark),
+            color: AppColors.borderSubtle(context),
           ),
         ),
       ),
@@ -69,10 +68,10 @@ class AdminPreviewToolbar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-              color: AppColors.bgPrimary(isDark),
+              color: AppColors.bgPrimary(context),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: AppColors.borderSubtle(isDark),
+                color: AppColors.borderSubtle(context),
               ),
             ),
             child: Row(
@@ -122,8 +121,6 @@ class _DeviceButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Tooltip(
       message: tooltip,
       child: InkWell(
@@ -142,7 +139,7 @@ class _DeviceButton extends StatelessWidget {
             size: 16,
             color: isSelected
                 ? AppColors.primary
-                : AppColors.textSecondary(isDark),
+                : AppColors.textSecondary(context),
           ),
         ),
       ),

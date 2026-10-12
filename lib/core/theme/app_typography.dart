@@ -42,7 +42,8 @@ class AppTypography {
         color: color,
       );
 
-  // Body & Labels (GoogleFonts.inter - máxima legibilidade em qualquer dispositivo)
+  // Body & Labels (GoogleFonts.inter - máxima legibilidade em
+  // qualquer dispositivo)
   static TextStyle bodyLarge({required Color color}) => GoogleFonts.inter(
         fontSize: 16,
         fontWeight: FontWeight.w400,

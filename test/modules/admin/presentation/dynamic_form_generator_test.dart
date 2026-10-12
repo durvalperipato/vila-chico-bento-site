@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nano_core/nano_core.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_field.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_group.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_icon.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/domain.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bundle.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/site_schema.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/admin_section_accordion.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/dynamic_form_generator.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_controller.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_state.dart';
+import 'package:vila_chico_bento_site/l10n/generated/app_localizations.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_view.dart';
 import '../admin_test_mocks.dart';
 
@@ -225,6 +222,9 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('pt'),
           home: AdminWorkspaceView(),
         ),
       );

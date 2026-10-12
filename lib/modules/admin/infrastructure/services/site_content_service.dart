@@ -9,26 +9,38 @@ class SiteContentService extends ValueNotifier<ContentBundle> {
     required this.repository,
     required this.siteId,
     ContentBundle? initialBundle,
-  }) : super(initialBundle ?? const ContentBundle.empty());
+  })  : _defaultBundle = initialBundle ?? const ContentBundle.empty(),
+        super(initialBundle ?? const ContentBundle.empty());
+
   final SiteContentRepository repository;
   final String siteId;
+  final ContentBundle _defaultBundle;
   StreamSubscription<Map<String, dynamic>>? _subscription;
 
   /// Returns the current active content bundle.
   ContentBundle get bundle => value;
+
+  ContentBundle _mergeWithDefault(Map<String, dynamic> data) {
+    if (_defaultBundle.toMap().isEmpty) {
+      return ContentBundle.fromMap(data);
+    }
+    final merged = Map<String, dynamic>.from(_defaultBundle.toMap())
+      ..addAll(data);
+    return ContentBundle.fromMap(merged);
+  }
 
   /// Loads the initial published content and begins streaming real-time
   /// updates.
   Future<void> init() async {
     final initialData = await repository.getContent(siteId);
     if (initialData.isNotEmpty) {
-      value = ContentBundle.fromMap(initialData);
+      value = _mergeWithDefault(initialData);
     }
 
     await _subscription?.cancel();
     _subscription = repository.watchContent(siteId).listen((data) {
       if (data.isNotEmpty) {
-        value = ContentBundle.fromMap(data);
+        value = _mergeWithDefault(data);
       }
     });
   }
@@ -50,11 +62,18 @@ class SiteContentService extends ValueNotifier<ContentBundle> {
     await repository.saveDraft(siteId, data);
   }
 
-  /// Loads existing draft data, if any.
+  /// Loads existing draft data, if any, merging on top of current published content.
   Future<ContentBundle?> loadDraft() async {
     final draft = await repository.getDraft(siteId);
     if (draft != null && draft.isNotEmpty) {
-      return ContentBundle.fromMap(draft);
+      final hasContent = draft.keys.any((k) =>
+          k != 'adminEmails' &&
+          k != 'siteName' &&
+          k != 'updated_at' &&
+          k != 'created_at');
+      if (!hasContent) return null;
+      final merged = Map<String, dynamic>.from(value.toMap())..addAll(draft);
+      return ContentBundle.fromMap(merged);
     }
     return null;
   }

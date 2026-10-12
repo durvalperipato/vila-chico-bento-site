@@ -104,4 +104,3 @@ class MockImagePickerAdapter implements ImagePickerAdapter {
   @override
   Future<XFile?> pickImage() async => pickedFile;
 }
-

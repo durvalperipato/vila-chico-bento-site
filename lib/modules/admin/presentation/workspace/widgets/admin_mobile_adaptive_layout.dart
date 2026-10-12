@@ -32,10 +32,10 @@ class AdminMobileAdaptiveLayout extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.bgCard(isDark),
+            color: AppColors.bgCard(context),
             border: Border(
               bottom: BorderSide(
-                color: AppColors.borderSubtle(isDark),
+                color: AppColors.borderSubtle(context),
               ),
             ),
           ),
@@ -101,6 +101,8 @@ class AdminMobileAdaptiveLayout extends StatelessWidget {
                       child: AdminLivePreview(
                         bundle: state.bundle,
                         previewDevice: state.previewDevice,
+                        selectedSectionNotifier:
+                            controller.selectedSectionNotifier,
                       ),
                     ),
                   ],

@@ -58,7 +58,9 @@ class FirestoreSiteContentRepository implements SiteContentRepository {
     final payload = Map<String, dynamic>.from(data);
     payload['updated_at'] = FieldValue.serverTimestamp();
 
-    await _siteDoc(siteId).set(payload, SetOptions(merge: true));
+    await _siteDoc(siteId)
+        .set(payload, SetOptions(merge: true))
+        .timeout(const Duration(seconds: 4));
   }
 
   @override
@@ -66,13 +68,16 @@ class FirestoreSiteContentRepository implements SiteContentRepository {
     final payload = Map<String, dynamic>.from(data);
     payload['updated_at'] = FieldValue.serverTimestamp();
 
-    await _draftDoc(siteId).set(payload, SetOptions(merge: true));
+    await _draftDoc(siteId)
+        .set(payload, SetOptions(merge: true))
+        .timeout(const Duration(seconds: 4));
   }
 
   @override
   Future<Map<String, dynamic>?> getDraft(String siteId) async {
     try {
-      final snapshot = await _draftDoc(siteId).get();
+      final snapshot =
+          await _draftDoc(siteId).get().timeout(const Duration(seconds: 4));
       if (snapshot.exists && snapshot.data() != null) {
         return Map<String, dynamic>.from(snapshot.data()!);
       }

@@ -30,6 +30,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navContact => 'Contact';
 
   @override
+  String get navCtaSchedule => 'Book Adaptation';
+
+  @override
+  String get brandTagline => 'Daycare & Dog Resort';
+
+  @override
   String get heroBadge => '🐾 Your Dog\'s Second Home';
 
   @override

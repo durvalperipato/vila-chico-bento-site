@@ -6,8 +6,7 @@ import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bund
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_default_content.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/schema/vila_chico_bento_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_controller.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_state.dart';
@@ -33,6 +32,45 @@ void main() {
     );
   }
 
+  const testBundleMap = {
+    'hero': {
+      'badge': '🐾 O Segundo Lar do Seu Cãozinho',
+      'title': 'Amor, liberdade e enriquecimento ambiental para o seu pet',
+      'subtitle': 'Creche diária (Day Care), hotelzinho acolhedor',
+      'cta_whatsapp_text': 'Agendar Adaptação no WhatsApp',
+      'banner_image':
+          'https://images.unsplash.com/photo-1548199973-03cce0bbc87b',
+    },
+    'about': {
+      'badge': 'Nossa Proposta & Cuidado',
+      'title': 'Mais que uma creche, uma extensão do seu lar',
+      'description': 'Na Vila Chico Bento...',
+    },
+    'services': {
+      'badge': 'O Que Fazemos de Melhor',
+      'title': 'Serviços pensados para a rotina',
+      'subtitle': 'Atividades diárias',
+      'items': [
+        {'title': 'Day Care', 'description': 'Recreação'},
+      ],
+    },
+    'gallery': {
+      'badge': 'Momentos Felizes',
+      'title': 'A alegria que transborda',
+      'images': ['https://images.unsplash.com/photo-1548199973-03cce0bbc87b'],
+    },
+    'location': {
+      'badge': 'Onde Estamos',
+      'title': 'Venha nos visitar em Pinhais',
+      'address': 'R. Clóvis Beviláqua, 579',
+      'hours': 'Segunda a Sexta: 07h às 19h',
+    },
+    'contact': {
+      'whatsapp_number': '(41) 99252-3108',
+      'instagram_handle': '@vilachicobento',
+    },
+  };
+
   setUp(() async {
     await GetIt.I.reset();
     mockRepo = MockSiteContentRepository();
@@ -44,7 +82,7 @@ void main() {
     contentService = SiteContentService(
       repository: mockRepo,
       siteId: VilaChicoBentoSchema.siteId,
-      initialBundle: VilaChicoBentoDefaultContent.bundle,
+      initialBundle: ContentBundle.fromMap(testBundleMap),
     );
 
     GetIt.I
@@ -114,8 +152,7 @@ void main() {
       controller.dispose();
     });
 
-    test(
-        'Matrix Scenario 6: Publish live commits and resets unsaved indicator',
+    test('Matrix Scenario 6: Publish live commits and resets unsaved indicator',
         () async {
       final controller = AdminWorkspaceController(
         siteContentService: contentService,

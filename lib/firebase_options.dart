@@ -53,12 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAMNkGxfMjq9Gr99f_hmeGWNp1nFWhxseo',
-    appId: '1:187854558134:web:fe335ba884f8a0d4042717',
-    messagingSenderId: '187854558134',
-    projectId: 'vila-chico-bento',
-    authDomain: 'vila-chico-bento.firebaseapp.com',
-    storageBucket: 'vila-chico-bento.firebasestorage.app',
-    measurementId: 'G-87GQD4P9JC',
+    apiKey: 'AIzaSyDoEGsSXp_gb5kxGxpf9B0ZSeFeGU4LNE0',
+    appId: '1:828884081479:web:36d938134e698fcee94a62',
+    messagingSenderId: '828884081479',
+    projectId: 'nano-devs-cms',
+    authDomain: 'nano-devs-cms.firebaseapp.com',
+    storageBucket: 'nano-devs-cms.firebasestorage.app',
+    measurementId: 'G-1M9K1NJFKB',
   );
 }

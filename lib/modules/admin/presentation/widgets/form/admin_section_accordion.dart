@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
-import '../../../domain/admin_section_group.dart';
-import '../../../domain/admin_section_icon.dart';
+import '../../../domain/domain.dart';
 
 /// Expandable accordion card wrapping fields of an [AdminSectionGroup].
 class AdminSectionAccordion extends StatefulWidget {
@@ -11,12 +10,14 @@ class AdminSectionAccordion extends StatefulWidget {
     required this.section,
     required this.children,
     this.initiallyExpanded = true,
+    this.onExpanded,
     super.key,
   });
 
   final AdminSectionGroup section;
   final List<Widget> children;
   final bool initiallyExpanded;
+  final VoidCallback? onExpanded;
 
   @override
   State<AdminSectionAccordion> createState() => _AdminSectionAccordionState();
@@ -52,12 +53,12 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        color: AppColors.bgCard(isDark),
+        color: AppColors.bgCard(context),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _isExpanded
               ? AppColors.primary.withValues(alpha: 0.3)
-              : AppColors.borderSubtle(isDark),
+              : AppColors.borderSubtle(context),
           width: 1.5,
         ),
         boxShadow: [
@@ -73,7 +74,11 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
         children: [
           // Header / Accordion Trigger
           InkWell(
-            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            onTap: () {
+              final newExpanded = !_isExpanded;
+              setState(() => _isExpanded = newExpanded);
+              widget.onExpanded?.call();
+            },
             borderRadius: BorderRadius.circular(16),
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -105,7 +110,7 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary(isDark),
+                            color: AppColors.textPrimary(context),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -113,7 +118,7 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
                           fieldsCountText,
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: AppColors.textMuted(isDark),
+                            color: AppColors.textMuted(context),
                           ),
                         ),
                       ],
@@ -124,7 +129,7 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.textSecondary(isDark),
+                      color: AppColors.textSecondary(context),
                       size: 24,
                     ),
                   ),
@@ -136,11 +141,18 @@ class _AdminSectionAccordionState extends State<AdminSectionAccordion> {
           // Collapsible Form Fields
           AnimatedCrossFade(
             firstChild: const SizedBox(width: double.infinity),
-            secondChild: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: widget.children,
+            secondChild: Focus(
+              onFocusChange: (hasFocus) {
+                if (hasFocus) {
+                  widget.onExpanded?.call();
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: widget.children,
+                ),
               ),
             ),
             crossFadeState: _isExpanded

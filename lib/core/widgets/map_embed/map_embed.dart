@@ -85,7 +85,8 @@ class _RealMapEmbedState extends State<RealMapEmbed> {
                 ),
               ),
 
-              // 2. Camada de proteção quando não interativo (permite rolar a página normalmente)
+              // 2. Camada de proteção quando não interativo
+              // (permite rolar a página normalmente)
               if (!_isInteractive) ...[
                 Positioned.fill(
                   child: GestureDetector(
@@ -97,7 +98,8 @@ class _RealMapEmbedState extends State<RealMapEmbed> {
                   ),
                 ),
 
-                // Selo de Dica de Interação (Translúcido e elegante no canto inferior)
+                // Selo de Dica de Interação
+                // (Translúcido e elegante no canto inferior)
                 Positioned(
                   bottom: 14,
                   right: 14,

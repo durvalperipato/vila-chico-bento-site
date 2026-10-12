@@ -2,11 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_field.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_group.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/admin_section_icon.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/domain.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bundle.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/site_schema.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/admin_gallery_field_input.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/widgets/form/dynamic_form_generator.dart';
 import '../../admin_test_mocks.dart';
@@ -89,8 +86,8 @@ void main() {
     });
 
     testWidgets(
-      'Matrix Scenario 1: Selects and uploads valid image <= 2MB with format',
-      (tester) async {
+        'Matrix Scenario 1: Selects and uploads valid image <= 2MB with format',
+        (tester) async {
       List<String>? updatedUrls;
       mockPicker.pickedFile = XFile.fromData(
         Uint8List.fromList(List.generate(1024, (i) => i % 256)), // 1 KB
@@ -139,7 +136,8 @@ void main() {
       expect(find.text('Arquivo excede o limite de 2MB.'), findsOneWidget);
     });
 
-    testWidgets('Matrix Scenario 3: Rejects invalid file format (e.g. .gif / .pdf)',
+    testWidgets(
+        'Matrix Scenario 3: Rejects invalid file format (e.g. .gif / .pdf)',
         (tester) async {
       mockPicker.pickedFile = XFile.fromData(
         Uint8List(500),
@@ -162,7 +160,8 @@ void main() {
 
     testWidgets('Matrix Scenario 4: Enforces gallery limit of 10 photos',
         (tester) async {
-      final tenPhotos = List.generate(10, (i) => 'https://example.com/photo_$i.jpg');
+      final tenPhotos =
+          List.generate(10, (i) => 'https://example.com/photo_$i.jpg');
 
       await tester.pumpWidget(createWidget(initialUrls: tenPhotos));
       await tester.pumpAndSettle();
@@ -235,9 +234,9 @@ void main() {
     });
 
     testWidgets(
-      'DynamicFormGenerator renders AdminGalleryFieldInput for gallery field',
-      (tester) async {
-        final schema = SiteSchema(
+        'DynamicFormGenerator renders AdminGalleryFieldInput for gallery field',
+        (tester) async {
+      final schema = SiteSchema(
         siteId: 'test-site',
         sections: [
           AdminSectionGroup(
@@ -268,10 +267,10 @@ void main() {
                   required contentType,
                 }) =>
                     mockStorage.uploadImage(
-                      path: 'sites/test/gallery/$fileName',
-                      bytes: bytes,
-                      contentType: contentType,
-                    ),
+                  path: 'sites/test/gallery/$fileName',
+                  bytes: bytes,
+                  contentType: contentType,
+                ),
                 imagePickerAdapter: mockPicker,
                 onFieldChanged: (_, __) {},
               ),

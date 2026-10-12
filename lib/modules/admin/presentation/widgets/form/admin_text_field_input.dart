@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/theme/app_colors.dart';
-import '../../../domain/admin_field.dart';
+import '../../../domain/domain.dart';
 
 /// Reactive form input widget for [AdminFieldType.text] fields.
 class AdminTextFieldInput extends StatefulWidget {
@@ -48,7 +48,6 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final maxLength = widget.field.maxLength;
 
     return Padding(
@@ -64,7 +63,7 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary(isDark),
+                  color: AppColors.textPrimary(context),
                 ),
               ),
               if (widget.field.required) ...[
@@ -91,7 +90,7 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
             onChanged: widget.onChanged,
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: AppColors.textPrimary(isDark),
+              color: AppColors.textPrimary(context),
             ),
             buildCounter: (
               context, {
@@ -108,7 +107,7 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
                   fontWeight: FontWeight.w500,
                   color: isNearLimit
                       ? Colors.orangeAccent
-                      : AppColors.textMuted(isDark),
+                      : AppColors.textMuted(context),
                 ),
               );
             },
@@ -116,10 +115,10 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
               hintText: 'Digite o conteúdo de ${widget.field.label}...',
               hintStyle: GoogleFonts.inter(
                 fontSize: 14,
-                color: AppColors.textMuted(isDark),
+                color: AppColors.textMuted(context),
               ),
               filled: true,
-              fillColor: AppColors.bgSurface(isDark),
+              fillColor: AppColors.bgSurface(context),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,
@@ -127,13 +126,13 @@ class _AdminTextFieldInputState extends State<AdminTextFieldInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                 ),
               ),
               focusedBorder: OutlineInputBorder(

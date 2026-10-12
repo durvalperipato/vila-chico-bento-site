@@ -41,17 +41,23 @@ class ContentBundle {
   }
 
   /// Returns a string value or the provided [fallback] if null, non-string,
-  /// or empty.
-  String getString(String key, {required String fallback}) {
+  /// or empty. Defaults to empty string `''`.
+  String getString(String key, {String fallback = ''}) {
     final val = getRaw(key);
-    if (val is String && val.trim().isNotEmpty) {
-      return val;
-    }
+    if (val is String && val.trim().isNotEmpty) return val;
     return fallback;
   }
 
-  /// Returns an int value or the provided [fallback].
-  int getInt(String key, {required int fallback}) {
+  /// Returns the raw string value (even if empty) if present, or [fallback]
+  /// only if null/missing. Defaults to empty string `''`.
+  String getOptionalString(String key, {String fallback = ''}) {
+    final val = getRaw(key);
+    if (val is String) return val;
+    return fallback;
+  }
+
+  /// Returns an int value or the provided [fallback]. Defaults to `0`.
+  int getInt(String key, {int fallback = 0}) {
     final val = getRaw(key);
     if (val is int) return val;
     if (val is num) return val.toInt();
@@ -59,8 +65,8 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a double value or the provided [fallback].
-  double getDouble(String key, {required double fallback}) {
+  /// Returns a double value or the provided [fallback]. Defaults to `0.0`.
+  double getDouble(String key, {double fallback = 0.0}) {
     final val = getRaw(key);
     if (val is double) return val;
     if (val is num) return val.toDouble();
@@ -68,8 +74,8 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a bool value or the provided [fallback].
-  bool getBool(String key, {required bool fallback}) {
+  /// Returns a bool value or the provided [fallback]. Defaults to `false`.
+  bool getBool(String key, {bool fallback = false}) {
     final val = getRaw(key);
     if (val is bool) return val;
     if (val is String) {
@@ -80,8 +86,8 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a `List<String>` or the provided [fallback].
-  List<String> getStringList(String key, {required List<String> fallback}) {
+  /// Returns a `List<String>` or the provided [fallback]. Defaults to `const []`.
+  List<String> getStringList(String key, {List<String> fallback = const []}) {
     final val = getRaw(key);
     if (val is List) {
       final result = val
@@ -94,10 +100,10 @@ class ContentBundle {
     return fallback;
   }
 
-  /// Returns a `List<Map<String, dynamic>>` or the provided [fallback].
+  /// Returns a `List<Map<String, dynamic>>` or the provided [fallback]. Defaults to `const []`.
   List<Map<String, dynamic>> getListMap(
     String key, {
-    required List<Map<String, dynamic>> fallback,
+    List<Map<String, dynamic>> fallback = const [],
   }) {
     final val = getRaw(key);
     if (val is List) {

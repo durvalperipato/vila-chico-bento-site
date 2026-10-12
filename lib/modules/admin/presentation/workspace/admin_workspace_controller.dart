@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:nano_core/nano_core.dart';
 import '../../domain/entities/content_bundle.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -69,37 +69,39 @@ class AdminWorkspaceController extends NanoController<AdminWorkspaceState> {
     );
   }
 
-  /// Persists working draft without publishing to live visitors.
-  Future<void> saveDraft() async {
-    await execute(
-      () => _siteContentService.saveDraft(viewState.bundle.toMap()),
-      onSuccess: (_) {
-        emitSuccess(
-          key: WorkspaceMessages.draftSaved,
-          data: viewState.copyWith(hasUnsavedChanges: true),
-        );
-      },
-      onError: (_) {
-        emitError(key: WorkspaceMessages.error);
-      },
-    );
-  }
+  /// Command that persists working draft with built-in loading and debounce.
+  late final saveDraftCommand = nanoCommand0<void>(
+    () => _siteContentService.saveDraft(viewState.bundle.toMap()),
+    onSuccess: (_) {
+      emitSuccess(
+        key: WorkspaceMessages.draftSaved,
+        data: viewState.copyWith(hasUnsavedChanges: true),
+      );
+    },
+    onError: (_) {
+      emitError(key: WorkspaceMessages.error);
+    },
+  );
 
-  /// Publishes changes to the public website in Cloud Firestore.
-  Future<void> publish() async {
-    await execute(
-      () => _siteContentService.publish(viewState.bundle.toMap()),
-      onSuccess: (_) {
-        emitSuccess(
-          key: WorkspaceMessages.published,
-          data: viewState.copyWith(hasUnsavedChanges: false),
-        );
-      },
-      onError: (_) {
-        emitError(key: WorkspaceMessages.error);
-      },
-    );
-  }
+  /// Command that publishes working draft to the live site.
+  late final publishCommand = nanoCommand0<void>(
+    () => _siteContentService.publish(viewState.bundle.toMap()),
+    onSuccess: (_) {
+      emitSuccess(
+        key: WorkspaceMessages.published,
+        data: viewState.copyWith(hasUnsavedChanges: false),
+      );
+    },
+    onError: (_) {
+      emitError(key: WorkspaceMessages.error);
+    },
+  );
+
+  /// Convenience wrapper to trigger [saveDraftCommand].
+  Future<void> saveDraft() => saveDraftCommand.run();
+
+  /// Convenience wrapper to trigger [publishCommand].
+  Future<void> publish() => publishCommand.run();
 
   /// Uploads a gallery photo to Storage and returns its public URL.
   Future<String> uploadGalleryImage({
@@ -126,6 +128,28 @@ class AdminWorkspaceController extends NanoController<AdminWorkspaceState> {
     emitLoaded(viewState.copyWith(viewMode: mode));
   }
 
-  /// Ends operator session.
-  Future<void> signOut() => _authRepository.signOut();
+  /// Notifier broadcasting the currently focused section ID for synchronized
+  /// auto-scrolling.
+  final ValueNotifier<String?> selectedSectionNotifier =
+      ValueNotifier<String?>(null);
+
+  /// Selects a section to trigger auto-scrolling on the live preview pane.
+  void selectSection(String sectionId) {
+    if (selectedSectionNotifier.value == sectionId) {
+      selectedSectionNotifier.value = null;
+    }
+    selectedSectionNotifier.value = sectionId;
+  }
+
+  /// Ends operator session and navigates to login.
+  Future<void> signOut() async {
+    await _authRepository.signOut();
+    await NanoRouter.toReplacementNamed('/admin/login');
+  }
+
+  @override
+  void dispose() {
+    selectedSectionNotifier.dispose();
+    super.dispose();
+  }
 }

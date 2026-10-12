@@ -9,7 +9,8 @@ import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_logi
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_login_page.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_login_state.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_messages.dart';
-import 'package:vila_chico_bento_site/modules/admin/presentation/guard/admin_guard_page.dart';
+import 'package:vila_chico_bento_site/core/routes/app_router.dart';
+import 'package:vila_chico_bento_site/l10n/generated/app_localizations.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_view.dart';
 import '../admin_test_mocks.dart';
 
@@ -103,29 +104,34 @@ void main() {
       await GetIt.I.reset();
     });
 
-    testWidgets('renders AdminLoginPage when unauthenticated', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AdminGuardPage(),
-        ),
+    Widget buildTestableApp({String initialRoute = '/admin'}) {
+      return MaterialApp(
+        navigatorKey: NanoRouter.navigatorKey,
+        initialRoute: initialRoute,
+        onGenerateRoute: appRouter.onGenerateRoute,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('pt'),
       );
+    }
+
+    testWidgets('redirects /admin to /admin/login when unauthenticated',
+        (tester) async {
+      await tester.pumpWidget(buildTestableApp(initialRoute: '/admin'));
       await tester.pumpAndSettle();
 
       expect(find.byType(AdminLoginPage), findsOneWidget);
-      expect(find.text('Entrar no Painel'), findsOneWidget);
-      expect(find.text('Painel Administrativo'), findsOneWidget);
+      expect(find.text('Acessar Painel'), findsOneWidget);
+      expect(find.text('Vila Chico Bento'), findsOneWidget);
     });
 
-    testWidgets('renders workspace view when authenticated', (tester) async {
+    testWidgets('allows /admin to render workspace view when authenticated',
+        (tester) async {
       mockAuth
         ..userId = 'uid-123'
         ..userEmail = 'admin@vilachicobento.com.br';
 
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AdminGuardPage(),
-        ),
-      );
+      await tester.pumpWidget(buildTestableApp(initialRoute: '/admin'));
       await tester.pumpAndSettle();
 
       expect(find.byType(AdminLoginPage), findsNothing);

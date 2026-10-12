@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
+import '../../../../core/extensions/build_context_extension.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../l10n/generated/app_localizations.dart';
+import '../../domain/repositories/auth_repository.dart';
 import 'admin_login_controller.dart';
 import 'admin_login_injections.dart';
 import 'admin_login_state.dart';
@@ -25,6 +25,18 @@ class _AdminLoginPageState
   NanoInjections get injections => const AdminLoginInjections();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted &&
+          GetIt.I.isRegistered<AuthRepository>() &&
+          GetIt.I<AuthRepository>().isAuthenticated) {
+        NanoRouter.toReplacementNamed('/admin');
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -41,10 +53,11 @@ class _AdminLoginPageState
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = context.l10n;
 
     return NanoScaffold<AdminLoginState, NanoMessageKey>(
       controller: controller,
-      backgroundColor: AppColors.bgPrimary(isDark),
+      backgroundColor: AppColors.bgPrimary(context),
       builder: (context, nanoState) {
         final state = nanoState.data ?? controller.viewState;
         final isLoading = nanoState is LoadingState;
@@ -56,10 +69,10 @@ class _AdminLoginPageState
               constraints: const BoxConstraints(maxWidth: 440),
               padding: const EdgeInsets.all(36),
               decoration: BoxDecoration(
-                color: AppColors.bgCard(isDark),
+                color: AppColors.bgCard(context),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                   width: 1.5,
                 ),
                 boxShadow: [
@@ -113,30 +126,29 @@ class _AdminLoginPageState
                     style: GoogleFonts.outfit(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary(isDark),
+                      color: AppColors.textPrimary(context),
                       letterSpacing: -0.5,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    AppLocalizations.of(context)?.adminLoginSubtitle ??
-                        'Painel Administrativo',
+                    l10n.adminLoginSubtitle,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textMuted(isDark),
+                      color: AppColors.textMuted(context),
                     ),
                   ),
                   const SizedBox(height: 32),
 
                   // Email Field
                   Text(
-                    AppLocalizations.of(context)?.adminEmailLabel ?? 'E-mail',
+                    l10n.adminEmailLabel,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary(isDark),
+                      color: AppColors.textSecondary(context),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -146,31 +158,30 @@ class _AdminLoginPageState
                     textInputAction: TextInputAction.next,
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: AppColors.textPrimary(isDark),
+                      color: AppColors.textPrimary(context),
                     ),
                     decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)?.adminEmailHint ??
-                          'admin@vilachicobento.com.br',
+                      hintText: l10n.adminEmailHint,
                       hintStyle: GoogleFonts.inter(
                         fontSize: 14,
-                        color: AppColors.textMuted(isDark),
+                        color: AppColors.textMuted(context),
                       ),
                       prefixIcon: const Icon(
                         Icons.mail_outline_rounded,
                         size: 20,
                       ),
                       filled: true,
-                      fillColor: AppColors.bgSurface(isDark),
+                      fillColor: AppColors.bgSurface(context),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.borderSubtle(isDark),
+                          color: AppColors.borderSubtle(context),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.borderSubtle(isDark),
+                          color: AppColors.borderSubtle(context),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -186,12 +197,11 @@ class _AdminLoginPageState
 
                   // Password Field
                   Text(
-                    AppLocalizations.of(context)?.adminPasswordLabel ??
-                        'Senha de Acesso',
+                    l10n.adminPasswordLabel,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary(isDark),
+                      color: AppColors.textSecondary(context),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -202,13 +212,13 @@ class _AdminLoginPageState
                     onSubmitted: (_) => _submit(),
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: AppColors.textPrimary(isDark),
+                      color: AppColors.textPrimary(context),
                     ),
                     decoration: InputDecoration(
                       hintText: '••••••••',
                       hintStyle: GoogleFonts.inter(
                         fontSize: 14,
-                        color: AppColors.textMuted(isDark),
+                        color: AppColors.textMuted(context),
                       ),
                       prefixIcon: const Icon(
                         Icons.lock_outline_rounded,
@@ -224,17 +234,17 @@ class _AdminLoginPageState
                         onPressed: controller.togglePasswordVisibility,
                       ),
                       filled: true,
-                      fillColor: AppColors.bgSurface(isDark),
+                      fillColor: AppColors.bgSurface(context),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.borderSubtle(isDark),
+                          color: AppColors.borderSubtle(context),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.borderSubtle(isDark),
+                          color: AppColors.borderSubtle(context),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -261,52 +271,20 @@ class _AdminLoginPageState
                       elevation: 0,
                     ),
                     child: Text(
-                      isLoading
-                          ? (AppLocalizations.of(context)?.adminBtnSigningIn ??
-                              'Autenticando...')
-                          : (AppLocalizations.of(context)?.adminBtnSignIn ??
-                              'Entrar no Painel'),
+                      isLoading ? l10n.adminBtnSigningIn : l10n.adminBtnSignIn,
                       style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  // TODO(durval): Remover apos finalizar os testes no
-                  // painel admin.
-                  if (kDebugMode) ...[
-                    const SizedBox(height: 12),
-                    OutlinedButton.icon(
-                      onPressed: isLoading
-                          ? null
-                          : () {
-                              _emailController.text =
-                                  'admin@vilachicobento.com.br';
-                              _passwordController.text = 'admin123';
-                              _submit();
-                            },
-                      icon: const Icon(Icons.flash_on_rounded, size: 16),
-                      label: const Text(
-                        'Entrar no Modo Demo (Bypass Local)',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        side: const BorderSide(color: AppColors.primary),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ],
                   const SizedBox(height: 20),
 
                   // Back to public site button
                   TextButton(
                     onPressed: () => context.toReplacementNamed('/'),
                     style: TextButton.styleFrom(
-                      foregroundColor: AppColors.textMuted(isDark),
+                      foregroundColor: AppColors.textMuted(context),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

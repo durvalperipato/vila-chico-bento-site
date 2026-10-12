@@ -140,6 +140,18 @@ abstract class AppLocalizations {
   /// **'Contato'**
   String get navContact;
 
+  /// No description provided for @navCtaSchedule.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendar Adaptação'**
+  String get navCtaSchedule;
+
+  /// No description provided for @brandTagline.
+  ///
+  /// In pt, this message translates to:
+  /// **'Creche & Resort Canino'**
+  String get brandTagline;
+
   /// No description provided for @heroBadge.
   ///
   /// In pt, this message translates to:

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
+import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../l10n/generated/app_localizations.dart';
 import 'admin_workspace_controller.dart';
 import 'admin_workspace_injections.dart';
 import 'admin_workspace_state.dart';
@@ -26,15 +26,16 @@ class _AdminWorkspaceViewState
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return NanoScaffold<AdminWorkspaceState, NanoMessageKey>(
       controller: controller,
-      backgroundColor: AppColors.bgPrimary(isDark),
+      backgroundColor: AppColors.bgPrimary(context),
+      loadingWidget: const SizedBox.shrink(),
       header: (context, _) {
         final screenWidth = MediaQuery.sizeOf(context).width;
         return AppBar(
-          backgroundColor: AppColors.bgCard(isDark),
+          backgroundColor: AppColors.bgCard(context),
           elevation: 0,
           title: Row(
             mainAxisSize: MainAxisSize.min,
@@ -47,13 +48,12 @@ class _AdminWorkspaceViewState
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
-                  l10n?.adminEditorTitle ??
-                      'Vila Chico Bento | Editor de Conteúdo',
+                  l10n.adminEditorTitle,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary(isDark),
+                    color: AppColors.textPrimary(context),
                   ),
                 ),
               ),
@@ -61,61 +61,112 @@ class _AdminWorkspaceViewState
           ),
           actions: [
             if (screenWidth >= 700) ...[
-              // Save Draft Action
-              OutlinedButton.icon(
-                onPressed: controller.saveDraft,
-                icon: const Icon(Icons.save_outlined, size: 16),
-                label: Text(
-                  l10n?.adminSaveDraft ?? 'Salvar Rascunho',
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.textPrimary(isDark),
-                  side: BorderSide(color: AppColors.borderSubtle(isDark)),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
-                  ),
-                ),
+              // Save Draft Action with NanoCommandBuilder
+              NanoCommandBuilder<void>(
+                command: controller.saveDraftCommand,
+                builder: (context, cmdState) {
+                  final isSaving = cmdState is LoadingState;
+                  return OutlinedButton.icon(
+                    onPressed:
+                        isSaving ? null : controller.saveDraftCommand.run,
+                    icon: isSaving
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.save_outlined, size: 16),
+                    label: Text(l10n.adminSaveDraft),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.textPrimary(context),
+                      side: BorderSide(color: AppColors.borderSubtle(context)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(width: 10),
 
-              // Publish Live Action
-              ElevatedButton.icon(
-                onPressed: controller.publish,
-                icon: const Icon(Icons.cloud_upload_rounded, size: 16),
-                label: Text(
-                  l10n?.adminPublishLive ?? 'Publicar no Site',
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                ),
+              // Publish Live Action with NanoCommandBuilder
+              NanoCommandBuilder<void>(
+                command: controller.publishCommand,
+                builder: (context, cmdState) {
+                  final isPublishing = cmdState is LoadingState;
+                  return ElevatedButton.icon(
+                    onPressed:
+                        isPublishing ? null : controller.publishCommand.run,
+                    icon: isPublishing
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.cloud_upload_rounded, size: 16),
+                    label: Text(l10n.adminPublishLive),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                  );
+                },
               ),
             ] else ...[
-              IconButton(
-                tooltip: l10n?.adminSaveDraft ?? 'Salvar Rascunho',
-                icon: const Icon(Icons.save_outlined, size: 20),
-                onPressed: controller.saveDraft,
+              NanoCommandBuilder<void>(
+                command: controller.saveDraftCommand,
+                builder: (context, cmdState) {
+                  final isSaving = cmdState is LoadingState;
+                  return IconButton(
+                    tooltip: l10n.adminSaveDraft,
+                    icon: isSaving
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.save_outlined, size: 20),
+                    onPressed:
+                        isSaving ? null : controller.saveDraftCommand.run,
+                  );
+                },
               ),
-              IconButton(
-                tooltip: l10n?.adminPublishLive ?? 'Publicar no Site',
-                icon: const Icon(
-                  Icons.cloud_upload_rounded,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
-                onPressed: controller.publish,
+              NanoCommandBuilder<void>(
+                command: controller.publishCommand,
+                builder: (context, cmdState) {
+                  final isPublishing = cmdState is LoadingState;
+                  return IconButton(
+                    tooltip: l10n.adminPublishLive,
+                    icon: isPublishing
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(
+                            Icons.cloud_upload_rounded,
+                            size: 20,
+                            color: AppColors.primary,
+                          ),
+                    onPressed:
+                        isPublishing ? null : controller.publishCommand.run,
+                  );
+                },
               ),
             ],
             const SizedBox(width: 8),
 
             // Operator Sign Out
             IconButton(
-              tooltip: l10n?.adminSignOut ?? 'Sair da sessão',
+              tooltip: l10n.adminSignOut,
               icon: const Icon(Icons.logout_rounded, size: 20),
               onPressed: controller.signOut,
             ),

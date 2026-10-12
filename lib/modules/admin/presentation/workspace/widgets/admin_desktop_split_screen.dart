@@ -30,7 +30,7 @@ class AdminDesktopSplitScreen extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 right: BorderSide(
-                  color: AppColors.borderSubtle(isDark),
+                  color: AppColors.borderSubtle(context),
                 ),
               ),
             ),
@@ -57,6 +57,7 @@ class AdminDesktopSplitScreen extends StatelessWidget {
                 child: AdminLivePreview(
                   bundle: state.bundle,
                   previewDevice: state.previewDevice,
+                  selectedSectionNotifier: controller.selectedSectionNotifier,
                 ),
               ),
             ],

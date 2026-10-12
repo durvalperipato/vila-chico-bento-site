@@ -4,17 +4,23 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/localization/app_language.dart';
 import '../../../core/settings/app_settings.dart';
+import '../../admin/domain/entities/content_bundle.dart';
+import '../../admin/infrastructure/services/site_content_service.dart';
 import 'home_state.dart';
 
 /// Controller reativo da Home gerenciando o estado via [NanoController].
 class HomeController extends NanoController<HomeState> {
-  HomeController()
-      : super(
+  HomeController({SiteContentService? siteContentService})
+      : _siteContentService = siteContentService,
+        super(
           initialState: HomeState(
             currentLanguage: AppSettings.initialLanguage,
+            contentBundle: siteContentService?.bundle,
           ),
         );
 
+  final SiteContentService? _siteContentService;
+  SiteContentService? _activeService;
   final ScrollController scrollController = ScrollController();
 
   // Chaves de Scroll para navegação por âncoras
@@ -28,7 +34,26 @@ class HomeController extends NanoController<HomeState> {
   @override
   Future<void> init(String? id) async {
     scrollController.addListener(_onScroll);
-    emitLoaded(viewState);
+
+    _activeService = _siteContentService ??
+        (GetIt.I.isRegistered<SiteContentService>()
+            ? GetIt.I<SiteContentService>()
+            : null);
+
+    if (_activeService != null) {
+      _activeService!.addListener(_onContentChanged);
+      emitLoaded(viewState.copyWith(contentBundle: _activeService!.bundle));
+      await _activeService!.init();
+      emitLoaded(viewState.copyWith(contentBundle: _activeService!.bundle));
+    } else {
+      emitLoaded(viewState);
+    }
+  }
+
+  void _onContentChanged() {
+    if (_activeService != null) {
+      emitLoaded(viewState.copyWith(contentBundle: _activeService!.bundle));
+    }
   }
 
   void _onScroll() {
@@ -37,9 +62,24 @@ class HomeController extends NanoController<HomeState> {
 
   @override
   void dispose() {
+    _activeService?.removeListener(_onContentChanged);
     scrollController.removeListener(_onScroll);
     scrollController.dispose();
     super.dispose();
+  }
+
+  ContentBundle get contentBundle => viewState.contentBundle;
+
+  String getContent(String key, {String fallback = ''}) {
+    return contentBundle.getString(key, fallback: fallback);
+  }
+
+  List<String> getGalleryImages() {
+    return contentBundle.getStringList('gallery.images', fallback: const []);
+  }
+
+  List<Map<String, dynamic>> getServices() {
+    return contentBundle.getListMap('services.items', fallback: const []);
   }
 
   bool get isDarkMode => AppSettings.themeModeNotifier.value == ThemeMode.dark;
@@ -112,7 +152,8 @@ class HomeController extends NanoController<HomeState> {
   /// Abre o WhatsApp com a mensagem padrão de agendamento de adaptação.
   Future<void> openWhatsApp({String? customMessage}) async {
     final message = customMessage ??
-        'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!';
+        'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma '
+            'visita e o período de adaptação para o meu cãozinho!';
     final url = AppConstants.buildWhatsAppUrl(message);
     await launchUrlString(url);
   }

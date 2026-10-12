@@ -31,6 +31,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get navContact => 'Contato';
 
   @override
+  String get navCtaSchedule => 'Agendar Adaptação';
+
+  @override
+  String get brandTagline => 'Creche & Resort Canino';
+
+  @override
   String get heroBadge => '🐾 O Segundo Lar do Seu Cãozinho';
 
   @override

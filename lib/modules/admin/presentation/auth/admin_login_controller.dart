@@ -40,6 +40,9 @@ class AdminLoginController extends NanoController<AdminLoginState> {
         email: cleanEmail,
         password: password,
       ),
+      onSuccess: (_) {
+        NanoRouter.toReplacementNamed('/admin');
+      },
       onError: (error) {
         emitError(key: AdminDynamicMessage(error.toString()));
       },

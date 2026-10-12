@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Verifica se o usuário autenticado é SuperAdmin global
+    function isSuperAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isSuperAdmin == true;
+    }
+
+    // Verifica se o usuário pode editar o site:
+    // 1. É SuperAdmin global (/users/{uid})
+    // 2. Tem o siteId na lista allowedSites (/users/{uid})
+    // 3. Fallback: email listado em adminEmails (/sites/{siteId})
+    function canEditSite(siteId) {
+      return request.auth != null && (
+        isSuperAdmin() ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          'allowedSites' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data &&
+          siteId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.allowedSites
+        ) ||
+        (
+          request.auth.token.email != null &&
+          exists(/databases/$(database)/documents/sites/$(siteId)) &&
+          'adminEmails' in get(/databases/$(database)/documents/sites/$(siteId)).data &&
+          request.auth.token.email in get(/databases/$(database)/documents/sites/$(siteId)).data.adminEmails
+        )
+      );
+    }
+
+    // Coleção central de usuários e permissões
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isSuperAdmin());
+      allow write: if isSuperAdmin();
+    }
+
+    // Coleção de cada site
+    match /sites/{siteId} {
+      // Leitura pública das configs básicas do site
+      allow read: if true;
+      allow write: if canEditSite(siteId);
+
+      // Conteúdo publicado no ar: visitantes apenas lêem, só o admin edita
+      match /content/live {
+        allow read: if true;
+        allow write: if canEditSite(siteId);
+      }
+
+      // Rascunhos de edição (Staging): somente quem tem permissão edita
+      match /content/staging {
+        allow read, write: if canEditSite(siteId);
+      }
+
+      // Rascunhos de edição (subcoleção drafts)
+      match /drafts/{draftId} {
+        allow read, write: if canEditSite(siteId);
+      }
+
+      // Imagens WebP: públicas para visitantes, gravação restrita ao admin
+      match /images/{imageId} {
+        allow read: if true;
+        allow write: if canEditSite(siteId);
+      }
+    }
+  }
+}

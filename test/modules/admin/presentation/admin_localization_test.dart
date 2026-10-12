@@ -7,7 +7,7 @@ import 'package:vila_chico_bento_site/modules/admin/domain/entities/content_bund
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/auth_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/site_content_repository.dart';
 import 'package:vila_chico_bento_site/modules/admin/domain/repositories/storage_repository.dart';
-import 'package:vila_chico_bento_site/modules/admin/domain/vila_chico_bento_schema.dart';
+import 'package:vila_chico_bento_site/modules/admin/domain/domain.dart';
 import 'package:vila_chico_bento_site/modules/admin/infrastructure/services/site_content_service.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/auth/admin_messages.dart';
 import 'package:vila_chico_bento_site/modules/admin/presentation/workspace/admin_workspace_view.dart';
