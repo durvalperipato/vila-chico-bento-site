@@ -35,7 +35,7 @@ class ContactCtaSection extends StatelessWidget {
       key: controller.contactKey,
       constraints: isDesktop ? BoxConstraints(minHeight: minHeight) : null,
       alignment: Alignment.center,
-      color: AppColors.bgSurface(context),
+      color: AppColors.bgPrimary(context),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
