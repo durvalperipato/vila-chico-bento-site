@@ -25,25 +25,6 @@ class ServicesSection extends StatelessWidget {
   final HomeState state;
   final HomeController controller;
 
-  // Fotografias temáticas para cada serviço da creche
-  static const List<String> _servicePhotos = [
-    'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80', // Day Care / Recreação no gramado
-    'https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=800&q=80', // Hotelzinho / Cão relaxando
-    'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80', // Adaptação / Acolhimento
-  ];
-
-  static const List<String> _serviceCtaLabels = [
-    'Agendar Day Care',
-    'Consultar Vagas',
-    'Agendar Adaptação',
-  ];
-
-  static const List<String> _serviceChips = [
-    'Mais Procurado',
-    'Sem Gaiolas',
-    '100% Acolhedor',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final services = state.services;
@@ -138,14 +119,12 @@ class ServicesSection extends StatelessWidget {
                 children: [
                   // Cabeçalho da Seção com consistência visual
                   SectionTag(
-                    text: services.badge.isNotEmpty
-                        ? services.badge
-                        : 'O QUE FAZEMOS DE MELHOR',
+                    text: services.badgeDisplay,
                     icon: Icons.pets_rounded,
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    services.title,
+                    services.titleDisplay,
                     textAlign: TextAlign.center,
                     style: AppTypography.displayMedium(
                       color: AppColors.textPrimary(context),
@@ -156,22 +135,20 @@ class ServicesSection extends StatelessWidget {
                       height: 1.18,
                     ),
                   ),
-                  if (services.subtitle.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 680),
-                      child: Text(
-                        services.subtitle,
-                        textAlign: TextAlign.center,
-                        style: AppTypography.bodyMedium(
-                          color: AppColors.textSecondary(context),
-                        ).copyWith(
-                          fontSize: 15.5,
-                          height: 1.5,
-                        ),
+                  const SizedBox(height: 12),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 680),
+                    child: Text(
+                      services.subtitleDisplay,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.bodyMedium(
+                        color: AppColors.textSecondary(context),
+                      ).copyWith(
+                        fontSize: 15.5,
+                        height: 1.5,
                       ),
                     ),
-                  ],
+                  ),
                   const SizedBox(height: 32),
 
                   // 3 Cards em Colunas no Desktop (Esquerda, Meio, Direita) ou
@@ -203,13 +180,9 @@ class ServicesSection extends StatelessWidget {
             Expanded(
               child: _ServicePhotoCard(
                 service: items[i],
-                photoUrl: i < _servicePhotos.length
-                    ? _servicePhotos[i]
-                    : _servicePhotos.first,
-                chipLabel: i < _serviceChips.length ? _serviceChips[i] : '',
-                ctaLabel: i < _serviceCtaLabels.length
-                    ? _serviceCtaLabels[i]
-                    : 'Consultar',
+                photoUrl: items[i].image,
+                chipLabel: items[i].badge,
+                ctaLabel: items[i].actionText,
                 controller: controller,
                 isFeatured: i == 0,
               ),
@@ -231,13 +204,9 @@ class ServicesSection extends StatelessWidget {
           if (i > 0) const SizedBox(height: 20),
           _ServicePhotoCard(
             service: items[i],
-            photoUrl: i < _servicePhotos.length
-                ? _servicePhotos[i]
-                : _servicePhotos.first,
-            chipLabel: i < _serviceChips.length ? _serviceChips[i] : '',
-            ctaLabel: i < _serviceCtaLabels.length
-                ? _serviceCtaLabels[i]
-                : 'Consultar',
+            photoUrl: items[i].image,
+            chipLabel: items[i].badge,
+            ctaLabel: items[i].actionText,
             controller: controller,
             isFeatured: i == 0,
           ),
@@ -319,17 +288,29 @@ class _ServicePhotoCardState extends State<_ServicePhotoCard> {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image(
-                    image: widget.photoUrl.toImageProvider(),
-                    fit: BoxFit.cover,
-                    gaplessPlayback: true,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return NanoSkeleton.box(
-                        color: AppColors.bgCard(context),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => Container(
+                  if (widget.photoUrl.isNotEmpty)
+                    Image(
+                      image: widget.photoUrl.toImageProvider(),
+                      fit: BoxFit.cover,
+                      gaplessPlayback: true,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return NanoSkeleton.box(
+                          color: AppColors.bgCard(context),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: service.accentColor.withValues(alpha: 0.1),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.pets_rounded,
+                          size: 40,
+                          color: service.accentColor,
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
                       color: service.accentColor.withValues(alpha: 0.1),
                       alignment: Alignment.center,
                       child: Icon(
@@ -338,7 +319,6 @@ class _ServicePhotoCardState extends State<_ServicePhotoCard> {
                         color: service.accentColor,
                       ),
                     ),
-                  ),
 
                   // Gradiente sutil na base da foto
                   Positioned(
@@ -443,46 +423,47 @@ class _ServicePhotoCardState extends State<_ServicePhotoCard> {
                       height: 1.45,
                     ),
                   ),
-                  const SizedBox(height: 20),
-
                   // 3. Link de Ação Editorial Elegante com Seta Animada
-                  InkWell(
-                    onTap: () => widget.controller.openWhatsApp(
-                      customMessage: service.whatsappMessage,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            widget.ctaLabel,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: service.accentColor,
-                              letterSpacing: -0.1,
+                  if (widget.ctaLabel.isNotEmpty) ...[
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () => widget.controller.openWhatsApp(
+                        customMessage: service.whatsappMessage,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.ctaLabel,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: service.accentColor,
+                                letterSpacing: -0.1,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
-                            transform: Matrix4.translationValues(
-                              _isHovered ? 4 : 0,
-                              0,
-                              0,
+                            const SizedBox(width: 6),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 180),
+                              transform: Matrix4.translationValues(
+                                _isHovered ? 4 : 0,
+                                0,
+                                0,
+                              ),
+                              child: Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 16,
+                                color: service.accentColor,
+                              ),
                             ),
-                            child: Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 16,
-                              color: service.accentColor,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

@@ -26,20 +26,25 @@ class AdminDesktopSplitScreen extends StatelessWidget {
       children: [
         // Left Column: Form Editor
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: AppColors.borderSubtle(context),
+          child: RepaintBoundary(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: AppColors.borderSubtle(context),
+                  ),
                 ),
               ),
-            ),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              child: AdminWorkspaceFormContent(
-                state: state,
-                controller: controller,
-                isDark: isDark,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
+                child: AdminWorkspaceFormContent(
+                  state: state,
+                  controller: controller,
+                  isDark: isDark,
+                ),
               ),
             ),
           ),
@@ -47,20 +52,22 @@ class AdminDesktopSplitScreen extends StatelessWidget {
 
         // Right Column: Live Real-Time Preview
         Expanded(
-          child: Column(
-            children: [
-              AdminPreviewToolbar(
-                selectedDevice: state.previewDevice,
-                onDeviceChanged: controller.setPreviewDevice,
-              ),
-              Expanded(
-                child: AdminLivePreview(
-                  bundle: state.bundle,
-                  previewDevice: state.previewDevice,
-                  selectedSectionNotifier: controller.selectedSectionNotifier,
+          child: RepaintBoundary(
+            child: Column(
+              children: [
+                AdminPreviewToolbar(
+                  selectedDevice: state.previewDevice,
+                  onDeviceChanged: controller.setPreviewDevice,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: AdminLivePreview(
+                    bundle: state.bundle,
+                    previewDevice: state.previewDevice,
+                    selectedSectionNotifier: controller.selectedSectionNotifier,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

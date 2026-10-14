@@ -13,6 +13,7 @@ class HeroViewContent {
     required this.subtitle,
     required this.ctaWhatsappText,
     required this.ctaServicesText,
+    this.highlights = const [],
     this.bannerAlignmentY = 0.0,
   });
 
@@ -28,6 +29,12 @@ class HeroViewContent {
       fallback: bundle.getString(HeroKeys.mainImage),
     );
 
+    final rawHighlights = bundle.getListMap(HeroKeys.highlights);
+    final highlights = rawHighlights
+        .map((item) => item['label']?.toString() ?? '')
+        .where((text) => text.isNotEmpty)
+        .toList();
+
     return HeroViewContent(
       mainImage: mainImage,
       bannerAlignmentY: bannerAlignmentY,
@@ -39,6 +46,7 @@ class HeroViewContent {
         fallback: bundle.getString(HeroKeys.ctaPrimary),
       ),
       ctaServicesText: bundle.getString(HeroKeys.ctaSecondary),
+      highlights: highlights,
     );
   }
 
@@ -49,6 +57,33 @@ class HeroViewContent {
   final String subtitle;
   final String ctaWhatsappText;
   final String ctaServicesText;
+  final List<String> highlights;
+
+  String get badgeDisplay =>
+      badge.isNotEmpty ? badge : '[ Badge Superior ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Título Principal ]';
+  String get subtitleDisplay =>
+      subtitle.isNotEmpty ? subtitle : '[ Subtítulo da Seção ]';
+  String get ctaWhatsappDisplay =>
+      ctaWhatsappText.isNotEmpty ? ctaWhatsappText : '[ Agendar Visita ]';
+  String get ctaServicesDisplay =>
+      ctaServicesText.isNotEmpty ? ctaServicesText : '[ Conhecer Serviços ]';
+}
+
+/// Pilar de cuidado da seção Sobre.
+class AboutViewPillar {
+  const AboutViewPillar({
+    required this.title,
+    required this.description,
+  });
+
+  final String title;
+  final String description;
+
+  String get titleDisplay => title.isNotEmpty ? title : '[ Título do Pilar ]';
+  String get descriptionDisplay =>
+      description.isNotEmpty ? description : '[ Descrição do Pilar ]';
 }
 
 /// Modelo fortemente tipado para a seção Sobre (About).
@@ -57,6 +92,8 @@ class AboutViewContent {
     required this.badge,
     required this.title,
     required this.description,
+    this.image = '',
+    this.pillars = const [],
     String? description1,
     String? description2,
   });
@@ -67,16 +104,36 @@ class AboutViewContent {
       fallback: bundle.getString(AboutKeys.descriptionLegacy),
     );
 
+    final rawPillars = bundle.getListMap(AboutKeys.pillars);
+    final pillars = rawPillars.map((p) {
+      return AboutViewPillar(
+        title: p['title']?.toString() ?? '',
+        description: p['description']?.toString() ?? '',
+      );
+    }).toList();
+
     return AboutViewContent(
       badge: bundle.getString(AboutKeys.badge),
       title: bundle.getString(AboutKeys.title),
       description: desc,
+      image: bundle.getString(AboutKeys.image),
+      pillars: pillars,
     );
   }
 
   final String badge;
   final String title;
   final String description;
+  final String image;
+  final List<AboutViewPillar> pillars;
+
+  String get badgeDisplay => badge.isNotEmpty ? badge : '[ SOBRE NÓS ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Título da Seção ]';
+  String get descriptionDisplay => description.isNotEmpty
+      ? description
+      : '[ Conteúdo sobre a creche e cuidados ]';
+  String get imageDisplay => image;
 
   /// Retained for backwards compatibility if needed
   String get description1 => description;
@@ -92,6 +149,8 @@ class ServiceItemContent {
     required this.icon,
     required this.accentColor,
     required this.whatsappMessage,
+    this.image = '',
+    this.actionText = '',
   });
 
   final String title;
@@ -100,6 +159,8 @@ class ServiceItemContent {
   final IconData icon;
   final Color accentColor;
   final String whatsappMessage;
+  final String image;
+  final String actionText;
 }
 
 /// Modelo fortemente tipado para a seção Serviços.
@@ -125,20 +186,14 @@ class ServicesViewContent {
       AppColors.accentGreen,
       Color(0xFF8B5CF6),
     ];
-    const defaultBadges = [
-      'Mais Procurado',
-      'Sem Gaiolas',
-      'Cuidado & Segurança',
-      'Bem-Estar Total',
-    ];
-
     final items = rawList.asMap().entries.map((entry) {
       final index = entry.key;
       final map = entry.value;
       final title = (map['title'] as String?) ?? '';
       final desc = (map['description'] as String?) ?? '';
-      final badge = (map['badge'] as String?) ??
-          defaultBadges[index % defaultBadges.length];
+      final badge = (map['tag'] as String?) ?? (map['badge'] as String?) ?? '';
+      final image = (map['image'] as String?) ?? '';
+      final actionText = (map['action_text'] as String?) ?? '';
       final icon = defaultIcons[index % defaultIcons.length];
       final color = defaultColors[index % defaultColors.length];
 
@@ -148,6 +203,8 @@ class ServicesViewContent {
         badge: badge,
         icon: icon,
         accentColor: color,
+        image: image,
+        actionText: actionText,
         whatsappMessage: 'Olá! Gostaria de saber mais sobre o serviço de '
             '"$title" na Vila Chico Bento!',
       );
@@ -165,6 +222,12 @@ class ServicesViewContent {
   final String title;
   final String subtitle;
   final List<ServiceItemContent> items;
+
+  String get badgeDisplay => badge.isNotEmpty ? badge : '[ SERVIÇOS ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Nossos Serviços ]';
+  String get subtitleDisplay =>
+      subtitle.isNotEmpty ? subtitle : '[ Subtítulo de Serviços ]';
 }
 
 /// Modelo fortemente tipado para a Galeria de Fotos.
@@ -189,6 +252,12 @@ class GalleryViewContent {
   final String title;
   final String subtitle;
   final List<String> images;
+
+  String get badgeDisplay =>
+      badge.isNotEmpty ? badge : '[ MOMENTOS FELIZES ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Galeria de Fotos ]';
+  String get subtitleDisplay => subtitle;
 }
 
 /// Modelo fortemente tipado para a seção Localização.
@@ -216,6 +285,14 @@ class LocationViewContent {
   final String address;
   final String hours;
   final String mapEmbedUrl;
+
+  String get badgeDisplay => badge.isNotEmpty ? badge : '[ LOCALIZAÇÃO ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Onde Estamos & Horários ]';
+  String get addressDisplay =>
+      address.isNotEmpty ? address : '[ Endereço Completo ]';
+  String get hoursDisplay =>
+      hours.isNotEmpty ? hours : '[ Horário de Funcionamento ]';
 }
 
 /// Modelo fortemente tipado para a seção Contato / CTA.
@@ -243,6 +320,12 @@ class ContactViewContent {
   final String subtitle;
   final String whatsappNumber;
   final String instagramHandle;
+
+  String get badgeDisplay => badge.isNotEmpty ? badge : '[ FALE CONOSCO ]';
+  String get titleDisplay =>
+      title.isNotEmpty ? title : '[ Título de Contato ]';
+  String get subtitleDisplay =>
+      subtitle.isNotEmpty ? subtitle : '[ Subtítulo de Contato ]';
 }
 
 /// Modelo fortemente tipado para o Rodapé (Footer).
@@ -270,4 +353,7 @@ class FooterViewContent {
   final String instagram;
   final String address;
   final String hours;
+
+  String get aboutTextDisplay =>
+      aboutText.isNotEmpty ? aboutText : '[ Texto sobre nós no rodapé ]';
 }

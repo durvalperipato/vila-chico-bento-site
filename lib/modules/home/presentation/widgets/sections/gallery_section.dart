@@ -120,14 +120,12 @@ class GallerySection extends StatelessWidget {
                 children: [
                   // Cabeçalho da Seção com consistência visual
                   SectionTag(
-                    text: gallery.badge.isNotEmpty
-                        ? gallery.badge
-                        : 'MOMENTOS FELIZES',
+                    text: gallery.badgeDisplay,
                     icon: Icons.pets_rounded,
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    gallery.title,
+                    gallery.titleDisplay,
                     textAlign: TextAlign.center,
                     style: AppTypography.displayMedium(
                       color: AppColors.textPrimary(context),
@@ -138,12 +136,12 @@ class GallerySection extends StatelessWidget {
                       height: 1.18,
                     ),
                   ),
-                  if (gallery.subtitle.isNotEmpty) ...[
+                  if (gallery.subtitleDisplay.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 680),
                       child: Text(
-                        gallery.subtitle,
+                        gallery.subtitleDisplay,
                         textAlign: TextAlign.center,
                         style: AppTypography.bodyMedium(
                           color: AppColors.textSecondary(context),

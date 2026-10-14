@@ -63,7 +63,7 @@ class SiteContentService extends ValueNotifier<ContentBundle> {
   }
 
   /// Loads existing draft data, if any, merging on top of current published
-  /// content.
+  /// content and canonical defaults.
   Future<ContentBundle?> loadDraft() async {
     final draft = await repository.getDraft(siteId);
     if (draft != null && draft.isNotEmpty) {

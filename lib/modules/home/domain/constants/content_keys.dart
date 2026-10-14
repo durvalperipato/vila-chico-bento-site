@@ -14,6 +14,7 @@ abstract final class HeroKeys {
   static const ctaWhatsapp = 'hero.cta_whatsapp_text';
   static const ctaPrimary = 'hero.cta_primary';
   static const ctaSecondary = 'hero.cta_secondary';
+  static const highlights = 'hero.highlights';
 }
 
 abstract final class AboutKeys {
@@ -21,6 +22,8 @@ abstract final class AboutKeys {
   static const title = 'about.title';
   static const description = 'about.description';
   static const descriptionLegacy = 'about.description_1';
+  static const image = 'about.image';
+  static const pillars = 'about.pillars';
 }
 
 abstract final class ServicesKeys {

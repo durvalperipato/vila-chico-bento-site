@@ -22,6 +22,7 @@ class VilaChicoBentoSchema {
             key: HeroKeys.badge,
             label: 'Badge Superior',
             maxLength: 50,
+            required: true,
           ),
           AdminField.text(
             key: HeroKeys.title,
@@ -40,6 +41,26 @@ class VilaChicoBentoSchema {
             key: HeroKeys.ctaWhatsapp,
             label: 'Texto do Botão WhatsApp',
             maxLength: 40,
+            required: true,
+          ),
+          AdminField.text(
+            key: HeroKeys.ctaSecondary,
+            label: 'Texto do Botão Secundário',
+            maxLength: 40,
+            required: true,
+          ),
+          AdminField.list(
+            key: HeroKeys.highlights,
+            label: 'Destaques de Confiança (Chips)',
+            maxItems: 4,
+            itemFields: [
+              AdminField.text(
+                key: 'label',
+                label: 'Texto do Destaque',
+                maxLength: 30,
+                required: true,
+              ),
+            ],
           ),
           AdminField.image(
             key: HeroKeys.bannerImage,
@@ -57,6 +78,7 @@ class VilaChicoBentoSchema {
             key: AboutKeys.badge,
             label: 'Badge',
             maxLength: 40,
+            required: true,
           ),
           AdminField.text(
             key: AboutKeys.title,
@@ -71,6 +93,31 @@ class VilaChicoBentoSchema {
             maxLength: 700,
             required: true,
           ),
+          AdminField.image(
+            key: AboutKeys.image,
+            label: 'Foto de Destaque',
+            maxSizeMB: 3.0,
+          ),
+          AdminField.list(
+            key: AboutKeys.pillars,
+            label: 'Pilares de Cuidado (Cards)',
+            maxItems: 4,
+            itemFields: [
+              AdminField.text(
+                key: 'title',
+                label: 'Título do Pilar',
+                maxLength: 40,
+                required: true,
+              ),
+              AdminField.text(
+                key: 'description',
+                label: 'Descrição',
+                maxLength: 160,
+                maxLines: 2,
+                required: true,
+              ),
+            ],
+          ),
         ],
       ),
       AdminSectionGroup(
@@ -82,6 +129,7 @@ class VilaChicoBentoSchema {
             key: ServicesKeys.badge,
             label: 'Badge',
             maxLength: 40,
+            required: true,
           ),
           AdminField.text(
             key: ServicesKeys.title,
@@ -113,6 +161,20 @@ class VilaChicoBentoSchema {
                 maxLength: 160,
                 maxLines: 2,
               ),
+              AdminField.image(
+                key: 'image',
+                label: 'Foto do Serviço',
+              ),
+              AdminField.text(
+                key: 'tag',
+                label: 'Tag em Destaque (ex: Mais Procurado)',
+                maxLength: 25,
+              ),
+              AdminField.text(
+                key: 'action_text',
+                label: 'Texto do Link de Ação (ex: Agendar Day Care)',
+                maxLength: 30,
+              ),
             ],
           ),
         ],
@@ -126,12 +188,19 @@ class VilaChicoBentoSchema {
             key: GalleryKeys.badge,
             label: 'Badge',
             maxLength: 40,
+            required: true,
           ),
           AdminField.text(
             key: GalleryKeys.title,
             label: 'Título da Galeria',
             maxLength: 80,
             required: true,
+          ),
+          AdminField.text(
+            key: GalleryKeys.subtitle,
+            label: 'Subtítulo da Galeria',
+            maxLength: 160,
+            maxLines: 2,
           ),
           AdminField.gallery(
             key: GalleryKeys.images,
@@ -148,6 +217,7 @@ class VilaChicoBentoSchema {
             key: LocationKeys.badge,
             label: 'Badge',
             maxLength: 40,
+            required: true,
           ),
           AdminField.text(
             key: LocationKeys.title,
@@ -176,6 +246,25 @@ class VilaChicoBentoSchema {
         icon: AdminSectionIcon.contactPhone,
         fields: [
           AdminField.text(
+            key: ContactKeys.badge,
+            label: 'Badge',
+            maxLength: 40,
+            required: true,
+          ),
+          AdminField.text(
+            key: ContactKeys.title,
+            label: 'Título de Contato',
+            maxLength: 80,
+            required: true,
+          ),
+          AdminField.text(
+            key: ContactKeys.subtitle,
+            label: 'Subtítulo',
+            maxLength: 200,
+            maxLines: 3,
+            required: true,
+          ),
+          AdminField.text(
             key: ContactKeys.whatsappNumber,
             label: 'Número WhatsApp Oficial',
             maxLength: 25,
@@ -185,6 +274,20 @@ class VilaChicoBentoSchema {
             key: ContactKeys.instagramHandle,
             label: 'Usuário do Instagram',
             maxLength: 40,
+            required: true,
+          ),
+        ],
+      ),
+      AdminSectionGroup(
+        id: 'footer',
+        title: 'Rodapé (Footer)',
+        icon: AdminSectionIcon.general,
+        fields: [
+          AdminField.text(
+            key: FooterKeys.aboutText,
+            label: 'Texto Sobre nós no Rodapé',
+            maxLength: 350,
+            maxLines: 4,
             required: true,
           ),
         ],

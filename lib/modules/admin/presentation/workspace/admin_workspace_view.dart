@@ -33,7 +33,7 @@ class _AdminWorkspaceViewState
       backgroundColor: AppColors.bgPrimary(context),
       loadingWidget: const SizedBox.shrink(),
       header: (context, _) {
-        final screenWidth = MediaQuery.sizeOf(context).width;
+        final isMobile = NanoDeviceType.isMobile(context);
         return AppBar(
           backgroundColor: AppColors.bgCard(context),
           elevation: 0,
@@ -60,7 +60,22 @@ class _AdminWorkspaceViewState
             ],
           ),
           actions: [
-            if (screenWidth >= 700) ...[
+            if (!isMobile) ...[
+              // Revert/Discard Draft
+              TextButton.icon(
+                onPressed: () => _confirmDiscard(context, controller),
+                icon: const Icon(Icons.restore_rounded, size: 16),
+                label: const Text('Reverter'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.redAccent,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+
               // Save Draft Action with NanoCommandBuilder
               NanoCommandBuilder<void>(
                 command: controller.saveDraftCommand,
@@ -121,6 +136,15 @@ class _AdminWorkspaceViewState
                 },
               ),
             ] else ...[
+              IconButton(
+                tooltip: 'Reverter para Publicado',
+                icon: const Icon(
+                  Icons.restore_rounded,
+                  size: 20,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () => _confirmDiscard(context, controller),
+              ),
               NanoCommandBuilder<void>(
                 command: controller.saveDraftCommand,
                 builder: (context, cmdState) {
@@ -195,6 +219,39 @@ class _AdminWorkspaceViewState
           ),
         );
       },
+    );
+  }
+
+  void _confirmDiscard(
+    BuildContext context,
+    AdminWorkspaceController controller,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Descartar alterações?'),
+        content: const Text(
+          'Todas as alterações não publicadas serão descartadas e o editor '
+          'voltará ao conteúdo atualmente publicado no site.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              controller.discardDraft();
+            },
+            child: const Text('Sim, reverter'),
+          ),
+        ],
+      ),
     );
   }
 }

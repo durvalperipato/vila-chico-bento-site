@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
-import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
 import 'package:vila_chico_bento_site/core/extensions/image_provider_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
@@ -25,17 +24,12 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final hero = state?.hero ?? controller.viewState.hero;
-    final badgeText = hero.badge.isNotEmpty
-        ? hero.badge
-        : l10n.heroBadge.replaceAll('🐾 ', '');
-    final titleText = hero.title.isNotEmpty ? hero.title : l10n.heroTitle;
-    final subtitleText =
-        hero.subtitle.isNotEmpty ? hero.subtitle : l10n.heroSubtitle;
-    final ctaText = hero.ctaWhatsappText.isNotEmpty
-        ? hero.ctaWhatsappText
-        : l10n.navCtaSchedule;
+    final badgeText = hero.badgeDisplay;
+    final titleText = hero.titleDisplay;
+    final subtitleText = hero.subtitleDisplay;
+    final ctaText = hero.ctaWhatsappDisplay;
+    final ctaServicesText = hero.ctaServicesDisplay;
 
     final isDark = controller.isDarkMode;
     final isDesktop = NanoDeviceType.isDesktop(context);
@@ -317,7 +311,7 @@ class HeroSection extends StatelessWidget {
                               color: AppColors.primary,
                             ),
                             label: Text(
-                              l10n.heroCtaServices,
+                              ctaServicesText,
                               style: TextStyle(
                                 fontSize: isMobile ? 15 : 16,
                                 fontWeight: FontWeight.w700,
@@ -340,28 +334,17 @@ class HeroSection extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: isMobile ? 18 : 28,
                       runSpacing: 10,
-                      children: const [
-                        _PillarBadge(
-                          icon: Icons.park_rounded,
-                          label: 'Área Verde ao Ar Livre',
-                          color: AppColors.accentGreen,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.favorite_rounded,
-                          label: '100% Livre de Baias',
-                          color: AppColors.primary,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.shield_rounded,
-                          label: 'Supervisão Atenta',
-                          color: Colors.amber,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.location_on_rounded,
-                          label: 'Pinhais / PR',
-                          color: Colors.cyanAccent,
-                        ),
-                      ],
+                      children: hero.highlights.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final text = entry.value;
+                        final visual =
+                            _defaultPillars[idx % _defaultPillars.length];
+                        return _PillarBadge(
+                          icon: visual.icon,
+                          label: text.isNotEmpty ? text : '[ Destaque ]',
+                          color: visual.color,
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -373,6 +356,13 @@ class HeroSection extends StatelessWidget {
     );
   }
 }
+
+const _defaultPillars = [
+  (icon: Icons.park_rounded, color: AppColors.accentGreen),
+  (icon: Icons.favorite_rounded, color: AppColors.primary),
+  (icon: Icons.shield_rounded, color: Colors.amber),
+  (icon: Icons.location_on_rounded, color: Colors.cyanAccent),
+];
 
 class _PillarBadge extends StatelessWidget {
   const _PillarBadge({

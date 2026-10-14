@@ -81,16 +81,12 @@ class ContactCtaSection extends StatelessWidget {
                 child: Column(
                   children: [
                     SectionTag(
-                      text: contact.badge.isNotEmpty
-                          ? contact.badge
-                          : l10n.contactBadge,
+                      text: contact.badgeDisplay,
                       icon: Icons.chat_rounded,
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      contact.title.isNotEmpty
-                          ? contact.title
-                          : l10n.contactTitle,
+                      contact.titleDisplay,
                       textAlign: TextAlign.center,
                       style: isDesktop
                           ? AppTypography.displaySmall(
@@ -104,9 +100,7 @@ class ContactCtaSection extends StatelessWidget {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 620),
                       child: Text(
-                        contact.subtitle.isNotEmpty
-                            ? contact.subtitle
-                            : l10n.contactSubtitle,
+                        contact.subtitleDisplay,
                         textAlign: TextAlign.center,
                         style: AppTypography.bodyLarge(
                           color: AppColors.textSecondary(context),

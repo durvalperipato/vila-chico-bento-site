@@ -31,9 +31,11 @@ class AboutSection extends StatelessWidget {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final minViewportHeight = (screenHeight - 86).clamp(600.0, 920.0);
 
-    final photoUrl = state.gallery.images.isNotEmpty
-        ? state.gallery.images.first
-        : 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80';
+    final photoUrl = about.image.isNotEmpty
+        ? about.image
+        : (state.gallery.images.isNotEmpty
+            ? state.gallery.images.first
+            : '');
 
     return Container(
       key: controller.aboutKey,
@@ -153,12 +155,12 @@ class AboutSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SectionTag(
-                text: about.badge,
+                text: about.badgeDisplay,
                 icon: Icons.pets_rounded,
               ),
               const SizedBox(height: 14),
               Text(
-                about.title,
+                about.titleDisplay,
                 style: AppTypography.displayMedium(
                   color: AppColors.textPrimary(context),
                 ).copyWith(
@@ -170,7 +172,7 @@ class AboutSection extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               Text(
-                about.description,
+                about.descriptionDisplay,
                 style: AppTypography.bodyMedium(
                   color: AppColors.textSecondary(context),
                 ).copyWith(
@@ -180,30 +182,8 @@ class AboutSection extends StatelessWidget {
               ),
               const SizedBox(height: 22),
 
-              // 3 Indicadores de Confiança / Cuidado Canino
-              _buildTrustPill(
-                context: context,
-                icon: Icons.sports_baseball_rounded,
-                accentColor: AppColors.primary,
-                title: l10n.aboutPoint1Title,
-                description: l10n.aboutPoint1Desc,
-              ),
-              const SizedBox(height: 12),
-              _buildTrustPill(
-                context: context,
-                icon: Icons.favorite_rounded,
-                accentColor: AppColors.accentGreen,
-                title: l10n.aboutPoint2Title,
-                description: l10n.aboutPoint2Desc,
-              ),
-              const SizedBox(height: 12),
-              _buildTrustPill(
-                context: context,
-                icon: Icons.park_rounded,
-                accentColor: AppColors.secondary,
-                title: l10n.aboutPoint3Title,
-                description: l10n.aboutPoint3Desc,
-              ),
+              // Indicadores de Confiança / Cuidado Canino
+              ..._buildPillars(context: context, l10n: l10n, about: about),
             ],
           ),
         ),
@@ -230,12 +210,12 @@ class AboutSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTag(
-          text: about.badge,
+          text: about.badgeDisplay,
           icon: Icons.pets_rounded,
         ),
         const SizedBox(height: 14),
         Text(
-          about.title,
+          about.titleDisplay,
           style: AppTypography.displaySmall(
             color: AppColors.textPrimary(context),
           ).copyWith(
@@ -247,7 +227,7 @@ class AboutSection extends StatelessWidget {
         _buildPhotoCard(context, photoUrl, height: 280),
         const SizedBox(height: 20),
         Text(
-          about.description,
+          about.descriptionDisplay,
           style: AppTypography.bodyMedium(
             color: AppColors.textSecondary(context),
           ).copyWith(
@@ -256,31 +236,68 @@ class AboutSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        _buildTrustPill(
-          context: context,
-          icon: Icons.sports_baseball_rounded,
-          accentColor: AppColors.primary,
-          title: l10n.aboutPoint1Title,
-          description: l10n.aboutPoint1Desc,
-        ),
-        const SizedBox(height: 12),
-        _buildTrustPill(
-          context: context,
-          icon: Icons.favorite_rounded,
-          accentColor: AppColors.accentGreen,
-          title: l10n.aboutPoint2Title,
-          description: l10n.aboutPoint2Desc,
-        ),
-        const SizedBox(height: 12),
-        _buildTrustPill(
-          context: context,
-          icon: Icons.park_rounded,
-          accentColor: AppColors.secondary,
-          title: l10n.aboutPoint3Title,
-          description: l10n.aboutPoint3Desc,
-        ),
+        ..._buildPillars(context: context, l10n: l10n, about: about),
       ],
     );
+  }
+
+  static const _defaultPillarVisuals = [
+    (Icons.sports_baseball_rounded, AppColors.primary),
+    (Icons.favorite_rounded, AppColors.accentGreen),
+    (Icons.park_rounded, AppColors.secondary),
+    (Icons.shield_rounded, Colors.amber),
+  ];
+
+  List<Widget> _buildPillars({
+    required BuildContext context,
+    required dynamic l10n,
+    required dynamic about,
+  }) {
+    if (about.pillars.isNotEmpty) {
+      return about.pillars.asMap().entries.map<Widget>((entry) {
+        final idx = entry.key;
+        final pillar = entry.value;
+        final visual =
+            _defaultPillarVisuals[idx % _defaultPillarVisuals.length];
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: idx < about.pillars.length - 1 ? 12 : 0,
+          ),
+          child: _buildTrustPill(
+            context: context,
+            icon: visual.$1,
+            accentColor: visual.$2,
+            title: pillar.titleDisplay,
+            description: pillar.descriptionDisplay,
+          ),
+        );
+      }).toList();
+    }
+    return [
+      _buildTrustPill(
+        context: context,
+        icon: Icons.sports_baseball_rounded,
+        accentColor: AppColors.primary,
+        title: l10n.aboutPoint1Title,
+        description: l10n.aboutPoint1Desc,
+      ),
+      const SizedBox(height: 12),
+      _buildTrustPill(
+        context: context,
+        icon: Icons.favorite_rounded,
+        accentColor: AppColors.accentGreen,
+        title: l10n.aboutPoint2Title,
+        description: l10n.aboutPoint2Desc,
+      ),
+      const SizedBox(height: 12),
+      _buildTrustPill(
+        context: context,
+        icon: Icons.park_rounded,
+        accentColor: AppColors.secondary,
+        title: l10n.aboutPoint3Title,
+        description: l10n.aboutPoint3Desc,
+      ),
+    ];
   }
 
   /// Indicador de confiança com tipografia legível, padding confortável e
@@ -435,30 +452,44 @@ class AboutSection extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: organicBorderRadius,
-                    child: Image(
-                      image: photoUrl.toImageProvider(),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return NanoSkeleton.box(
-                          borderRadius: organicBorderRadius,
-                          color: AppColors.bgCard(context),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.bgCard(context),
-                          borderRadius: organicBorderRadius,
-                        ),
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.pets_rounded,
-                          size: 56,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
+                    child: photoUrl.isNotEmpty
+                        ? Image(
+                            image: photoUrl.toImageProvider(),
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                            loadingBuilder: (context, child, progress) {
+                              if (progress == null) return child;
+                              return NanoSkeleton.box(
+                                borderRadius: organicBorderRadius,
+                                color: AppColors.bgCard(context),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.bgCard(context),
+                                borderRadius: organicBorderRadius,
+                              ),
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.pets_rounded,
+                                size: 56,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.bgCard(context),
+                              borderRadius: organicBorderRadius,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.pets_rounded,
+                              size: 56,
+                              color: AppColors.primary,
+                            ),
+                          ),
                   ),
 
                   // Gradiente suave no rodapé da imagem

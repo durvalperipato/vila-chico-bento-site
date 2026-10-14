@@ -73,7 +73,7 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                footer.aboutText,
+                footer.aboutTextDisplay,
                 style: AppTypography.bodyMedium(
                   color: AppColors.textSecondary(context),
                 ),
@@ -164,7 +164,7 @@ class FooterSection extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          footer.aboutText,
+                          footer.aboutTextDisplay,
                           style: AppTypography.bodyMedium(
                             color: AppColors.textSecondary(context),
                           ),

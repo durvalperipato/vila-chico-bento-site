@@ -11,6 +11,7 @@ class ServiceCard extends StatefulWidget {
     required this.badge,
     required this.accentColor,
     required this.onCtaTap,
+    this.ctaText = '',
     super.key,
   });
 
@@ -20,6 +21,7 @@ class ServiceCard extends StatefulWidget {
   final String badge;
   final Color accentColor;
   final VoidCallback onCtaTap;
+  final String ctaText;
 
   @override
   State<ServiceCard> createState() => _ServiceCardState();
@@ -108,33 +110,35 @@ class _ServiceCardState extends State<ServiceCard> {
                 color: AppColors.textSecondary(context),
               ).copyWith(fontSize: 13.5, height: 1.45),
             ),
-            const SizedBox(height: 14),
-            InkWell(
-              onTap: widget.onCtaTap,
-              borderRadius: BorderRadius.circular(6),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Consultar detalhes',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
+            if (widget.ctaText.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              InkWell(
+                onTap: widget.onCtaTap,
+                borderRadius: BorderRadius.circular(6),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.ctaText,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: widget.accentColor,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 15,
                         color: widget.accentColor,
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 15,
-                      color: widget.accentColor,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),

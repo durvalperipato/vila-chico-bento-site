@@ -30,8 +30,8 @@ class LocationSection extends StatelessWidget {
     final isDesktop = context.screen.isDesktop;
     final minHeight =
         isDesktop ? (context.screen.height - 86).clamp(600.0, 1000.0) : 0.0;
-    final addressText = location.address;
-    final hoursText = location.hours;
+    final addressText = location.addressDisplay;
+    final hoursText = location.hoursDisplay;
 
     return Container(
       key: controller.locationKey,
@@ -75,20 +75,20 @@ class LocationSection extends StatelessWidget {
               child: Column(
                 children: [
                   SectionTag(
-                    text: location.badge,
+                    text: location.badgeDisplay,
                     icon: Icons.place_rounded,
                   ),
                   const SizedBox(height: 10),
                   NanoResponsiveLayout(
                     desktop: (context) => Text(
-                      location.title,
+                      location.titleDisplay,
                       textAlign: TextAlign.center,
                       style: AppTypography.displayMedium(
                         color: AppColors.textPrimary(context),
                       ),
                     ),
                     mobile: (context) => Text(
-                      location.title,
+                      location.titleDisplay,
                       textAlign: TextAlign.center,
                       style: AppTypography.displaySmall(
                         color: AppColors.textPrimary(context),
