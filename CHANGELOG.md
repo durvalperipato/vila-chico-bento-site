@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.0.2] - 2026-10-14
+
+### Added
+- **Admin Workspace & Live Preview**:
+  - Interactive CMS split-screen live preview with real-time responsive simulation (Desktop, Tablet, Mobile).
+  - NanoDebouncer integration for smooth text input without UI lag.
+  - Multi-section accordion editor supporting Hero, About, Services, Gallery, Location, Contact, and Footer.
+  - Live draft synchronization and one-click publishing flow to production.
+  - Image upload and URL management for galleries and content sections.
+- **Dynamic Content & Cloud Sync**:
+  - Full schema-driven synchronization with Firebase Firestore (`sites/vila-chico-bento` and `drafts/current`).
+  - Added support for rich About section pillars (`Environmental Enrichment`, `Safety & Supervision`, `Spacious Green Area`).
+  - Added photo cards, badges, and custom WhatsApp CTA actions per service item.
+  - Support for custom hero highlights and secondary CTAs directly managed from the cloud.
+- **Section Enhancements**:
+  - **Hero Section**: Dynamic high-resolution banner with custom alignment, secondary glassmorphic CTA, and cloud highlights.
+  - **About Section**: Split Editorial layout with organic pebble photo card and interactive care pillars.
+  - **Services Section**: Triptych layout featuring real dog photography, dynamic badges, and direct WhatsApp booking buttons.
+
+### Changed
+- **Pure Cloud-Driven Architecture**:
+  - Completely eradicated all hardcoded fallback texts, default badge lists, and static placeholder URLs across Dart models and presentation widgets.
+  - Live preview renders dynamically from active content bundle with contextual placeholders during empty states.
+
 ## [0.0.1] - 2026-09-18
 
 ### Added

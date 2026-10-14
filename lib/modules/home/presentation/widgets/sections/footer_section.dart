@@ -12,15 +12,22 @@ import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.
 import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
 
 class FooterSection extends StatelessWidget {
-  const FooterSection({required this.controller, super.key});
+  const FooterSection({
+    required this.state,
+    required this.controller,
+    super.key,
+  });
+
+  final HomeState state;
   final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final isDark = controller.isDarkMode;
-    final isMobile = NanoDeviceType.isMobile(context);
-    final isDesktop = NanoDeviceType.isDesktop(context);
+    final footer = state.footer;
+    final isDark = context.theme.isDark;
+    final isMobile = context.screen.isMobile;
+    final isDesktop = context.screen.isDesktop;
 
     return Container(
       padding: EdgeInsets.only(
@@ -31,7 +38,7 @@ class FooterSection extends StatelessWidget {
         color: isDark ? const Color(0xFF080D1A) : const Color(0xFFF1EDE6),
         border: Border(
           top: BorderSide(
-            color: AppColors.borderSubtle(isDark),
+            color: AppColors.borderSubtle(context),
           ),
         ),
       ),
@@ -59,16 +66,16 @@ class FooterSection extends StatelessWidget {
                   Text(
                     'Vila Chico Bento',
                     style: AppTypography.titleMedium(
-                      color: AppColors.textPrimary(isDark),
+                      color: AppColors.textPrimary(context),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                'Creche e Hospedagem para Cães com amor, liberdade e respeito em Pinhais/PR.',
+                footer.aboutTextDisplay,
                 style: AppTypography.bodyMedium(
-                  color: AppColors.textSecondary(isDark),
+                  color: AppColors.textSecondary(context),
                 ),
               ),
               const SizedBox(height: 24),
@@ -77,7 +84,7 @@ class FooterSection extends StatelessWidget {
               Text(
                 'Redes Sociais & Contato',
                 style: AppTypography.labelLarge(
-                  color: AppColors.textPrimary(isDark),
+                  color: AppColors.textPrimary(context),
                 ),
               ),
               const SizedBox(height: 12),
@@ -117,9 +124,9 @@ class FooterSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                AppConstants.phoneDisplay,
+                footer.phone,
                 style: AppTypography.bodyMedium(
-                  color: AppColors.textSecondary(isDark),
+                  color: AppColors.textSecondary(context),
                 ),
               ),
             ] else
@@ -150,16 +157,16 @@ class FooterSection extends StatelessWidget {
                             Text(
                               'Vila Chico Bento',
                               style: AppTypography.titleMedium(
-                                color: AppColors.textPrimary(isDark),
+                                color: AppColors.textPrimary(context),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Creche e Hospedagem para Cães com amor,\nliberdade e respeito em Pinhais/PR.',
+                          footer.aboutTextDisplay,
                           style: AppTypography.bodyMedium(
-                            color: AppColors.textSecondary(isDark),
+                            color: AppColors.textSecondary(context),
                           ),
                         ),
                       ],
@@ -173,7 +180,7 @@ class FooterSection extends StatelessWidget {
                       Text(
                         'Redes Sociais & Contato',
                         style: AppTypography.labelLarge(
-                          color: AppColors.textPrimary(isDark),
+                          color: AppColors.textPrimary(context),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -213,9 +220,9 @@ class FooterSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        AppConstants.phoneDisplay,
+                        footer.phone,
                         style: AppTypography.bodyMedium(
-                          color: AppColors.textSecondary(isDark),
+                          color: AppColors.textSecondary(context),
                         ),
                       ),
                     ],
@@ -223,7 +230,7 @@ class FooterSection extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: 40),
-            Divider(color: AppColors.borderSubtle(isDark)),
+            Divider(color: AppColors.borderSubtle(context)),
             const SizedBox(height: 24),
 
             // Linha Final de Copyright & Assinatura NanoDevs
@@ -237,7 +244,7 @@ class FooterSection extends StatelessWidget {
                     child: Text(
                       l10n.footerRights,
                       style: AppTypography.bodyMedium(
-                        color: AppColors.textMuted(isDark),
+                        color: AppColors.textMuted(context),
                       ),
                     ),
                   ),
@@ -255,7 +262,7 @@ class FooterSection extends StatelessWidget {
                           HomeNavSection.hero,
                           controller.heroKey,
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -266,8 +273,8 @@ class FooterSection extends StatelessWidget {
                                 color: AppColors.primary,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            const Icon(
+                            SizedBox(width: 4),
+                            Icon(
                               Icons.arrow_upward_rounded,
                               size: 15,
                               color: AppColors.primary,
@@ -286,7 +293,7 @@ class FooterSection extends StatelessWidget {
                     l10n.footerRights,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyMedium(
-                      color: AppColors.textMuted(isDark),
+                      color: AppColors.textMuted(context),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -297,7 +304,7 @@ class FooterSection extends StatelessWidget {
                       HomeNavSection.hero,
                       controller.heroKey,
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
@@ -308,8 +315,8 @@ class FooterSection extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        const Icon(
+                        SizedBox(width: 4),
+                        Icon(
                           Icons.arrow_upward_rounded,
                           size: 15,
                           color: AppColors.primary,
@@ -366,7 +373,6 @@ class _DeveloperSignatureState extends State<_DeveloperSignature> {
               color: _isHovered
                   ? (isDark ? const Color(0x6638BDF8) : const Color(0x440284C7))
                   : Colors.transparent,
-              width: 1,
             ),
           ),
           child: Row(
@@ -377,7 +383,7 @@ class _DeveloperSignatureState extends State<_DeveloperSignature> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.textMuted(isDark),
+                  color: AppColors.textMuted(context),
                 ),
               ),
               AnimatedDefaultTextStyle(
@@ -396,9 +402,9 @@ class _DeveloperSignatureState extends State<_DeveloperSignature> {
                       : TextDecoration.none,
                   decorationColor: const Color(0xFF38BDF8),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text('NanoDevs'),
                     SizedBox(width: 4),
                     Text('⚡', style: TextStyle(fontSize: 11)),

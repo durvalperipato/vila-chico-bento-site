@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "vila-chico-bento-site",
     "public": "build/web",
     "ignore": [
       "firebase.json",
@@ -13,13 +14,16 @@
       }
     ]
   },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "flutter": {
     "platforms": {
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "vila-chico-bento",
+          "projectId": "nano-devs-cms",
           "configurations": {
-            "web": "1:187854558134:web:fe335ba884f8a0d4042717"
+            "web": "1:828884081479:web:36d938134e698fcee94a62"
           }
         }
       }

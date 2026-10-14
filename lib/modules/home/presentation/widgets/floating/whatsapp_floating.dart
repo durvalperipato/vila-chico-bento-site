@@ -16,7 +16,8 @@ class _WhatsappFloatingState extends State<WhatsappFloating> {
 
   void _openWhatsApp() {
     const defaultMsg =
-        'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma visita e o período de adaptação para o meu cãozinho!';
+        'Olá! Conheci o site da Vila Chico Bento e gostaria de agendar uma '
+        'visita e o período de adaptação para o meu cãozinho!';
     final url = AppConstants.buildWhatsAppUrl(defaultMsg);
     launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }

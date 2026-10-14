@@ -5,7 +5,7 @@ import 'home_controller.dart';
 import 'home_injections.dart';
 import 'home_state.dart';
 import 'widgets/floating/whatsapp_floating.dart';
-import 'widgets/navbar.dart';
+import 'widgets/navbar/navbar.dart';
 import 'widgets/sections/about_section.dart';
 import 'widgets/sections/contact_cta_section.dart';
 import 'widgets/sections/footer_section.dart';
@@ -30,21 +30,23 @@ class _HomePageState extends NanoStatePage<HomePage, HomeController> {
     return NanoScaffold<HomeState, NanoMessageKey>(
       controller: controller,
       headerHeight: 86,
-      backgroundColor: AppColors.bgPrimary(controller.isDarkMode),
+      backgroundColor: AppColors.bgPrimary(context),
       header: (context, state) => Navbar(controller: controller),
       floatingActionButton: (context, state) => const WhatsappFloating(),
       builder: (context, state) {
+        final homeState = state.data;
+        if (homeState == null) return const SizedBox.shrink();
         return SingleChildScrollView(
           controller: controller.scrollController,
           child: Column(
             children: [
-              HeroSection(controller: controller),
-              AboutSection(controller: controller),
-              ServicesSection(controller: controller),
-              GallerySection(controller: controller),
-              LocationSection(controller: controller),
-              ContactCtaSection(controller: controller),
-              FooterSection(controller: controller),
+              HeroSection(state: homeState, controller: controller),
+              AboutSection(state: homeState, controller: controller),
+              ServicesSection(state: homeState, controller: controller),
+              GallerySection(state: homeState, controller: controller),
+              LocationSection(state: homeState, controller: controller),
+              ContactCtaSection(state: homeState, controller: controller),
+              FooterSection(state: homeState, controller: controller),
             ],
           ),
         );

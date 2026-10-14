@@ -23,7 +23,6 @@ class PawTrailDivider extends StatelessWidget {
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: List.generate(pawsCount, (index) {
             final isEven = index % 2 == 0;

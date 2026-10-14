@@ -1,92 +1,116 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
-import 'package:vila_chico_bento_site/core/constants/app_constants.dart';
 import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/theme/app_typography.dart';
 import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
-import 'package:vila_chico_bento_site/core/widgets/map_embed/map_embed.dart';
 import 'package:vila_chico_bento_site/core/widgets/meandering_paw_trail.dart';
 import 'package:vila_chico_bento_site/core/widgets/responsive_container.dart';
 import 'package:vila_chico_bento_site/core/widgets/section_tag.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.dart';
+import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
+import 'widgets/interactive_map_preview.dart';
 
 class LocationSection extends StatelessWidget {
-  const LocationSection({required this.controller, super.key});
+  const LocationSection({
+    required this.state,
+    required this.controller,
+    super.key,
+  });
+
+  final HomeState state;
   final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final isDark = controller.isDarkMode;
-    final isDesktop = NanoDeviceType.isDesktop(context);
-    final isMobile = NanoDeviceType.isMobile(context);
-    final screenHeight = MediaQuery.sizeOf(context).height;
+    final location = state.location;
+    final isDark = context.theme.isDark;
+    final isDesktop = context.screen.isDesktop;
     final minHeight =
-        isDesktop ? (screenHeight - 86).clamp(650.0, 1400.0) : 0.0;
+        isDesktop ? (context.screen.height - 86).clamp(600.0, 1000.0) : 0.0;
+    final addressText = location.addressDisplay;
+    final hoursText = location.hoursDisplay;
 
     return Container(
       key: controller.locationKey,
       constraints: isDesktop ? BoxConstraints(minHeight: minHeight) : null,
       alignment: Alignment.center,
-      color: isDark ? AppColors.darkBgPrimary : AppColors.lightBgPrimary,
+      color: AppColors.bgSurface(context),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Rastro Contínuo de Patinhas: continua de Galeria (0.10) e desce até o centro da base (0.50)
+          // Rastro Contínuo de Patinhas
           Positioned.fill(
-            child: MeanderingPawTrail(
-              start: const Offset(0.10, 0.0),
-              control1: const Offset(0.10, 0.25),
-              control2: const Offset(0.50, 0.75),
-              end: const Offset(0.50, 1.0),
-              pawCount: isMobile ? 8 : 14,
-              baseSize: 32.0,
-              opacity: isDark ? 0.38 : 0.50,
-              color: AppColors.pawTrail,
-              startWithRightFoot: true,
+            child: NanoResponsiveLayout(
+              desktop: (context) => MeanderingPawTrail(
+                start: const Offset(0.10, 0.0),
+                control1: const Offset(0.10, 0.25),
+                control2: const Offset(0.50, 0.75),
+                end: const Offset(0.50, 1.0),
+                pawCount: 14,
+                opacity: isDark ? 0.38 : 0.50,
+                color: AppColors.pawTrail,
+                startWithRightFoot: true,
+              ),
+              mobile: (context) => MeanderingPawTrail(
+                start: const Offset(0.10, 0.0),
+                control1: const Offset(0.10, 0.25),
+                control2: const Offset(0.50, 0.75),
+                end: const Offset(0.50, 1.0),
+                pawCount: 8,
+                opacity: isDark ? 0.38 : 0.50,
+                color: AppColors.pawTrail,
+                startWithRightFoot: true,
+              ),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: isMobile ? 56 : 72,
+              vertical: isDesktop ? 26 : 40,
             ),
             child: ResponsiveContainer(
               maxWidth: 960,
               child: Column(
                 children: [
                   SectionTag(
-                    text: l10n.locationBadge,
+                    text: location.badgeDisplay,
                     icon: Icons.place_rounded,
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    l10n.locationTitle,
-                    textAlign: TextAlign.center,
-                    style: isDesktop
-                        ? AppTypography.displayMedium(
-                            color: AppColors.textPrimary(isDark),
-                          )
-                        : AppTypography.displaySmall(
-                            color: AppColors.textPrimary(isDark),
-                          ),
+                  const SizedBox(height: 10),
+                  NanoResponsiveLayout(
+                    desktop: (context) => Text(
+                      location.titleDisplay,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.displayMedium(
+                        color: AppColors.textPrimary(context),
+                      ),
+                    ),
+                    mobile: (context) => Text(
+                      location.titleDisplay,
+                      textAlign: TextAlign.center,
+                      style: AppTypography.displaySmall(
+                        color: AppColors.textPrimary(context),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: isDesktop ? 20 : 32),
 
-                  // Card Principal com Informações, Prévia de Mapa e Botões Oficiais
+                  // Card Principal com Informações, Prévia de Mapa
+                  // e Botões Oficiais
                   Container(
-                    padding: EdgeInsets.all(isMobile ? 20 : 36),
+                    padding: EdgeInsets.all(isDesktop ? 22 : 18),
                     decoration: BoxDecoration(
-                      color: AppColors.bgCard(isDark),
+                      color: AppColors.bgCard(context),
                       borderRadius: BorderRadius.circular(32),
                       border: Border.all(
-                        color: AppColors.borderSubtle(isDark),
+                        color: AppColors.borderSubtle(context),
                         width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.cardShadow(isDark),
+                          color: AppColors.cardShadow(context),
                           blurRadius: 30,
                           offset: const Offset(0, 10),
                         ),
@@ -145,8 +169,9 @@ class LocationSection extends StatelessWidget {
                                           style: GoogleFonts.inter(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
-                                            color:
-                                                AppColors.textSecondary(isDark),
+                                            color: AppColors.textSecondary(
+                                              context,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -154,25 +179,28 @@ class LocationSection extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 6),
                                   Text(
-                                    AppConstants.fullAddress,
+                                    addressText,
                                     style: AppTypography.titleMedium(
-                                      color: AppColors.textPrimary(isDark),
+                                      color: AppColors.textPrimary(context),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.access_time_filled_rounded,
-                                        size: 15,
-                                        color: AppColors.textMuted(isDark),
+                                      const Icon(
+                                        Icons.access_time_rounded,
+                                        size: 16,
+                                        color: AppColors.accentGreen,
                                       ),
                                       const SizedBox(width: 6),
-                                      Text(
-                                        AppConstants.openingHours,
-                                        style: AppTypography.bodyMedium(
-                                          color:
-                                              AppColors.textSecondary(isDark),
+                                      Expanded(
+                                        child: Text(
+                                          hoursText,
+                                          style: AppTypography.bodyMedium(
+                                            color: AppColors.textSecondary(
+                                              context,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -183,31 +211,26 @@ class LocationSection extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: isDesktop ? 16 : 20),
 
-                        // 2. Container com Prévia Estilizada do Mapa e Pin da Vila Chico Bento
-                        _InteractiveMapPreview(
-                          controller: controller,
-                          isDark: isDark,
-                          isMobile: isMobile,
-                        ),
+                        // 2. Container com Prévia Estilizada do Mapa
+                        const InteractiveMapPreview(),
 
-                        const SizedBox(height: 28),
+                        SizedBox(height: isDesktop ? 18 : 22),
 
-                        // 3. Botões Oficiais de Navegação (Google Maps e Waze)
+                        // 3. Botões Oficiais de Navegação
                         Wrap(
                           spacing: 16,
                           runSpacing: 12,
                           alignment: WrapAlignment.center,
                           children: [
-                            // Botão Oficial Google Maps
                             ElevatedButton.icon(
                               onPressed: controller.openGoogleMaps,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF1A73E8),
                                 foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isMobile ? 20 : 28,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26,
                                   vertical: 16,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -229,15 +252,13 @@ class LocationSection extends StatelessWidget {
                                 ),
                               ),
                             ),
-
-                            // Botão Oficial Waze
                             ElevatedButton.icon(
                               onPressed: controller.openWaze,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF33CCFF),
-                                foregroundColor: const Color(0xFF0F172A),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isMobile ? 20 : 28,
+                                foregroundColor: Colors.black87,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 26,
                                   vertical: 16,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -249,14 +270,13 @@ class LocationSection extends StatelessWidget {
                               ),
                               icon: BrandIcons.waze(
                                 size: 18,
-                                color: const Color(0xFF0F172A),
+                                color: Colors.black87,
                               ),
                               label: Text(
                                 l10n.btnWaze,
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: Color(0xFF0F172A),
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -270,51 +290,6 @@ class LocationSection extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Container com Prévia Visual Estilizada do Mapa e Pin Marcador
-class _InteractiveMapPreview extends StatelessWidget {
-  const _InteractiveMapPreview({
-    required this.controller,
-    required this.isDark,
-    required this.isMobile,
-  });
-
-  final HomeController controller;
-  final bool isDark;
-  final bool isMobile;
-
-  @override
-  Widget build(BuildContext context) {
-    final height = isMobile ? 260.0 : 360.0;
-
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: isDark ? 0.35 : 0.25),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.35)
-                : AppColors.primary.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: RealMapEmbed(
-        mapUrl: AppConstants.googleMapsEmbedUrl,
-        height: height,
-        isDark: isDark,
-        borderRadius: BorderRadius.circular(24),
       ),
     );
   }

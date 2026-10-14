@@ -7,11 +7,11 @@ import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 /// para que as seções fiquem literalmente "coladas" e unidas de ponta a ponta.
 class MeanderingPawTrail extends StatelessWidget {
   const MeanderingPawTrail({
-    super.key,
     required this.start,
     required this.control1,
     required this.control2,
     required this.end,
+    super.key,
     this.pawCount = 12,
     this.color = AppColors.primary,
     this.baseSize = 32.0,
@@ -68,15 +68,17 @@ class MeanderingPawTrail extends StatelessWidget {
         final isSmallScreen = width < 680;
         // Passo constante em pixels:
         // - Mobile: 88.0 (já aprovado pelo usuário como perfeito)
-        // - Telas maiores: 66.0 para passos mais próximos e contínuos, eliminando o vão entre seções
+        // - Telas maiores: 66.0 para passos mais próximos e contínuos,
+        //   eliminando o vão entre seções
         final stepDistance = isSmallScreen ? 88.0 : 66.0;
         final effectivePawCount = (height / stepDistance).round().clamp(6, 36);
 
         final pawWidgets = <Widget>[];
 
         for (int i = 0; i < effectivePawCount; i++) {
-          // Distribuição métrica com meio passo de respiro nas bordas para continuidade
-          // perfeita e sem encavalamento de passos na junção entre seções consecutivas.
+          // Distribuição métrica com meio passo de respiro nas bordas
+          // para continuidade perfeita e sem encavalamento de passos na
+          // junção entre seções consecutivas.
           final t = (i + 0.5) / effectivePawCount;
           final isEven = (i % 2 == 0) ^ startWithRightFoot;
 
@@ -92,7 +94,8 @@ class MeanderingPawTrail extends StatelessWidget {
               3 * oneMinusT * math.pow(t, 2) * p2.dy +
               math.pow(t, 3) * p3.dy;
 
-          // Derivada B'(t) para calcular o ângulo da tangente (direção da passada)
+          // Derivada B'(t) para calcular o ângulo da tangente
+          // (direção da passada)
           final dX = 3 * math.pow(oneMinusT, 2) * (p1.dx - p0.dx) +
               6 * oneMinusT * t * (p2.dx - p1.dx) +
               3 * math.pow(t, 2) * (p3.dx - p2.dx);
@@ -128,8 +131,9 @@ class MeanderingPawTrail extends StatelessWidget {
           final pawSize = responsiveBaseSize + (isEven ? 1.0 : -1.0);
           final stepAngle = tangentAngle + (side * 0.12);
 
-          // Margem vertical: no desktop fica sutil (4px) para manter a cadência
-          // de passos idêntica e sem lacuna entre a última pata de uma seção e a primeira da próxima
+          // Margem vertical: no desktop fica sutil (4px) para manter a
+          // cadência de passos idêntica e sem lacuna entre a última pata
+          // de uma seção e a primeira da próxima
           final verticalGap = isSmallScreen ? 14.0 : 4.0;
           final verticalMargin = (pawSize / 2) + verticalGap;
           final clampedY = posY.clamp(
