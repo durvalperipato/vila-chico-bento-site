@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "vila-chico-bento-site",
     "public": "build/web",
     "ignore": [
       "firebase.json",
