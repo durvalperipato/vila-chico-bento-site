@@ -170,12 +170,6 @@ abstract class AppLocalizations {
   /// **'Creche diária (Day Care), hotelzinho acolhedor e rotina pensada com carinho em Pinhais e Região. Deixe seu melhor amigo brincar, socializar e gastar energia com total segurança!'**
   String get heroSubtitle;
 
-  /// No description provided for @heroCtaWhatsapp.
-  ///
-  /// In pt, this message translates to:
-  /// **'Agendar Adaptação no WhatsApp'**
-  String get heroCtaWhatsapp;
-
   /// No description provided for @heroCtaServices.
   ///
   /// In pt, this message translates to:

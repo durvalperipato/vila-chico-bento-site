@@ -29,7 +29,7 @@ class ContactCtaSection extends StatelessWidget {
     final isDesktop = context.screen.isDesktop;
     final isMobile = context.screen.isMobile;
     final minHeight =
-        isDesktop ? (context.screen.height - 86).clamp(650.0, 1400.0) : 0.0;
+        isDesktop ? (context.screen.height - 86).clamp(580.0, 1000.0) : 0.0;
 
     return Container(
       key: controller.contactKey,
@@ -39,29 +39,17 @@ class ContactCtaSection extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Rastro Contínuo de Patinhas
-          Positioned.fill(
-            child: MeanderingPawTrail(
-              start: const Offset(0.50, 0.0),
-              control1: const Offset(0.50, 0.20),
-              control2: const Offset(0.50, 0.40),
-              end: const Offset(0.50, 0.52),
-              pawCount: 7,
-              opacity: isDark ? 0.38 : 0.50,
-              color: AppColors.pawTrail,
-              startWithRightFoot: true,
-            ),
-          ),
+          // 1. Card Container Principal
           Padding(
             padding: EdgeInsets.symmetric(
-              vertical: isMobile ? 56 : 72,
+              vertical: isDesktop ? 26 : 36,
             ),
             child: ResponsiveContainer(
               maxWidth: 920,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 20 : 48,
-                  vertical: isMobile ? 32 : 52,
+                  horizontal: isMobile ? 20 : 44,
+                  vertical: isMobile ? 22 : 30,
                 ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -98,7 +86,7 @@ class ContactCtaSection extends StatelessWidget {
                           : l10n.contactBadge,
                       icon: Icons.chat_rounded,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                     Text(
                       contact.title.isNotEmpty
                           ? contact.title
@@ -112,7 +100,7 @@ class ContactCtaSection extends StatelessWidget {
                               color: AppColors.textPrimary(context),
                             ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 620),
                       child: Text(
@@ -125,12 +113,12 @@ class ContactCtaSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: isDesktop ? 20 : 28),
 
                     // Botões de Conversão
                     Wrap(
                       spacing: 16,
-                      runSpacing: 14,
+                      runSpacing: 12,
                       alignment: WrapAlignment.center,
                       children: [
                         ElevatedButton.icon(
@@ -138,9 +126,9 @@ class ContactCtaSection extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.whatsapp,
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 28,
-                              vertical: 18,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isDesktop ? 24 : 20,
+                              vertical: isDesktop ? 15 : 16,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
@@ -153,7 +141,7 @@ class ContactCtaSection extends StatelessWidget {
                           label: Text(
                             l10n.btnWhatsapp,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -166,9 +154,9 @@ class ContactCtaSection extends StatelessWidget {
                               color: AppColors.instagram.withValues(alpha: 0.6),
                               width: 1.5,
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 18,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isDesktop ? 22 : 18,
+                              vertical: isDesktop ? 15 : 16,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
@@ -178,7 +166,7 @@ class ContactCtaSection extends StatelessWidget {
                           label: Text(
                             l10n.btnInstagram,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -186,11 +174,41 @@ class ContactCtaSection extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 36),
+                    SizedBox(height: isDesktop ? 20 : 28),
 
                     // Cãozinho 3D SOLTO no final da trilha
                     const Free3DMascotDog(),
                   ],
+                ),
+              ),
+            ),
+          ),
+
+          // 2. Rastro Contínuo de Patinhas:
+          // Conecta no ponto da seção anterior (0.50, 0.0), contorna o card
+          // pela direita e termina exatamente no cãozinho adormecido!
+          Positioned.fill(
+            child: IgnorePointer(
+              child: NanoResponsiveLayout(
+                desktop: (context) => MeanderingPawTrail(
+                  start: const Offset(0.50, 0.0),
+                  control1: const Offset(0.92, 0.28),
+                  control2: const Offset(0.88, 0.72),
+                  end: const Offset(0.50, 0.86),
+                  pawCount: 14,
+                  opacity: isDark ? 0.38 : 0.50,
+                  color: AppColors.pawTrail,
+                  startWithRightFoot: true,
+                ),
+                mobile: (context) => MeanderingPawTrail(
+                  start: const Offset(0.50, 0.0),
+                  control1: const Offset(0.95, 0.28),
+                  control2: const Offset(0.92, 0.72),
+                  end: const Offset(0.50, 0.86),
+                  pawCount: 10,
+                  opacity: isDark ? 0.38 : 0.50,
+                  color: AppColors.pawTrail,
+                  startWithRightFoot: true,
                 ),
               ),
             ),

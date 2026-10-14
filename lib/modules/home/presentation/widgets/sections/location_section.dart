@@ -27,13 +27,15 @@ class LocationSection extends StatelessWidget {
     final l10n = context.l10n;
     final location = state.location;
     final isDark = context.theme.isDark;
-    final minHeight = (context.screen.height - 86).clamp(650.0, 1400.0);
+    final isDesktop = context.screen.isDesktop;
+    final minHeight =
+        isDesktop ? (context.screen.height - 86).clamp(600.0, 1000.0) : 0.0;
     final addressText = location.address;
     final hoursText = location.hours;
 
     return Container(
       key: controller.locationKey,
-      constraints: BoxConstraints(minHeight: minHeight),
+      constraints: isDesktop ? BoxConstraints(minHeight: minHeight) : null,
       alignment: Alignment.center,
       color: AppColors.bgSurface(context),
       child: Stack(
@@ -65,7 +67,9 @@ class LocationSection extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 64),
+            padding: EdgeInsets.symmetric(
+              vertical: isDesktop ? 26 : 40,
+            ),
             child: ResponsiveContainer(
               maxWidth: 960,
               child: Column(
@@ -74,7 +78,7 @@ class LocationSection extends StatelessWidget {
                     text: location.badge,
                     icon: Icons.place_rounded,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   NanoResponsiveLayout(
                     desktop: (context) => Text(
                       location.title,
@@ -91,12 +95,12 @@ class LocationSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: isDesktop ? 20 : 32),
 
                   // Card Principal com Informações, Prévia de Mapa
                   // e Botões Oficiais
                   Container(
-                    padding: const EdgeInsets.all(28),
+                    padding: EdgeInsets.all(isDesktop ? 22 : 18),
                     decoration: BoxDecoration(
                       color: AppColors.bgCard(context),
                       borderRadius: BorderRadius.circular(32),
@@ -207,12 +211,12 @@ class LocationSection extends StatelessWidget {
                           ],
                         ),
 
-                        const SizedBox(height: 24),
+                        SizedBox(height: isDesktop ? 16 : 20),
 
                         // 2. Container com Prévia Estilizada do Mapa
                         const InteractiveMapPreview(),
 
-                        const SizedBox(height: 28),
+                        SizedBox(height: isDesktop ? 18 : 22),
 
                         // 3. Botões Oficiais de Navegação
                         Wrap(
@@ -264,7 +268,10 @@ class LocationSection extends StatelessWidget {
                                 shadowColor: const Color(0xFF33CCFF)
                                     .withValues(alpha: 0.4),
                               ),
-                              icon: BrandIcons.waze(size: 18),
+                              icon: BrandIcons.waze(
+                                size: 18,
+                                color: Colors.black87,
+                              ),
                               label: Text(
                                 l10n.btnWaze,
                                 style: const TextStyle(

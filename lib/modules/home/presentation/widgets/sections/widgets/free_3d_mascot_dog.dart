@@ -50,7 +50,7 @@ class _Free3DMascotDogState extends State<Free3DMascotDog>
     final l10n = context.l10n;
     final isMobile = context.screen.isMobile;
     final isDark = context.theme.isDark;
-    final dogWidth = isMobile ? 290.0 : 420.0;
+    final dogWidth = isMobile ? 260.0 : 330.0;
 
     final bubbleBg = isDark
         ? const Color(0xFF0F172A).withValues(alpha: 0.90)
@@ -64,14 +64,14 @@ class _Free3DMascotDogState extends State<Free3DMascotDog>
         // 1. Balão de Fala estilo História em Quadrinhos / Cartoon Moderno
         ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: isMobile ? 330 : 540,
+            maxWidth: isMobile ? 310 : 460,
           ),
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 18 : 26,
-                  vertical: isMobile ? 14 : 18,
+                  horizontal: isMobile ? 16 : 22,
+                  vertical: isMobile ? 12 : 14,
                 ),
                 decoration: BoxDecoration(
                   color: bubbleBg,

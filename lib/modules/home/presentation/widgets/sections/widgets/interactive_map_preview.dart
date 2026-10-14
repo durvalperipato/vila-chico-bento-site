@@ -11,8 +11,8 @@ class InteractiveMapPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NanoResponsiveLayout(
-      desktop: (context) => const _MapContainer(height: 360.0),
-      mobile: (context) => const _MapContainer(height: 260.0),
+      desktop: (context) => const _MapContainer(height: 260.0),
+      mobile: (context) => const _MapContainer(height: 230.0),
     );
   }
 }

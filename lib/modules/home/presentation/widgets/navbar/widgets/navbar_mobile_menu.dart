@@ -227,7 +227,7 @@ class NavbarMobileMenuSheet extends StatelessWidget {
                 ),
                 icon: BrandIcons.whatsapp(color: Colors.white),
                 label: Text(
-                  l10n.heroCtaWhatsapp,
+                  l10n.navCtaSchedule,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,

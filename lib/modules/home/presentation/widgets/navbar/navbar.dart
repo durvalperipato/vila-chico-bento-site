@@ -5,11 +5,8 @@ import 'package:vila_chico_bento_site/core/constants/app_assets.dart';
 import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/theme/app_typography.dart';
-import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
-import 'widgets/nav_cta_pill.dart';
-import 'widgets/navbar_language_selector.dart';
 import 'widgets/navbar_mobile_menu.dart';
 import 'widgets/navbar_theme_toggle.dart';
 import 'widgets/pill_nav_link.dart';
@@ -237,33 +234,12 @@ class Navbar extends StatelessWidget {
                     // Ações (Tema, Idioma, CTA no Desktop ou Hambúrguer
                     // no Mobile)
                     if (isDesktop)
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            NavbarThemeToggle(controller: controller),
-                            const SizedBox(width: 8),
-                            NavbarLanguageSelector(controller: controller),
-                            const SizedBox(width: 12),
-                            NavCtaPill(
-                              label: l10n.navCtaSchedule,
-                              onTap: controller.openWhatsApp,
-                            ),
-                          ],
-                        ),
-                      )
+                      NavbarThemeToggle(controller: controller)
                     else
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           NavbarThemeToggle(controller: controller),
-                          const SizedBox(width: 4),
-                          IconButton(
-                            onPressed: controller.openWhatsApp,
-                            tooltip: 'WhatsApp',
-                            icon: BrandIcons.whatsapp(size: 22),
-                          ),
                           const SizedBox(width: 4),
                           Container(
                             decoration: BoxDecoration(

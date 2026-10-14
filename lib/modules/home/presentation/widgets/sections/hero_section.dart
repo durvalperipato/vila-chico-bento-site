@@ -35,7 +35,7 @@ class HeroSection extends StatelessWidget {
         hero.subtitle.isNotEmpty ? hero.subtitle : l10n.heroSubtitle;
     final ctaText = hero.ctaWhatsappText.isNotEmpty
         ? hero.ctaWhatsappText
-        : l10n.heroCtaWhatsapp;
+        : l10n.navCtaSchedule;
 
     final isDark = controller.isDarkMode;
     final isDesktop = NanoDeviceType.isDesktop(context);

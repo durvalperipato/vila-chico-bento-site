@@ -47,9 +47,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Daily daycare, caring pet boarding, and thoughtful daily routines in Pinhais and Region. Let your best friend play, socialize, and thrive in total safety!';
 
   @override
-  String get heroCtaWhatsapp => 'Schedule Adaptation on WhatsApp';
-
-  @override
   String get heroCtaServices => 'Explore Our Services';
 
   @override

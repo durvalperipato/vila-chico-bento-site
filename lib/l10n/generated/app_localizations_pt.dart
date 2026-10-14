@@ -48,9 +48,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Creche diária (Day Care), hotelzinho acolhedor e rotina pensada com carinho em Pinhais e Região. Deixe seu melhor amigo brincar, socializar e gastar energia com total segurança!';
 
   @override
-  String get heroCtaWhatsapp => 'Agendar Adaptação no WhatsApp';
-
-  @override
   String get heroCtaServices => 'Ver Nossos Serviços';
 
   @override
