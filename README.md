@@ -20,6 +20,7 @@
 - 📍 **Embedded Real Google Maps**: Interactive Google Maps embed with scroll-trap prevention (pointer events disabled by default until user interaction).
 - 🌐 **Full Internationalization (l10n)**: Native bilingual support for Brazilian Portuguese (`pt-BR`) and English (`en`).
 - 💬 **Instant Communication Integrations**: Persistent floating WhatsApp button with pre-filled messages, plus one-tap links to Waze, Google Maps, and Instagram.
+- ☁️ **100% Cloud-Driven Content**: Zero hardcoded strings or static arrays; landing page sections dynamically stream from Firebase Firestore bundles.
 
 ---
 
@@ -27,6 +28,7 @@
 
 - **Framework**: [Flutter Web](https://flutter.dev)
 - **State Management & DI**: [`nano_core`](https://pub.dev/packages/nano_core) (`NanoStatePage`, `NanoController`, `NanoInjections`)
+- **Backend & Cloud Sync**: [Cloud Firestore](https://firebase.google.com/docs/firestore), [Firebase Auth](https://firebase.google.com/docs/auth), [Firebase Storage](https://firebase.google.com/docs/storage)
 - **Typography**: [`google_fonts`](https://pub.dev/packages/google_fonts) (*Fredoka*, *Outfit*)
 - **Official Brand Icons**: [`font_awesome_flutter`](https://pub.dev/packages/font_awesome_flutter) (WhatsApp, Instagram, Waze, Google Maps)
 - **Hosting & Infrastructure**: [Firebase Hosting](https://firebase.google.com/docs/hosting)
@@ -39,23 +41,27 @@
 lib/
 ├── core/
 │   ├── constants/       # Asset paths, URLs, location constants
-│   ├── extensions/      # BuildContext and l10n extensions
+│   ├── extensions/      # BuildContext, ImageProvider, and l10n extensions
 │   ├── theme/           # AppColors, AppTypography, design tokens
 │   └── widgets/         # ResponsiveContainer, MeanderingPawTrail, BrandIcons, RealMapEmbed
 ├── l10n/
 │   ├── arb/             # ARB localization files (app_en.arb, app_pt.arb)
 │   └── generated/       # Generated Dart localization classes
-└── modules/
-    └── home/
-        ├── presentation/
-        │   ├── widgets/
-        │   │   ├── floating/    # WhatsAppFloating button
-        │   │   ├── navbar/      # Responsive Navbar with language & theme toggles
-        │   │   └── sections/    # Hero, About, Services, Gallery, Location, Contact, Footer
-        │   ├── home_controller.dart
-        │   ├── home_injections.dart
-        │   ├── home_page.dart
-        │   └── home_state.dart
+├── modules/
+│   ├── admin/           # Schema-driven CMS editor & live preview workspace
+│   └── home/
+│       ├── domain/      # Strongly-typed ViewContent entities and ContentKeys
+│       └── presentation/
+│           ├── widgets/
+│           │   ├── floating/    # WhatsAppFloating button
+│           │   ├── navbar/      # Responsive Navbar with language & theme toggles
+│           │   └── sections/    # Hero, About, Services, Gallery, Location, Contact, Footer
+│           ├── home_controller.dart
+│           ├── home_injections.dart
+│           ├── home_page.dart
+│           └── home_state.dart
+├── firebase_options.dart # Firebase initialization credentials
+└── main.dart
 ```
 
 ---
@@ -104,7 +110,7 @@ firebase deploy --only hosting
 ```
 
 Live preview:
-👉 **[https://vila-chico-bento.web.app/](https://vila-chico-bento.web.app/)**
+👉 **[https://vila-chico-bento-site.web.app/](https://vila-chico-bento-site.web.app/)**
 
 ---
 

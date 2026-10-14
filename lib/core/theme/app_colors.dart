@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nano_core/nano_core.dart';
 
 class AppColors {
   AppColors._();
@@ -14,6 +15,7 @@ class AppColors {
   static const Color primaryHover = Color(0xFFC8661B);
   static const Color primaryLight = Color(0xFFFFF3E8);
   static const Color primaryGlow = Color(0xFFF59E0B);
+  static const Color primaryDark = Color(0xFFC8661B);
 
   static const Color secondary = Color(0xFF0EA5E9); // Azul Céu Ensolarado
   static const Color secondaryHover = Color(0xFF0284C7);
@@ -55,24 +57,38 @@ class AppColors {
   static const Color darkBorderSubtle = Color(0x1FFFFFFF);
   static const Color darkBorderActive = Color(0x50F59E0B);
 
-  // Helpers contextuais conforme o tema atual
-  static Color bgPrimary(bool isDark) =>
-      isDark ? darkBgPrimary : lightBgPrimary;
-  static Color bgSurface(bool isDark) =>
-      isDark ? darkBgSurface : lightBgSurface;
-  static Color bgCard(bool isDark) => isDark ? darkBgCard : lightBgCard;
-  static Color bgCardHover(bool isDark) =>
-      isDark ? darkBgCardHover : lightBgCardHover;
-  static Color textPrimary(bool isDark) =>
-      isDark ? darkTextPrimary : lightTextPrimary;
-  static Color textSecondary(bool isDark) =>
-      isDark ? darkTextSecondary : lightTextSecondary;
-  static Color textMuted(bool isDark) =>
-      isDark ? darkTextMuted : lightTextMuted;
-  static Color borderSubtle(bool isDark) =>
-      isDark ? darkBorderSubtle : lightBorderSubtle;
-  static Color borderActive(bool isDark) =>
-      isDark ? darkBorderActive : lightBorderActive;
-  static Color cardShadow(bool isDark) =>
-      isDark ? black.withValues(alpha: 0.35) : const Color(0x12000000);
+  // Helper privado para centralizar a resolução do tema atual
+  static bool _isDark(BuildContext context) => context.theme.isDark;
+
+  // Helpers contextuais fortemente tipados conforme o tema atual
+  static Color bgPrimary(BuildContext context) =>
+      _isDark(context) ? darkBgPrimary : lightBgPrimary;
+
+  static Color bgSurface(BuildContext context) =>
+      _isDark(context) ? darkBgSurface : lightBgSurface;
+
+  static Color bgCard(BuildContext context) =>
+      _isDark(context) ? darkBgCard : lightBgCard;
+
+  static Color bgCardHover(BuildContext context) =>
+      _isDark(context) ? darkBgCardHover : lightBgCardHover;
+
+  static Color textPrimary(BuildContext context) =>
+      _isDark(context) ? darkTextPrimary : lightTextPrimary;
+
+  static Color textSecondary(BuildContext context) =>
+      _isDark(context) ? darkTextSecondary : lightTextSecondary;
+
+  static Color textMuted(BuildContext context) =>
+      _isDark(context) ? darkTextMuted : lightTextMuted;
+
+  static Color borderSubtle(BuildContext context) =>
+      _isDark(context) ? darkBorderSubtle : lightBorderSubtle;
+
+  static Color borderActive(BuildContext context) =>
+      _isDark(context) ? darkBorderActive : lightBorderActive;
+
+  static Color cardShadow(BuildContext context) => _isDark(context)
+      ? black.withValues(alpha: 0.35)
+      : const Color(0x12000000);
 }

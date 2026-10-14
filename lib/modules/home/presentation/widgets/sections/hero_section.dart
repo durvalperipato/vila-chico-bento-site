@@ -2,24 +2,35 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nano_core/nano_core.dart';
-import 'package:vila_chico_bento_site/core/constants/app_assets.dart';
-import 'package:vila_chico_bento_site/core/extensions/build_context_extension.dart';
+import 'package:vila_chico_bento_site/core/extensions/image_provider_extension.dart';
 import 'package:vila_chico_bento_site/core/theme/app_colors.dart';
 import 'package:vila_chico_bento_site/core/widgets/brand_icons.dart';
 import 'package:vila_chico_bento_site/core/widgets/responsive_container.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_controller.dart';
 import 'package:vila_chico_bento_site/modules/home/presentation/home_state.dart';
 
-/// Hero Section em formato Cinemático Full-Bleed (Estilo Apple / Airbnb Luxury).
-/// Imersão visual total de ponta a ponta com fotografia panorâmica em alta resolução,
-/// vinhetas cinematográficas e dock flutuante de confiança.
+/// Hero Section em formato Cinemático Full-Bleed (Estilo Apple / Airbnb
+/// Luxury). Imersão visual total de ponta a ponta com fotografia panorâmica em
+/// alta resolução, vinhetas cinematográficas e dock flutuante de confiança.
 class HeroSection extends StatelessWidget {
-  const HeroSection({required this.controller, super.key});
+  const HeroSection({
+    required this.controller,
+    this.state,
+    super.key,
+  });
+
   final HomeController controller;
+  final HomeState? state;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    final hero = state?.hero ?? controller.viewState.hero;
+    final badgeText = hero.badgeDisplay;
+    final titleText = hero.titleDisplay;
+    final subtitleText = hero.subtitleDisplay;
+    final ctaText = hero.ctaWhatsappDisplay;
+    final ctaServicesText = hero.ctaServicesDisplay;
+
     final isDark = controller.isDarkMode;
     final isDesktop = NanoDeviceType.isDesktop(context);
     final isMobile = NanoDeviceType.isMobile(context);
@@ -42,39 +53,43 @@ class HeroSection extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // 1. Fotografia Panorâmica de Fundo (Full Bleed com acabamento escultural)
-          Positioned.fill(
-            child: Image.network(
-              AppAssets.heroMainImage,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) return child;
-                return NanoSkeleton.box(
+          // 1. Fotografia Panorâmica de Fundo (Full Bleed com acabamento
+          // escultural)
+          if (hero.mainImage.isNotEmpty)
+            Positioned.fill(
+              child: Image(
+                image: hero.mainImage.toImageProvider(),
+                fit: BoxFit.cover,
+                alignment: Alignment(0.0, hero.bannerAlignmentY),
+                gaplessPlayback: true,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return NanoSkeleton.box(
+                    color: const Color(0xFF0F172A),
+                    highlightColor: const Color(0xFF1E293B),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Container(
                   color: const Color(0xFF0F172A),
-                  highlightColor: const Color(0xFF1E293B),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) => Container(
-                color: const Color(0xFF0F172A),
+                ),
               ),
             ),
-          ),
 
           // 2. Camadas de Vinheta Cinematográfica para Contraste e Legibilidade
-          // 2.1. Base de escurecimento equilibrada (mantém os cães vivos e solares)
+          // 2.1. Base de escurecimento equilibrada
+          // (mantém cães vivos e solares)
           Positioned.fill(
             child: Container(
               color: const Color(0xFF0F172A).withValues(alpha: 0.52),
             ),
           ),
 
-          // 2.2. Vinheta Radial suave (foco no centro com atmosfera cinematográfica)
+          // 2.2. Vinheta Radial suave (foco no centro com atmosfera
+          // cinematográfica)
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment.center,
                   radius: 1.15,
                   colors: [
                     Colors.transparent,
@@ -114,9 +129,9 @@ class HeroSection extends StatelessWidget {
             child: ResponsiveContainer(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Selo Acolhedor Artesanal (Identidade Exclusiva Vila Chico Bento)
+                  // Selo Acolhedor Artesanal
+                  // (Identidade Exclusiva Vila Chico Bento)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: BackdropFilter(
@@ -158,7 +173,7 @@ class HeroSection extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              l10n.heroBadge.replaceAll('🐾 ', ''),
+                              badgeText,
                               style: GoogleFonts.outfit(
                                 fontSize: isMobile ? 13 : 14.5,
                                 fontWeight: FontWeight.w700,
@@ -183,7 +198,7 @@ class HeroSection extends StatelessWidget {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 920),
                     child: Text(
-                      l10n.heroTitle,
+                      titleText,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         fontSize: isDesktop ? 54 : (isMobile ? 32 : 42),
@@ -208,7 +223,7 @@ class HeroSection extends StatelessWidget {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 720),
                     child: Text(
-                      l10n.heroSubtitle,
+                      subtitleText,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: isDesktop ? 18 : 15,
@@ -255,7 +270,7 @@ class HeroSection extends StatelessWidget {
                         icon:
                             BrandIcons.whatsapp(size: 22, color: Colors.white),
                         label: Text(
-                          l10n.heroCtaWhatsapp,
+                          ctaText,
                           style: TextStyle(
                             fontSize: isMobile ? 15 : 16,
                             fontWeight: FontWeight.w800,
@@ -296,7 +311,7 @@ class HeroSection extends StatelessWidget {
                               color: AppColors.primary,
                             ),
                             label: Text(
-                              l10n.heroCtaServices,
+                              ctaServicesText,
                               style: TextStyle(
                                 fontSize: isMobile ? 15 : 16,
                                 fontWeight: FontWeight.w700,
@@ -310,7 +325,8 @@ class HeroSection extends StatelessWidget {
 
                   const SizedBox(height: 36),
 
-                  // Destaques de Confiança (Leves, sem container, direto na atmosfera da foto)
+                  // Destaques de Confiança (Leves, sem container,
+                  // direto na atmosfera da foto)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Wrap(
@@ -318,28 +334,17 @@ class HeroSection extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: isMobile ? 18 : 28,
                       runSpacing: 10,
-                      children: const [
-                        _PillarBadge(
-                          icon: Icons.park_rounded,
-                          label: 'Área Verde ao Ar Livre',
-                          color: AppColors.accentGreen,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.favorite_rounded,
-                          label: '100% Livre de Baias',
-                          color: AppColors.primary,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.shield_rounded,
-                          label: 'Supervisão Atenta',
-                          color: Colors.amber,
-                        ),
-                        _PillarBadge(
-                          icon: Icons.location_on_rounded,
-                          label: 'Pinhais / PR',
-                          color: Colors.cyanAccent,
-                        ),
-                      ],
+                      children: hero.highlights.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final text = entry.value;
+                        final visual =
+                            _defaultPillars[idx % _defaultPillars.length];
+                        return _PillarBadge(
+                          icon: visual.icon,
+                          label: text.isNotEmpty ? text : '[ Destaque ]',
+                          color: visual.color,
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],
@@ -351,6 +356,13 @@ class HeroSection extends StatelessWidget {
     );
   }
 }
+
+const _defaultPillars = [
+  (icon: Icons.park_rounded, color: AppColors.accentGreen),
+  (icon: Icons.favorite_rounded, color: AppColors.primary),
+  (icon: Icons.shield_rounded, color: Colors.amber),
+  (icon: Icons.location_on_rounded, color: Colors.cyanAccent),
+];
 
 class _PillarBadge extends StatelessWidget {
   const _PillarBadge({

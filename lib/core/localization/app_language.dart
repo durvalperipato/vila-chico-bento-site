@@ -21,20 +21,19 @@ enum AppLanguage {
     );
   }
 
-  /// Detecta o idioma do navegador (Web) ou do sistema operacional (Mobile/Desktop).
-  /// Caso o idioma do sistema/navegador seja inglês ('en'), adota EN.
-  /// Para qualquer outro caso (ou fallback), adota o Português (PT-BR) como padrão oficial.
+  /// Detecta o idioma padrão da aplicação.
+  /// TODO(durval): Para o MVP sera usado por enquanto apenas portugues - BR.
   static AppLanguage detectInitialLanguage() {
-    try {
-      final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
-      final code = systemLocale.languageCode.toLowerCase();
+    // try {
+    //   final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    //   final code = systemLocale.languageCode.toLowerCase();
 
-      if (code.startsWith('en')) {
-        return AppLanguage.en;
-      }
-    } catch (_) {
-      // Fallback seguro em ambientes de teste ou erro de dispatcher
-    }
+    //   if (code.startsWith('en')) {
+    //     return AppLanguage.en;
+    //   }
+    // } catch (_) {
+    //   // Fallback seguro em ambientes de teste ou erro de dispatcher
+    // }
     return AppLanguage.pt;
   }
 }

@@ -1,0 +1,22 @@
+[core]
+project_name = "Vila Chico Bento Site"
+communication_language = "English"
+document_output_language = "English"
+output_folder = "{project-root}/_bmad"
+
+[modules.bmm]
+planning_artifacts = "{project-root}/_bmad/specs"
+implementation_artifacts = "{project-root}/_bmad"
+project_knowledge = "{project-root}/_bmad"
+
+[modules.bmb]
+bmad_builder_output_folder = "{project-root}/skills"
+bmad_builder_reports = "{project-root}/skills/reports"
+
+[agents.bmad-agent-dev]
+module = "bmm"
+team = "software-development"
+name = "Amelia"
+title = "Senior Software Engineer"
+icon = "💻"
+description = "Test-first discipline, 100% pass before review, clean Nano Core architecture."
